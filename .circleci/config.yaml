@@ -1,0 +1,58 @@
+version: 2.1
+
+orbs:
+  win: circleci/windows@2.2.0
+
+defaults: &defaults
+  working_directory: /snyk-iac-custom-rules
+
+windows_defaults: &windows_defaults
+  executor:
+    name: win/default
+    shell: powershell.exe
+
+macos_defaults: &macos_defaults
+  macos:
+    xcode: 11.3.0
+
+jobs:
+  test-windows:
+    <<: *defaults
+    <<: *windows_defaults
+    steps:
+      - run: echo "Tests in Windows"
+  test-macos:
+    <<: *defaults
+    <<: *macos_defaults
+    steps:
+      - run: echo "Tests in MacOS"
+  test-linux:
+    <<: *defaults
+    docker:
+      - image: circleci/golang:1.15-node
+    resource_class: small
+    steps:
+      - run: echo "Tests in Linux"
+
+workflows:
+  version: 2
+  test:
+    jobs:
+      - test-windows:
+          name: Windows
+          filters:
+            branches:
+              ignore:
+                - main
+      - test-linux:
+          name: Linux
+          filters:
+            branches:
+              ignore:
+                - main
+      - test-macos:
+          name: MacOS
+          filters:
+            branches:
+              ignore:
+                - main
