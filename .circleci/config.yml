@@ -23,6 +23,28 @@ commands:
       - run: sudo ln -s ${HOME}/.local/lib/shellspec/shellspec /usr/local/bin/shellspec
       - run: sudo apt-get install jq
 jobs:
+  lint_and_format:
+    <<: *defaults
+    description: Lint & formatting
+    docker:
+      - image: golangci/golangci-lint:v1.41
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/snyk-iac-custom-rules
+      # Logs the version in our build logs, for posterity
+      - run: go version
+      - run:
+          name: "Ensure go.mod is tidy"
+          command: |
+            go mod tidy
+            git diff --exit-code go.mod go.sum
+      - run:
+          name: "Run golangci-lint"
+          command: golangci-lint run -v --timeout 10m
+      - run:
+          name: "Run gofmt"
+          command: "! gofmt -d -e . | read"
   test-windows:
     <<: *defaults
     <<: *windows_defaults
@@ -78,20 +100,28 @@ workflows:
   version: 2
   test:
     jobs:
+      - lint_and_format:
+          name: Lint & formatting
       - test-windows:
           name: Windows
+          requires:
+            - Lint & formatting
           filters:
             branches:
               ignore:
                 - main
       - test-linux:
           name: Linux
+          requires:
+            - Lint & formatting
           filters:
             branches:
               ignore:
                 - main
       - test-macos:
           name: MacOS
+          requires:
+            - Lint & formatting
           filters:
             branches:
               ignore:
