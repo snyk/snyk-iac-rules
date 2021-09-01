@@ -22,6 +22,17 @@ commands:
       - run: curl -fsSL https://git.io/shellspec | sh -s -- -y
       - run: sudo ln -s ${HOME}/.local/lib/shellspec/shellspec /usr/local/bin/shellspec
       - run: sudo apt-get install jq
+  build:
+    description: Build Golang CLI
+    steps:
+      - run:
+          name: Build
+          command: go build -o synk-iac-custom-rules .
+      - persist_to_workspace:
+          root: .
+          paths:
+            - synk-iac-custom-rules
+
 jobs:
   lint_and_format:
     <<: *defaults
@@ -45,18 +56,28 @@ jobs:
       - run:
           name: "Run gofmt"
           command: "! gofmt -d -e . | read"
+  regression-test:
+    <<: *defaults
+    docker:
+      - image: circleci/golang:1.15-node
+    steps:
+      - checkout
+      - install_shellspec
+      - build
+      - run:
+          name: Run shellspec
+          command: shellspec
   test-windows:
     <<: *defaults
     <<: *windows_defaults
     steps:
       - checkout
-      - install_shellspec
       - restore_cache:
           keys:
             - go-mod-{{ checksum "go.sum" }}
       - run:
-          name: Run shellspec
-          command: shellspec
+          name: Run sanity test
+          command: go run main.go
       - save_cache:
           key: go-mod-{{ checksum "go.sum" }}
           paths:
@@ -66,17 +87,17 @@ jobs:
     <<: *macos_defaults
     steps:
       - checkout
-      - install_shellspec
-      - restore_cache:
-          keys:
-            - go-mod-{{ checksum "go.sum" }}
       - run:
-          name: Run shellspec
-          command: shellspec
-      - save_cache:
-          key: go-mod-{{ checksum "go.sum" }}
-          paths:
-            - "/go/pkg/mod"
+          name: Run sanity test
+          command: |
+            sudo mkdir -p /usr/local/go
+            sudo chown -R $(whoami): /usr/local/go
+            curl -sSL "https://dl.google.com/go/go1.16.darwin-amd64.tar.gz" | sudo tar -xz -C /usr/local/
+            export PATH=$PATH:/usr/local/go/bin 
+
+            go version
+
+            go run main.go
   test-linux:
     <<: *defaults
     docker:
@@ -84,13 +105,12 @@ jobs:
     resource_class: small
     steps:
       - checkout
-      - install_shellspec
       - restore_cache:
           keys:
             - go-mod-{{ checksum "go.sum" }}
       - run:
-          name: Run shellspec
-          command: shellspec
+          name: Run sanity test
+          command: go run main.go
       - save_cache:
           key: go-mod-{{ checksum "go.sum" }}
           paths:
@@ -102,27 +122,28 @@ workflows:
     jobs:
       - lint_and_format:
           name: Lint & formatting
+          filters:
+            branches:
+              ignore:
+                - main
+      - regression-test:
+          name: Regression Test
+          filters:
+            branches:
+              ignore:
+                - main
       - test-windows:
           name: Windows
           requires:
             - Lint & formatting
-          filters:
-            branches:
-              ignore:
-                - main
+            - Regression Test
       - test-linux:
           name: Linux
           requires:
             - Lint & formatting
-          filters:
-            branches:
-              ignore:
-                - main
+            - Regression Test
       - test-macos:
           name: MacOS
           requires:
             - Lint & formatting
-          filters:
-            branches:
-              ignore:
-                - main
+            - Regression Test
