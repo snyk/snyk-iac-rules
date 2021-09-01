@@ -18,3 +18,7 @@ Environment preparation
 ```
 $ ./synk-iac-custom-rules
 ```
+
+### Testing
+
+From the project's root folder, run `shellspec` to run [shellspec](https://github.com/shellspec/shellspec) tests.

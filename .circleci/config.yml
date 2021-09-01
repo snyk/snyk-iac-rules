@@ -4,7 +4,7 @@ orbs:
   win: circleci/windows@2.2.0
 
 defaults: &defaults
-  working_directory: /snyk-iac-custom-rules
+  working_directory: ~/snyk-iac-custom-rules
 
 windows_defaults: &windows_defaults
   executor:
@@ -15,24 +15,64 @@ macos_defaults: &macos_defaults
   macos:
     xcode: 11.3.0
 
+commands:
+  install_shellspec:
+    description: Install Shellspec
+    steps:
+      - run: curl -fsSL https://git.io/shellspec | sh -s -- -y
+      - run: sudo ln -s ${HOME}/.local/lib/shellspec/shellspec /usr/local/bin/shellspec
+      - run: sudo apt-get install jq
 jobs:
   test-windows:
     <<: *defaults
     <<: *windows_defaults
     steps:
-      - run: echo "Tests in Windows"
+      - checkout
+      - install_shellspec
+      - restore_cache:
+          keys:
+            - go-mod-{{ checksum "go.sum" }}
+      - run:
+          name: Run shellspec
+          command: shellspec
+      - save_cache:
+          key: go-mod-{{ checksum "go.sum" }}
+          paths:
+            - "/go/pkg/mod"
   test-macos:
     <<: *defaults
     <<: *macos_defaults
     steps:
-      - run: echo "Tests in MacOS"
+      - checkout
+      - install_shellspec
+      - restore_cache:
+          keys:
+            - go-mod-{{ checksum "go.sum" }}
+      - run:
+          name: Run shellspec
+          command: shellspec
+      - save_cache:
+          key: go-mod-{{ checksum "go.sum" }}
+          paths:
+            - "/go/pkg/mod"
   test-linux:
     <<: *defaults
     docker:
       - image: circleci/golang:1.15-node
     resource_class: small
     steps:
-      - run: echo "Tests in Linux"
+      - checkout
+      - install_shellspec
+      - restore_cache:
+          keys:
+            - go-mod-{{ checksum "go.sum" }}
+      - run:
+          name: Run shellspec
+          command: shellspec
+      - save_cache:
+          key: go-mod-{{ checksum "go.sum" }}
+          paths:
+            - "/go/pkg/mod"
 
 workflows:
   version: 2
