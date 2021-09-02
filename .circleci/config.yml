@@ -4,7 +4,7 @@ orbs:
   win: circleci/windows@2.2.0
 
 defaults: &defaults
-  working_directory: /snyk-iac-custom-rules
+  working_directory: ~/snyk-iac-custom-rules
 
 windows_defaults: &windows_defaults
   executor:
@@ -15,44 +15,135 @@ macos_defaults: &macos_defaults
   macos:
     xcode: 11.3.0
 
+commands:
+  install_shellspec:
+    description: Install Shellspec
+    steps:
+      - run: curl -fsSL https://git.io/shellspec | sh -s -- -y
+      - run: sudo ln -s ${HOME}/.local/lib/shellspec/shellspec /usr/local/bin/shellspec
+      - run: sudo apt-get install jq
+  build:
+    description: Build Golang CLI
+    steps:
+      - run:
+          name: Build
+          command: go build -o synk-iac-custom-rules .
+      - persist_to_workspace:
+          root: .
+          paths:
+            - synk-iac-custom-rules
+
 jobs:
+  lint_and_format:
+    <<: *defaults
+    description: Lint & formatting
+    docker:
+      - image: golangci/golangci-lint:v1.41
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/snyk-iac-custom-rules
+      # Logs the version in our build logs, for posterity
+      - run: go version
+      - run:
+          name: "Ensure go.mod is tidy"
+          command: |
+            go mod tidy
+            git diff --exit-code go.mod go.sum
+      - run:
+          name: "Run golangci-lint"
+          command: golangci-lint run -v --timeout 10m
+      - run:
+          name: "Run gofmt"
+          command: "! gofmt -d -e . | read"
+  regression-test:
+    <<: *defaults
+    docker:
+      - image: circleci/golang:1.15-node
+    steps:
+      - checkout
+      - install_shellspec
+      - build
+      - run:
+          name: Run shellspec
+          command: shellspec
   test-windows:
     <<: *defaults
     <<: *windows_defaults
     steps:
-      - run: echo "Tests in Windows"
+      - checkout
+      - restore_cache:
+          keys:
+            - go-mod-{{ checksum "go.sum" }}
+      - run:
+          name: Run sanity test
+          command: go run main.go
+      - save_cache:
+          key: go-mod-{{ checksum "go.sum" }}
+          paths:
+            - "/go/pkg/mod"
   test-macos:
     <<: *defaults
     <<: *macos_defaults
     steps:
-      - run: echo "Tests in MacOS"
+      - checkout
+      - run:
+          name: Run sanity test
+          command: |
+            sudo mkdir -p /usr/local/go
+            sudo chown -R $(whoami): /usr/local/go
+            curl -sSL "https://dl.google.com/go/go1.16.darwin-amd64.tar.gz" | sudo tar -xz -C /usr/local/
+            export PATH=$PATH:/usr/local/go/bin 
+
+            go version
+
+            go run main.go
   test-linux:
     <<: *defaults
     docker:
       - image: circleci/golang:1.15-node
     resource_class: small
     steps:
-      - run: echo "Tests in Linux"
+      - checkout
+      - restore_cache:
+          keys:
+            - go-mod-{{ checksum "go.sum" }}
+      - run:
+          name: Run sanity test
+          command: go run main.go
+      - save_cache:
+          key: go-mod-{{ checksum "go.sum" }}
+          paths:
+            - "/go/pkg/mod"
 
 workflows:
   version: 2
   test:
     jobs:
+      - lint_and_format:
+          name: Lint & formatting
+          filters:
+            branches:
+              ignore:
+                - main
+      - regression-test:
+          name: Regression Test
+          filters:
+            branches:
+              ignore:
+                - main
       - test-windows:
           name: Windows
-          filters:
-            branches:
-              ignore:
-                - main
+          requires:
+            - Lint & formatting
+            - Regression Test
       - test-linux:
           name: Linux
-          filters:
-            branches:
-              ignore:
-                - main
+          requires:
+            - Lint & formatting
+            - Regression Test
       - test-macos:
           name: MacOS
-          filters:
-            branches:
-              ignore:
-                - main
+          requires:
+            - Lint & formatting
+            - Regression Test
