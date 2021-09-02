@@ -1,22 +1,15 @@
 package main
 
 import (
-	"log"
+	"fmt"
 	"os"
 
-	"github.com/urfave/cli/v2"
+	"github.com/snyk/snyk-iac-custom-rules/cmd"
 )
 
 func main() {
-	app := &cli.App{
-		Name:     "snyk-iac-custom-rules",
-		Usage:    "Use this SDK to write, debug, test, and bundle custom rules for the Snyk IaC CLI",
-		Commands: []*cli.Command{},
-	}
-
-	err := app.Run(os.Args)
-
-	if err != nil {
-		log.Fatal(err)
+	if err := cmd.RootCommand.Execute(); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
 	}
 }

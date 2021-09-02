@@ -67,6 +67,9 @@ jobs:
       - run:
           name: Run shellspec
           command: shellspec
+      - run:
+          name: Run Golang tests
+          command: go test
   test-windows:
     <<: *defaults
     <<: *windows_defaults
