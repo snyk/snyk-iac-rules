@@ -7,12 +7,16 @@ This is a Golang CLI that will provide flags for writing, debugging, testing, an
 
 ## Folder structure
 ```
-cmd - commands and subcommands to register with the cobra CLI  
-│   root.go - the root command which needs each subcommand to be registered to
-│
-└───internal - internal implementation of OPA related fucntionality
+
 │   
 └───builtins - rego builtins for custom functionality
+│
+└───cmd - commands and subcommands to register with the cobra CLI  
+│   root.go - the root command which needs each subcommand to be registered to
+│
+└───internal - internal implementation of OPA related functionality
+│   
+└───fixtures - test fixtures
 │   
 └───scripts - scripts for CircleCI or GitHub action
 │   

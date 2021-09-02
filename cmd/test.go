@@ -15,8 +15,7 @@ var testCommand = &cobra.Command{
 	Short: "Execute Rego test cases",
 	Long: `Execute Rego test cases.
 
-The 'test' command takes a file or directory path as input and executes all
-test cases discovered in matching files. Test cases are rules whose names have the prefix "test_".
+The 'test' command executes all test cases discovered in matching files. Test cases are rules whose names have the prefix "test_".
 `,
 	SilenceUsage: true,
 	PreRunE: func(Cmd *cobra.Command, args []string) error {
