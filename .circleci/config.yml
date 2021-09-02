@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  win: circleci/windows@2.2.0
+  win: circleci/windows@2.4.1
 
 defaults: &defaults
   working_directory: ~/snyk-iac-custom-rules
@@ -22,6 +22,37 @@ commands:
       - run: curl -fsSL https://git.io/shellspec | sh -s -- -y
       - run: sudo ln -s ${HOME}/.local/lib/shellspec/shellspec /usr/local/bin/shellspec
       - run: sudo apt-get install jq
+  install_golang:
+    description: Install Golang in Windows
+    steps:
+    - run:
+        name: Install
+        command: |
+          $downloadDir = $env:TEMP
+          $version = "1.16.1"
+          $url = 'https://storage.googleapis.com/golang/go' + $version + '.windows-amd64.zip'
+          $goroot = "C:\go$version"
+
+          echo "Downloading $url"
+          $zip = "$downloadDir\golang-$version.zip"
+          if (!(Test-Path "$zip")) {
+            $downloader = new-object System.Net.WebClient
+            $downloader.DownloadFile($url, $zip)
+          }
+
+          echo "Extracting $zip to $goroot"
+          if (Test-Path "$downloadDir\go") {
+            rm -Force -Recurse -Path "$downloadDir\go"
+          }
+          Add-Type -AssemblyName System.IO.Compression.FileSystem
+          [System.IO.Compression.ZipFile]::ExtractToDirectory("$zip", $downloadDir)
+          mv "$downloadDir\go" $goroot
+
+          echo "Setting GOROOT and PATH for Machine"
+          [System.Environment]::SetEnvironmentVariable("GOROOT", "$goroot", "Machine")
+          $p = [System.Environment]::GetEnvironmentVariable("PATH", "Machine")
+          $p = "$goroot\bin;$p"
+          [System.Environment]::SetEnvironmentVariable("PATH", "$p", "Machine")
   build:
     description: Build Golang CLI
     steps:
@@ -75,12 +106,13 @@ jobs:
     <<: *windows_defaults
     steps:
       - checkout
+      - install_golang
       - restore_cache:
           keys:
             - go-mod-{{ checksum "go.sum" }}
       - run:
           name: Run sanity test
-          command: go run main.go
+          command: go version; go run main.go
       - save_cache:
           key: go-mod-{{ checksum "go.sum" }}
           paths:
@@ -104,7 +136,7 @@ jobs:
   test-linux:
     <<: *defaults
     docker:
-      - image: circleci/golang:1.15-node
+      - image: circleci/golang:1.16-node
     resource_class: small
     steps:
       - checkout
