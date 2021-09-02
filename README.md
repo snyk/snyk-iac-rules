@@ -4,6 +4,23 @@
 
 This is a Golang CLI that will provide flags for writing, debugging, testing, and bundling a customer's custom rules for the Snyk IaC CLI.
 
+
+## Folder structure
+```
+cmd - commands and subcommands to register with the cobra CLI  
+│   root.go - the root command which needs each subcommand to be registered to
+│
+└───internal - internal implementation of OPA related fucntionality
+│   
+└───builtins - rego builtins for custom functionality
+│   
+└───scripts - scripts for CircleCI or GitHub action
+│   
+└───spec - shellspec tests
+│   
+└───util - other utility functions used throughout the code
+```
+
 ## Usage
 
 ### Running Locally
