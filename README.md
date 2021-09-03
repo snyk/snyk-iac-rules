@@ -30,7 +30,7 @@ This is a Golang CLI that will provide flags for writing, debugging, testing, an
 ### Running Locally
 
 Environment preparation
-* Install [Go](https://golang.org/doc/install)
+* Install [Go](https://golang.org/doc/install) - requires Golang v1.16 at least
 * VSCode - Extentions - [Go](https://marketplace.visualstudio.com/items?itemName=ms-vscode.Go), [Open Policy Agent](https://marketplace.visualstudio.com/items?itemName=tsandall.opa)
 * Install [golangci-lint](https://github.com/golangci/golangci-lint)
 
