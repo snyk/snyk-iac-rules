@@ -21,4 +21,7 @@ func Test(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Contains(t, string(out), "An SDK to write, debug, test, and bundle custom rules for Snyk IaC.")
+	assert.Contains(t, string(out), "Usage")
+	assert.Contains(t, string(out), "Available Commands:")
+	assert.Contains(t, string(out), "Flags:")
 }
