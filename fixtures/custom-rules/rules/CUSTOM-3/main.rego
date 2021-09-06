@@ -2,19 +2,33 @@ package rules
 
 import data.lib
 
-cidr_block_contains_all_networking(cidr_blocks) {
-	contains(cidr_blocks[_], "0.0.0.0/0")
+is_kind(kind) {
+	input.kind == kind
 }
 
-cidr_block_contains_all_networking(cidr_blocks) {
-	contains(cidr_blocks[_], "::/0")
+services[service] {
+	is_kind("Service")
+	service = input
+}
+
+is_clusterIP_service_type(service) {
+	not lib.has_field(service.spec, "type")
+} else {
+	service.spec.type == "ClusterIP"
+}
+
+service_has_externalIPs(service) {
+	lib.has_field(service.spec, "externalIPs")
+	externalIPs := service.spec.externalIPs
+	not is_null(externalIPs)
+	count(externalIPs) > 0
 }
 
 deny[msg] {
-	resource := input.resource.aws_security_group[name]
-	ingres_rules := lib.normalize_to_array(resource.ingress)
-	rule := ingres_rules[i]
-	cidr_block_contains_all_networking(rule.cidr_blocks)
+	is_kind("Service")
+	services[service]
+	is_clusterIP_service_type(service)
+	service_has_externalIPs(service)
 
 	msg := {
 		"publicId": "CUSTOM-3",
@@ -24,7 +38,7 @@ deny[msg] {
 		"issue": "",
 		"impact": "",
 		"remediation": "",
-		"msg": sprintf("input.resource.aws_security_group[%v].ingress[%v]", [name, i]),
+		"msg": sprintf("spec.externalIPs", []),
 		"references": [],
 	}
 }

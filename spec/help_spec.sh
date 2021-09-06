@@ -12,6 +12,7 @@ Available Commands:
   build       Build an OPA WASM bundle
   completion  generate the autocompletion script for the specified shell
   help        Help about any command
+  parse       Parse a fixture into JSON format
   test        Execute Rego test cases
 
 Flags:
