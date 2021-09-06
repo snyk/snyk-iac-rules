@@ -10,6 +10,10 @@ import (
 	"github.com/snyk/snyk-iac-custom-rules/util"
 )
 
+var TestIgnore = []string{
+	".*",
+}
+
 var testCommand = &cobra.Command{
 	Use:   "test <path>",
 	Short: "Execute Rego test cases",
