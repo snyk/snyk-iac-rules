@@ -90,7 +90,7 @@ jobs:
   regression-test:
     <<: *defaults
     docker:
-      - image: circleci/golang:1.15-node
+      - image: circleci/golang:1.16-node
     steps:
       - checkout
       - install_shellspec
