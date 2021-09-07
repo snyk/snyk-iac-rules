@@ -13,6 +13,7 @@ Available Commands:
   completion  generate the autocompletion script for the specified shell
   help        Help about any command
   parse       Parse a fixture into JSON format
+  template    Template a new rule
   test        Execute Rego test cases
 
 Flags:
