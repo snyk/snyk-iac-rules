@@ -1,15 +1,7 @@
 version: 2.1
 
-orbs:
-  win: circleci/windows@2.4.1
-
 defaults: &defaults
   working_directory: ~/snyk-iac-custom-rules
-
-windows_defaults: &windows_defaults
-  executor:
-    name: win/default
-    shell: powershell.exe
 
 macos_defaults: &macos_defaults
   macos:
@@ -22,47 +14,16 @@ commands:
       - run: curl -fsSL https://git.io/shellspec | sh -s -- -y
       - run: sudo ln -s ${HOME}/.local/lib/shellspec/shellspec /usr/local/bin/shellspec
       - run: sudo apt-get install jq
-  install_golang:
-    description: Install Golang in Windows
-    steps:
-    - run:
-        name: Install
-        command: |
-          $downloadDir = $env:TEMP
-          $version = "1.16.1"
-          $url = 'https://storage.googleapis.com/golang/go' + $version + '.windows-amd64.zip'
-          $goroot = "C:\go$version"
-
-          echo "Downloading $url"
-          $zip = "$downloadDir\golang-$version.zip"
-          if (!(Test-Path "$zip")) {
-            $downloader = new-object System.Net.WebClient
-            $downloader.DownloadFile($url, $zip)
-          }
-
-          echo "Extracting $zip to $goroot"
-          if (Test-Path "$downloadDir\go") {
-            rm -Force -Recurse -Path "$downloadDir\go"
-          }
-          Add-Type -AssemblyName System.IO.Compression.FileSystem
-          [System.IO.Compression.ZipFile]::ExtractToDirectory("$zip", $downloadDir)
-          mv "$downloadDir\go" $goroot
-
-          echo "Setting GOROOT and PATH for Machine"
-          [System.Environment]::SetEnvironmentVariable("GOROOT", "$goroot", "Machine")
-          $p = [System.Environment]::GetEnvironmentVariable("PATH", "Machine")
-          $p = "$goroot\bin;$p"
-          [System.Environment]::SetEnvironmentVariable("PATH", "$p", "Machine")
   build:
     description: Build Golang CLI
     steps:
       - run:
           name: Build
-          command: go build -o synk-iac-custom-rules .
+          command: go build -o snyk-iac-custom-rules .
       - persist_to_workspace:
-          root: .
+          root: ./ # relative to the working directory
           paths:
-            - synk-iac-custom-rules
+            - snyk-iac-custom-rules # the file we want to store
 
 jobs:
   lint_and_format:
@@ -101,55 +62,6 @@ jobs:
       - run:
           name: Run Golang tests
           command: go test
-  test-windows:
-    <<: *defaults
-    <<: *windows_defaults
-    steps:
-      - checkout
-      - install_golang
-      - restore_cache:
-          keys:
-            - go-mod-{{ checksum "go.sum" }}
-      - run:
-          name: Run sanity test
-          command: go version; go run main.go
-      - save_cache:
-          key: go-mod-{{ checksum "go.sum" }}
-          paths:
-            - "/go/pkg/mod"
-  test-macos:
-    <<: *defaults
-    <<: *macos_defaults
-    steps:
-      - checkout
-      - run:
-          name: Run sanity test
-          command: |
-            sudo mkdir -p /usr/local/go
-            sudo chown -R $(whoami): /usr/local/go
-            curl -sSL "https://dl.google.com/go/go1.16.darwin-amd64.tar.gz" | sudo tar -xz -C /usr/local/
-            export PATH=$PATH:/usr/local/go/bin 
-
-            go version
-
-            go run main.go
-  test-linux:
-    <<: *defaults
-    docker:
-      - image: circleci/golang:1.16-node
-    resource_class: small
-    steps:
-      - checkout
-      - restore_cache:
-          keys:
-            - go-mod-{{ checksum "go.sum" }}
-      - run:
-          name: Run sanity test
-          command: go run main.go
-      - save_cache:
-          key: go-mod-{{ checksum "go.sum" }}
-          paths:
-            - "/go/pkg/mod"
 
 workflows:
   version: 2
@@ -167,18 +79,3 @@ workflows:
             branches:
               ignore:
                 - main
-      - test-windows:
-          name: Windows
-          requires:
-            - Lint & formatting
-            - Regression Test
-      - test-linux:
-          name: Linux
-          requires:
-            - Lint & formatting
-            - Regression Test
-      - test-macos:
-          name: MacOS
-          requires:
-            - Lint & formatting
-            - Regression Test

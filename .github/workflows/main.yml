@@ -2,6 +2,9 @@ name: Shellspec Tests
 
 on:
   push:
+    branches:
+      - '*'
+      - '!main'
 
 jobs:
   smoke_test:
