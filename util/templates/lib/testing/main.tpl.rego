@@ -1,23 +1,50 @@
-package lib
+package lib.testing
 
-has_field(obj, field) {
-	_ := obj[field]
+import data.lib
+
+assert_response_set(result_set, test_case) {
+	total_violations := {res |
+		result := result_set[index]
+		result.publicId == test_case.publicId
+		trace(sprintf("[%s][%d] Issue msg : %s", [test_case.publicId, test_case.index, result.msg]))
+		res := index
+	}
+
+	trace(sprintf("[%s][%s] Number of issues identified: want %d, got %d", [test_case.publicId, test_case.fixture, count(test_case.want_msgs), count(total_violations)]))
+	count(total_violations) == count(test_case.want_msgs)
+
+	violation_match := {res |
+		result := total_violations[index]
+		result.msg == test_case.want_msgs[_]
+		trace(sprintf("[%s][%d] Violation msg : %s", [test_case.publicId, test_case.index, result.msg]))
+		res := index
+	}
+
+	trace(sprintf("[%s][%s] Number of issues with correct `msg` value: want %d, got %d", [test_case.publicId, test_case.fixture, count(test_case.want_msgs), count(violation_match)]))
+	count(violation_match) == count(test_case.want_msgs)
+	trace(sprintf("[%s] Fixture %d passed", [test_case.publicId, test_case.index]))
+} else = false {
+	true
 }
 
-normalize_to_array(resource) = out_array {
-	is_array(resource)
-	out_array = resource
-} else = out_array {
-	out_array = [resource]
+parse_fixture_file(fixture_file) = fixture {
+	fixture := lib.normalize_to_array(yaml.unmarshal_file(fixture_file))
 }
 
-pick(k, obj1, _) = obj1[k]
-
-pick(k, obj1, obj2) = obj2[k] {
-	not has_field(obj1, k)
+get_result_set(fixture) = result_set {
+	result_set := data.rules.deny with input as fixture
 }
 
-merge_objects(a, b) = c {
-	keys := {k | some k; _ = a[k]} | {k | some k; _ = b[k]}
-	c := {k: v | k := keys[_]; v := pick(k, b, a)}
+evaluate_test_cases(publicId, test_cases) {
+	passed_tests := {res |
+		tc := lib.merge_objects(test_cases[index], {"publicId": publicId, "index": index})
+		result_set := get_result_set(tc.fixture)
+		assert_response_set(result_set, tc)
+		res := index
+	}
+
+	trace(sprintf("[%s] Number of test cases passed: want %d, got %d", [publicId, count(test_cases), count(passed_tests)]))
+	count(passed_tests) == count(test_cases)
+} else = false {
+	true
 }
