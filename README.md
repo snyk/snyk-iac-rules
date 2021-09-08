@@ -43,6 +43,7 @@ $ ./snyk-iac-custom-rules
 
 ### Testing
 
+Make sure to build the Golang binary first by running `go build -o snyk-iac-custom-rules .`.
 From the project's root folder, run `shellspec` to run [shellspec](https://github.com/shellspec/shellspec) tests.
 
 ### Formatting & Linting
