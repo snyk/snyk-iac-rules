@@ -1,6 +1,6 @@
 # Snyk IaC Custom Rules
 
-[![CircleCI](https://circleci.com/gh/snyk/snyk-iac-custom-rules/tree/develop.svg?style=svg)](https://circleci.com/gh/snyk/snyk-iac-custom-rules/tree/develop)
+[![CircleCI](https://circleci.com/gh/snyk/snyk-iac-custom-rules/tree/develop.svg?style=svg&circle-token=5597b9f0189554f754f38400cbe9d8f8b334c72a)](https://circleci.com/gh/snyk/snyk-iac-custom-rules/tree/develop) [![Shellspec Tests](https://github.com/snyk/snyk-iac-custom-rules/actions/workflows/main.yml/badge.svg)](https://github.com/snyk/snyk-iac-custom-rules/actions/workflows/main.yml)
 
 This is a Golang CLI that will provide flags for writing, debugging, testing, and bundling a customer's custom rules for the Snyk IaC CLI.
 
