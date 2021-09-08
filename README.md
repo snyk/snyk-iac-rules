@@ -35,10 +35,10 @@ Environment preparation
 * Install [golangci-lint](https://github.com/golangci/golangci-lint)
 
 1. Clone the repository
-2. Build and run the binary: `go build -o synk-iac-custom-rules .`. Or, alternatively, `go run main.go`.
+2. Build and run the binary: `go build -o snyk-iac-custom-rules .`. Or, alternatively, `go run main.go {command}`.
 3. Run the command:
 ```
-$ ./synk-iac-custom-rules
+$ ./snyk-iac-custom-rules
 ```
 
 ### Testing
