@@ -1,7 +1,7 @@
 #!/bin/bash
-Describe 'go run main.go'
+Describe './snyk-iac-custom-rules'
    It 'returns help info'
-      When call go run main.go
+      When call ./snyk-iac-custom-rules
       The status should be success
       The output should include 'An SDK to write, debug, test, and bundle custom rules for Snyk IaC.
 
