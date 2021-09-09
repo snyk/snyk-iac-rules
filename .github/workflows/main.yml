@@ -3,8 +3,8 @@ name: Shellspec Tests
 on:
   push:
     branches:
-      - '*'
-      - '!main'
+      - '**'        # matches every branch
+      - '!main'     # excludes main
 
 jobs:
   smoke_test:
@@ -22,7 +22,7 @@ jobs:
           go-version: '1.16.7'
 
       - name: Build Golang CLI
-        run: go build -o synk-iac-custom-rules .
+        run: go build -o snyk-iac-custom-rules .
 
       - name: Install Shellspec - non-windows
         if: ${{ matrix.os != 'windows' }}
