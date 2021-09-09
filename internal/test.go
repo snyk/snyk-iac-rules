@@ -21,10 +21,11 @@ const (
 )
 
 type TestCommandParams struct {
-	Verbose bool
-	Explain util.EnumFlag
-	Timeout time.Duration
-	Ignore  []string
+	Verbose  bool
+	Explain  util.EnumFlag
+	Timeout  time.Duration
+	Ignore   []string
+	RunRegex string
 }
 
 func RunTest(args []string, params *TestCommandParams) error {
@@ -62,7 +63,7 @@ func RunTest(args []string, params *TestCommandParams) error {
 		SetRuntime(info).
 		SetModules(modules).
 		SetTimeout(params.Timeout).
-		Filter("").
+		Filter(params.RunRegex).
 		Target(compile.TargetRego)
 
 	reporter := tester.PrettyReporter{
