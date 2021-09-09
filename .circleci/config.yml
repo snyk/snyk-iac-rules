@@ -3,10 +3,6 @@ version: 2.1
 defaults: &defaults
   working_directory: ~/snyk-iac-custom-rules
 
-macos_defaults: &macos_defaults
-  macos:
-    xcode: 11.3.0
-
 commands:
   install_shellspec:
     description: Install Shellspec
@@ -73,9 +69,11 @@ workflows:
             branches:
               ignore:
                 - main
+                - develop
       - regression-test:
           name: Regression Test
           filters:
             branches:
               ignore:
                 - main
+                - develop
