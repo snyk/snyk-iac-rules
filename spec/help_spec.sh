@@ -10,7 +10,6 @@ Usage:
 
 Available Commands:
   build       Build an OPA WASM bundle
-  completion  generate the autocompletion script for the specified shell
   help        Help about any command
   parse       Parse a fixture into JSON format
   template    Template a new rule
