@@ -6,10 +6,10 @@
 
 This repo is written in the [Go](https://golang.org) programming language, which can be installed from their [installation page](https://golang.org/doc/install). The version it was developed with was v1.16, which is the minimum required version for this SDK.
 
-## Shellspec
+### Shellspec
 The SDK developed in this repo is tested by [shellspec](https://github.com/shellspec/shellspec), which can be installed as documented in [their README](https://github.com/shellspec/shellspec#installation).
 
-## Golangci-lint
+### Golangci-lint
 The SDK is linted by [golangci-lint](https://github.com/golangci/golangci-lint), which can be installed as documented in their [local installation page](https://golangci-lint.run/usage/install/#local-installation).
 
 ## How to add a new command
@@ -82,4 +82,19 @@ Describe './snyk-iac-custom-rules <command>'
       The output should include ''
    End
 End
-```
+```  
+
+### How to run the tests
+
+Make sure to build the Golang binary first by following the instructions above.
+From the project's root folder, run `shellspec` to run [shellspec](https://github.com/shellspec/shellspec) tests. These tests cover the end-to-end behaviour of the SDK, whereas more complex behaviour checks are covered by the Golang unit tests.
+
+Alternatively, you can run `go test ./...` for Golang unit tests. These test the files under `./internal` and `./util` and make sure complex behaviour is maintained between code changes.
+
+For test coverage, run `go test -coverprofile cover.out fmt ./...` and then `go tool cover -html=cover.out` to see what is missing.
+
+### How to lint the code
+
+To format all files in the current directory and subdirectories, run `go fmt ./...` from the root directory.
+
+To run the linter, run `golangci-lint run -v --timeout 10m` from the root directory.

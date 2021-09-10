@@ -9,6 +9,8 @@ import (
 	hcl2jsonConverter "github.com/tmccombs/hcl2json/convert"
 )
 
+// TODO: move these to an exportable Golang package so we can use them in multiple places
+
 func ParseHCL2(p []byte, v interface{}) error {
 	jsonBytes, err := hcl2jsonConverter.Bytes(p, "", hcl2jsonConverter.Options{})
 	if err != nil {

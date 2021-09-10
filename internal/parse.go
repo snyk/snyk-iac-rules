@@ -14,6 +14,10 @@ const (
 	YAML = "yaml"
 )
 
+var readFile = ioutil.ReadFile
+var parseYAML = util.ParseYAML
+var parseHCL2 = util.ParseHCL2
+
 type ParseCommandParams struct {
 	Format util.EnumFlag
 }
@@ -21,7 +25,7 @@ type ParseCommandParams struct {
 func RunParse(args []string, params *ParseCommandParams) error {
 	filePath := args[0]
 
-	content, err := ioutil.ReadFile(filePath)
+	content, err := readFile(filePath)
 	if err != nil {
 		return err
 	}
@@ -29,12 +33,12 @@ func RunParse(args []string, params *ParseCommandParams) error {
 	var parsedInput interface{}
 	switch params.Format.String() {
 	case YAML:
-		if err := util.ParseYAML(content, &parsedInput); err != nil {
+		if err := parseYAML(content, &parsedInput); err != nil {
 			return err
 		}
 	default:
 		// HCL2 is the only other option here
-		if err := util.ParseHCL2(content, &parsedInput); err != nil {
+		if err := parseHCL2(content, &parsedInput); err != nil {
 			return err
 		}
 	}
