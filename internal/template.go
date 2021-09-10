@@ -3,8 +3,6 @@ package internal
 import (
 	"errors"
 	"fmt"
-	"os"
-	"path"
 	"strings"
 
 	"github.com/snyk/snyk-iac-custom-rules/util"
@@ -15,17 +13,13 @@ type TemplateCommandParams struct {
 }
 
 func RunTemplate(args []string, params *TemplateCommandParams) error {
-	currentDirectory, err := os.Getwd()
-	if err != nil {
-		return err
-	}
-	workingDirectory := path.Join(currentDirectory, args[0])
+	workingDirectory := args[0]
 
 	templating := util.Templating{
 		RuleName: params.Rule,
 		Replace:  strings.ReplaceAll,
 	}
-	err = templateRule(workingDirectory, templating)
+	err := templateRule(workingDirectory, templating)
 	if err != nil {
 		return err
 	}
