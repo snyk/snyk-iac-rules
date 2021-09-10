@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"os"
 
@@ -20,6 +21,12 @@ var buildCommand = &cobra.Command{
 The 'build' command packages OPA policy and data files into gzipped tarballs containing policies and data written as WASM.
 `,
 	SilenceUsage: true,
+	Args: func(cmd *cobra.Command, args []string) error {
+		if len(args) > 1 {
+			return errors.New("Too many paths provided")
+		}
+		return nil
+	},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		fmt.Println("Building OPA WASM bundle...")
 		if len(args) == 0 {
