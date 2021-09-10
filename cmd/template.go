@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path"
+	"strings"
 
 	"github.com/spf13/cobra"
 
@@ -20,6 +21,18 @@ The 'template' command generates some templating code for writing new rules.
 	SilenceUsage: true,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		fmt.Println("Templating rule...")
+
+		// make sure rule name doesn't have any whitespace in it
+		if strings.Contains(templateParams.Rule, " ") {
+			return fmt.Errorf("Rule name cannot contain whitespace")
+		}
+
+		// make sure rule name doesn't belong to Snyk namesapce
+		if strings.HasPrefix(templateParams.Rule, "SNYK-") {
+			return fmt.Errorf("Rule name cannot start with \"SNYK-\"")
+		}
+
+		// prepare directory for templating
 		currentDirectory, err := os.Getwd()
 		if err != nil {
 			return err
@@ -29,10 +42,12 @@ The 'template' command generates some templating code for writing new rules.
 		} else {
 			args = []string{path.Join(currentDirectory, args[0])}
 		}
+
 		err = internal.RunTemplate(args, templateParams)
 		if err != nil {
 			return err
 		}
+
 		fmt.Println("Generated template")
 		return nil
 	},

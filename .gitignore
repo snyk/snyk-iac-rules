@@ -2,3 +2,4 @@ snyk-iac-custom-rules
 .DS_Store
 bundle.tar.gz
 dist/
+cover.out
