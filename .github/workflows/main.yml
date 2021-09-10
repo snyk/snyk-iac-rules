@@ -1,0 +1,70 @@
+name: Shellspec Tests
+
+on:
+  push:
+    branches:
+      - '**'        # matches every branch
+      - '!main'     # excludes main
+
+jobs:
+  smoke_test:
+    # The type of runner that the job will run on
+    runs-on: ${{ matrix.os }}-latest
+    strategy:
+      fail-fast: false # we care about other platforms and channels building
+      matrix:
+        os: [ubuntu, macos, windows]
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-go@v2
+        with:
+          go-version: '1.16.7'
+
+      - name: Build Golang CLI
+        run: go build -o snyk-iac-custom-rules .
+
+      - name: Install Shellspec - non-windows
+        if: ${{ matrix.os != 'windows' }}
+        run: |
+          curl -fsSL https://git.io/shellspec | sh -s -- -y
+          sudo ln -s ${HOME}/.local/lib/shellspec/shellspec /usr/local/bin/shellspec
+          ls -la ${HOME}/.local/lib/shellspec
+          echo "shellspec symlink:"
+          ls -la /usr/local/bin/shellspec
+          /usr/local/bin/shellspec --version
+          which shellspec
+          shellspec --version
+
+      - name: Install Shellspec - Windows
+        shell: powershell
+        if: ${{ matrix.os == 'windows' }}
+        run: |
+          Get-Host | Select-Object Version
+          Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux
+          sh ./scripts/install-shellspec-win.sh
+
+      - name: Run shellspec tests - Ubuntu
+        if: ${{ matrix.os == 'ubuntu'}}
+        working-directory: ./
+        shell: bash -l {0} # run bash with --login flag to load .bash_profile that's used by yarn install method
+        run: |
+          export PATH="/usr/local/bin/snyk-mac/docker:$PATH"
+
+          shellspec
+
+      - name: Run shellspec tests - MacOS
+        if: ${{ matrix.os == 'macos'}}
+        working-directory: ./
+        shell: bash -l {0} # run bash with --login flag to load .bash_profile that's used by yarn install method
+        run: |
+          export PATH=${GOROOT}/bin:$PATH
+
+          shellspec
+
+      - name: Run shellspec tests - Windows
+        if: ${{ matrix.os == 'windows' }}
+        working-directory: ./
+        shell: powershell
+        run: |
+          sh ./scripts/run-shellspec-win.sh
