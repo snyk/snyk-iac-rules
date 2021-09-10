@@ -2,6 +2,8 @@ package cmd
 
 import (
 	"fmt"
+	"os"
+	"path"
 
 	"github.com/spf13/cobra"
 
@@ -16,13 +18,18 @@ var templateCommand = &cobra.Command{
 The 'template' command generates some templating code for writing new rules.
 `,
 	SilenceUsage: true,
-
 	RunE: func(cmd *cobra.Command, args []string) error {
 		fmt.Println("Templating rule...")
-		if len(args) == 0 {
-			args = append(args, "./")
+		currentDirectory, err := os.Getwd()
+		if err != nil {
+			return err
 		}
-		err := internal.RunTemplate(args, templateParams)
+		if len(args) == 0 {
+			args = append(args, currentDirectory)
+		} else {
+			args = []string{path.Join(currentDirectory, args[0])}
+		}
+		err = internal.RunTemplate(args, templateParams)
 		if err != nil {
 			return err
 		}
