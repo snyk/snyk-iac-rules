@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 	"time"
 
 	"github.com/spf13/cobra"
@@ -33,7 +34,11 @@ The 'test' command executes all test cases discovered in matching files. Test ca
 	RunE: func(cmd *cobra.Command, args []string) error {
 		fmt.Println("Executing Rego test cases...")
 		if len(args) == 0 {
-			args = append(args, "./")
+			currentDirectory, err := os.Getwd()
+			if err != nil {
+				return err
+			}
+			args = append(args, currentDirectory)
 		}
 		return internal.RunTest(args, testParams)
 	},

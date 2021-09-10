@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/spf13/cobra"
 
@@ -22,7 +23,11 @@ The 'build' command packages OPA policy and data files into gzipped tarballs con
 	RunE: func(cmd *cobra.Command, args []string) error {
 		fmt.Println("Building OPA WASM bundle...")
 		if len(args) == 0 {
-			args = append(args, "./")
+			currentDirectory, err := os.Getwd()
+			if err != nil {
+				return err
+			}
+			args = append(args, currentDirectory)
 		}
 		err := internal.RunBuild(args, buildParams)
 		if err != nil {
