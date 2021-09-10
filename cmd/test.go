@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"time"
@@ -23,6 +24,12 @@ var testCommand = &cobra.Command{
 The 'test' command executes all test cases discovered in matching files. Test cases are rules whose names have the prefix "test_".
 `,
 	SilenceUsage: true,
+	Args: func(cmd *cobra.Command, args []string) error {
+		if len(args) > 1 {
+			return errors.New("Too many paths provided")
+		}
+		return nil
+	},
 	PreRunE: func(Cmd *cobra.Command, args []string) error {
 		// If an --explain flag was set, turn on verbose output
 		if testParams.Explain.IsSet() {

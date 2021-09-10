@@ -19,7 +19,10 @@ The 'parse' command takes the path to a fixture and returns the JSON format that
 	SilenceUsage: true,
 	Args: func(cmd *cobra.Command, args []string) error {
 		if len(args) < 1 {
-			return errors.New("expected a path to be provided via the command")
+			return errors.New("Expected a path to be provided via the command")
+		}
+		if len(args) > 1 {
+			return errors.New("Too many paths provided")
 		}
 		return nil
 	},
