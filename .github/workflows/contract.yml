@@ -1,4 +1,4 @@
-name: E2E Tests
+name: Contract Tests
 
 on:
   push:
@@ -16,6 +16,17 @@ jobs:
         os: [ubuntu, macos, windows]
     steps:
       - uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 15
+
+      - name: Install Snyk with npm
+        run: |
+          echo "node_version: ${{ matrix.node_version }}"
+          node -v
+          echo "install snyk with npm"
+          npm install -g snyk
 
       - uses: actions/setup-go@v2
         with:
@@ -51,7 +62,9 @@ jobs:
         run: |
           export PATH="/usr/local/bin/snyk-mac/docker:$PATH"
 
-          shellspec "spec/e2e"
+          shellspec "spec/contract"
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
       - name: Run shellspec tests - MacOS
         if: ${{ matrix.os == 'macos'}}
@@ -60,11 +73,15 @@ jobs:
         run: |
           export PATH=${GOROOT}/bin:$PATH
 
-          shellspec "spec/e2e"
+          shellspec "spec/contract"
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
       - name: Run shellspec tests - Windows
         if: ${{ matrix.os == 'windows' }}
         working-directory: ./
         shell: powershell
         run: |
-          sh ./scripts/run-e2e-win.sh
+          sh ./scripts/run-contract-win.sh
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}

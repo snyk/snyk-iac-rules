@@ -54,7 +54,7 @@ jobs:
       - build
       - run:
           name: Run shellspec
-          command: shellspec
+          command: shellspec "spec/e2e"
       - run:
           name: Run Golang tests
           command: go test ./...
