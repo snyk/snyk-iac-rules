@@ -26,7 +26,7 @@ This is a Golang SDK that will provide flags for writing, debugging, testing, an
 
 ## Usage
 
-* See [DEVELOPMENT.md](DEVELOPMENT.md) for how to setup the environment and add a new command.
+* See [DEVELOPMENT.md](DEVELOPMENT.md) for how to setup the environment, add a new command, and run the tests.
 * See [RELEASE.md](RELEASE.md) for how to release a new version of the SDK.
 
 ### Running Locally
@@ -37,14 +37,3 @@ This is a Golang SDK that will provide flags for writing, debugging, testing, an
 ```
 $ ./snyk-iac-custom-rules {command}
 ```
-
-### Testing
-
-Make sure to build the Golang binary first by following the instructions above.
-From the project's root folder, run `shellspec` to run [shellspec](https://github.com/shellspec/shellspec) tests.
-
-### Formatting & Linting
-
-To format all files in the current directory and subdirectories, run `go fmt ./...` from the root directory.
-
-To run the linter, run `golangci-lint run -v --timeout 10m` from the root directory.

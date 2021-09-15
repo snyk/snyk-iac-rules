@@ -12,6 +12,9 @@ type TemplateCommandParams struct {
 	Rule string
 }
 
+var createDirectory = util.CreateDirectory
+var templateFile = util.TemplateFile
+
 func RunTemplate(args []string, params *TemplateCommandParams) error {
 	workingDirectory := args[0]
 
@@ -28,13 +31,13 @@ func RunTemplate(args []string, params *TemplateCommandParams) error {
 }
 
 func templateRule(workingDirectory string, templating util.Templating) error {
-	rulesDir, err := util.CreateDirectory(workingDirectory, "rules", false)
+	rulesDir, err := createDirectory(workingDirectory, "rules", false)
 	if err != nil {
 		return err
 	}
 	fmt.Printf("Templated directory %s\n", rulesDir)
 
-	ruleDir, err := util.CreateDirectory(rulesDir, templating.RuleName, true)
+	ruleDir, err := createDirectory(rulesDir, templating.RuleName, true)
 	if err != nil {
 		if strings.Contains(err.Error(), "Directory already exists") {
 			return errors.New("Rule with the provided name already exists")
@@ -43,12 +46,12 @@ func templateRule(workingDirectory string, templating util.Templating) error {
 	}
 	fmt.Printf("Templated directory %s\n", ruleDir)
 
-	err = util.TemplateFile(ruleDir, "main.rego", "templates/main.tpl.rego", templating)
+	err = templateFile(ruleDir, "main.rego", "templates/main.tpl.rego", templating)
 	if err != nil {
 		return err
 	}
 
-	err = util.TemplateFile(ruleDir, "main_test.rego", "templates/main_test.tpl.rego", templating)
+	err = templateFile(ruleDir, "main_test.rego", "templates/main_test.tpl.rego", templating)
 	if err != nil {
 		return err
 	}
@@ -57,7 +60,7 @@ func templateRule(workingDirectory string, templating util.Templating) error {
 }
 
 func templateLib(workingDirectory string, templating util.Templating) error {
-	libDir, err := util.CreateDirectory(workingDirectory, "lib", true)
+	libDir, err := createDirectory(workingDirectory, "lib", true)
 	if err != nil {
 		if strings.Contains(err.Error(), "Directory already exists at") {
 			return nil
@@ -66,12 +69,12 @@ func templateLib(workingDirectory string, templating util.Templating) error {
 	}
 	fmt.Printf("Templated directory %s\n", libDir)
 
-	err = util.TemplateFile(libDir, "main.rego", "templates/lib/main.tpl.rego", templating)
+	err = templateFile(libDir, "main.rego", "templates/lib/main.tpl.rego", templating)
 	if err != nil {
 		return err
 	}
 
-	testingDir, err := util.CreateDirectory(libDir, "testing", true)
+	testingDir, err := createDirectory(libDir, "testing", true)
 	if err != nil {
 		if strings.Contains(err.Error(), "Directory already exists at") {
 			return nil
@@ -80,7 +83,7 @@ func templateLib(workingDirectory string, templating util.Templating) error {
 	}
 	fmt.Printf("Templated directory %s\n", testingDir)
 
-	err = util.TemplateFile(testingDir, "main.rego", "templates/lib/testing/main.tpl.rego", templating)
+	err = templateFile(testingDir, "main.rego", "templates/lib/testing/main.tpl.rego", templating)
 	if err != nil {
 		return err
 	}
