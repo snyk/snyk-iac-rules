@@ -65,6 +65,14 @@ var files = []struct {
 }
 
 func TestTemplateInEmptyDirectory(t *testing.T) {
+	oldStartProgress := startProgress
+	defer func() {
+		startProgress = oldStartProgress
+	}()
+	startProgress = func(progressName string, progress util.ProgressFunc) error {
+		return progress()
+	}
+
 	directoriesIndex := 0
 	oldCreateDirectory := createDirectory
 	defer func() {
@@ -105,6 +113,14 @@ func TestTemplateInEmptyDirectory(t *testing.T) {
 }
 
 func TestTemplateInDirectoryWithLib(t *testing.T) {
+	oldStartProgress := startProgress
+	defer func() {
+		startProgress = oldStartProgress
+	}()
+	startProgress = func(progressName string, progress util.ProgressFunc) error {
+		return progress()
+	}
+
 	directoriesIndex := 0
 	oldCreateDirectory := createDirectory
 	defer func() {
@@ -148,6 +164,14 @@ func TestTemplateInDirectoryWithLib(t *testing.T) {
 }
 
 func TestTemplateInDirectoryWithTesting(t *testing.T) {
+	oldStartProgress := startProgress
+	defer func() {
+		startProgress = oldStartProgress
+	}()
+	startProgress = func(progressName string, progress util.ProgressFunc) error {
+		return progress()
+	}
+
 	directoriesIndex := 0
 	oldCreateDirectory := createDirectory
 	defer func() {
@@ -191,6 +215,14 @@ func TestTemplateInDirectoryWithTesting(t *testing.T) {
 }
 
 func TestTemplateWithExistingRule(t *testing.T) {
+	oldStartProgress := startProgress
+	defer func() {
+		startProgress = oldStartProgress
+	}()
+	startProgress = func(progressName string, progress util.ProgressFunc) error {
+		return progress()
+	}
+
 	directoriesIndex := 0
 	oldCreateDirectory := createDirectory
 	defer func() {
