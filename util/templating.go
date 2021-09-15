@@ -2,7 +2,6 @@ package util
 
 import (
 	"embed"
-	"fmt"
 	"io"
 	"io/fs"
 	"os"
@@ -33,7 +32,6 @@ func TemplateFile(workingDirectory string, fileName string, template string, tem
 	if err != nil {
 		return err
 	}
-	fmt.Printf("Templated file %s\n", filePath)
 	return nil
 }
 

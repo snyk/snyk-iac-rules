@@ -49,7 +49,7 @@ $ snyk-iac-rules test --help
 		}
 		return nil
 	},
-	RunE: func(cmd *cobra.Command, args []string) error {
+	PreRunE: func(cmd *cobra.Command, args []string) error {
 		// make sure rule name doesn't have any whitespace in it
 		if strings.Contains(templateParams.Rule, " ") {
 			return fmt.Errorf("Rule name cannot contain whitespace")
@@ -59,7 +59,9 @@ $ snyk-iac-rules test --help
 		if strings.HasPrefix(templateParams.Rule, "SNYK-") {
 			return fmt.Errorf("Rule name cannot start with \"SNYK-\"")
 		}
-
+		return nil
+	},
+	RunE: func(cmd *cobra.Command, args []string) error {
 		// prepare directory for templating
 		currentDirectory, err := os.Getwd()
 		if err != nil {

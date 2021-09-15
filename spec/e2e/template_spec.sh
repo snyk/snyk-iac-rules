@@ -7,14 +7,11 @@ Describe './snyk-iac-rules template ./fixtures/custom-rules --rule test'
    It 'returns passing test status'
       When call ./snyk-iac-rules template ./fixtures/custom-rules --rule test
       The status should be success
-      The output should include 'Templated directory'
-      The output should include '/fixtures/custom-rules/rules'
-      The output should include 'Templated directory'
-      The output should include '/fixtures/custom-rules/rules/test'
-      The output should include 'Templated file'
-      The output should include '/fixtures/custom-rules/rules/test/main.rego'
-      The output should include 'Templated file'
-      The output should include '/fixtures/custom-rules/rules/test/main_test.rego'
+      The stderr should include 'Template rules directory'
+      The stderr should include 'Template rules/test directory'
+      The stderr should include 'Template rules/test/main.rego file'
+      The stderr should include 'Template rules/test/main_test.rego file'
+      The output should include 'Generated template'
    End
 End
 
