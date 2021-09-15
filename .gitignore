@@ -3,3 +3,4 @@ snyk-iac-custom-rules
 bundle.tar.gz
 dist/
 cover.out
+tmp/

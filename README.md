@@ -20,6 +20,9 @@ This is a Golang SDK that will provide flags for writing, debugging, testing, an
 └───scripts - scripts for CircleCI or GitHub action
 │   
 └───spec - shellspec tests
+│   └─── e2e - shellspec end-to-end tests
+|   |
+│   └─── contract - shellspec contract tests
 │   
 └───util - other utility functions used throughout the code
 ```

@@ -86,12 +86,18 @@ End
 
 ### How to run the tests
 
-Make sure to build the Golang binary first by following the instructions above.
-From the project's root folder, run `shellspec` to run [shellspec](https://github.com/shellspec/shellspec) tests. These tests cover the end-to-end behaviour of the SDK, whereas more complex behaviour checks are covered by the Golang unit tests.
+Make sure to build the Golang binary first by following the instructions in the README.
+
+From the project's root folder, run `shellspec "spec/e2e"` to run [shellspec](https://github.com/shellspec/shellspec) tests for the end-to-end flow. This will verify the behaviour of the commands against the fixtures in the `./fixtures` folder and make sure the output and exit codes are correct.
+
+To run the contract tests with Snyk, install Snyk by running `npm i -g snyk` and set the `SNYK_TOKEN` to the Auth Token from https://app.snyk.io/account. Then, run `shellspec "spec/contract"` to verify if the generated bundle from the SDK is valid for the Snyk CLI(make sure the custom rules feature flag is enabled: `iacCustomRules`).
 
 Alternatively, you can run `go test ./...` for Golang unit tests. These test the files under `./internal` and `./util` and make sure complex behaviour is maintained between code changes.
 
 For test coverage, run `go test -coverprofile cover.out fmt ./...` and then `go tool cover -html=cover.out` to see what is missing.
+
+**Note**
+All the fixtures under the `./fixture` folder are used for all Shellspec tests.
 
 ### How to lint the code
 
