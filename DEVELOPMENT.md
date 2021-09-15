@@ -75,9 +75,9 @@ func Run<Command>(args []string, params *<Command>CommandParams) error {
 
 ```go
 #!/bin/bash
-Describe './snyk-iac-custom-rules <command>'
+Describe './snyk-iac-rules <command>'
    It 'returns passing test status'
-      When call ./snyk-iac-custom-rules <command>
+      When call ./snyk-iac-rules <command>
       The status should be success
       The output should include ''
    End

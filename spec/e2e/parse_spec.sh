@@ -1,7 +1,7 @@
 #!/bin/bash
-Describe './snyk-iac-custom-rules parse ./fixtures/custom-rules/rules/CUSTOM-1/fixtures/test.tf'
+Describe './snyk-iac-rules parse ./fixtures/custom-rules/rules/CUSTOM-1/fixtures/test.tf'
    It 'returns passing test status'
-      When call ./snyk-iac-custom-rules parse ./fixtures/custom-rules/rules/CUSTOM-1/fixtures/test.tf
+      When call ./snyk-iac-rules parse ./fixtures/custom-rules/rules/CUSTOM-1/fixtures/test.tf
       The status should be success
       The output should include '{
 	"resource": {
@@ -25,9 +25,9 @@ Describe './snyk-iac-custom-rules parse ./fixtures/custom-rules/rules/CUSTOM-1/f
    End
 End
 
-Describe './snyk-iac-custom-rules parse ./fixtures/custom-rules/rules/CUSTOM-3/fixtures/test.yaml --format yaml'
+Describe './snyk-iac-rules parse ./fixtures/custom-rules/rules/CUSTOM-3/fixtures/test.yaml --format yaml'
    It 'returns passing test status'
-      When call ./snyk-iac-custom-rules parse ./fixtures/custom-rules/rules/CUSTOM-3/fixtures/test.yaml --format yaml
+      When call ./snyk-iac-rules parse ./fixtures/custom-rules/rules/CUSTOM-3/fixtures/test.yaml --format yaml
       The status should be success
       The output should include '{
 	"apiVersion": "v1",
