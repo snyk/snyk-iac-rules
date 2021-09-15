@@ -18,7 +18,6 @@ func checkIfDirectoryExists(path string) (bool, error) {
 }
 
 var createDirectoryIfNotExists = func(dirPath string, strict bool) error {
-	fmt.Println(dirPath)
 	exists, _ := checkIfDirectoryExists(dirPath)
 	if !exists {
 		if err := os.Mkdir(dirPath, 0755); err != nil {
