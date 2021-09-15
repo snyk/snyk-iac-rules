@@ -17,7 +17,30 @@ var templateCommand = &cobra.Command{
 	Short: "Template a new rule",
 	Long: `Template a new rule.
 
-The 'template' command generates some templating code for writing new rules.
+The 'template' command generates the scaffolding for writing new rules.
+
+To start, run the following command, replacing <rule> with the name of a rule.
+$ snyk-iac-rules template --rule <rule>
+
+A rules/ folder is created, which will contain a folder named after the provided
+rule name. In this folder the rule definition can be found in the main.rego file,
+along with a test in the main_test.rego file.
+
+Each rule must return a JSON structure containing the following required fields:
+- 'publicId': the name of the rule (automatically filled in by the command)
+- 'title': rule identifier in the snyk CLI
+- 'severity': the severity of the rule; can be one of 'low', 'medium', 'high', and 'critical'
+- 'msg': the misconfigured path in the fixture
+
+By default, the deny function is where the rule will be implemented. A different 
+folder structure can be used, but overrides must be provided when generating the
+bundle. To find out how, run the following command:
+$ snyk-iac-rules build --help
+
+On top of generating the scaffolding for the rule, the command also generates a
+testing framework.
+To learn more about this, run the following command:
+$ snyk-iac-rules test --help 
 `,
 	SilenceUsage: true,
 	Args: func(cmd *cobra.Command, args []string) error {
@@ -27,8 +50,6 @@ The 'template' command generates some templating code for writing new rules.
 		return nil
 	},
 	RunE: func(cmd *cobra.Command, args []string) error {
-		fmt.Println("Templating rule...")
-
 		// make sure rule name doesn't have any whitespace in it
 		if strings.Contains(templateParams.Rule, " ") {
 			return fmt.Errorf("Rule name cannot contain whitespace")

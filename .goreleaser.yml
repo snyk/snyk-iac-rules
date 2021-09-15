@@ -53,7 +53,7 @@ release:
   # Header template for the release body.
   # Defaults to empty.
   header: |
-    ## snyk-iac-custom-rules ({{ .Date }})
+    ## snyk-iac-rules ({{ .Date }})
 
     Welcome to this new release!
 
