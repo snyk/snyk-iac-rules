@@ -10,16 +10,16 @@ Describe 'Contract test'
             mkdir tmp
             
             # create a basic rule
-            ./snyk-iac-custom-rules template ./tmp --rule Contract 
+            ./snyk-iac-rules template ./tmp --rule Contract 
 
             # write rule and test
             cp -r ./fixtures/custom-rules/rules/CUSTOM-3/* ./tmp/rules/Contract
 
             # run tests and make sure they pass
-            ./snyk-iac-custom-rules test ./tmp 
+            ./snyk-iac-rules test ./tmp 
 
             # create bundle
-            ./snyk-iac-custom-rules build ./tmp --ignore "testing" --ignore "*_test.rego" 
+            ./snyk-iac-rules build ./tmp --ignore "testing" --ignore "*_test.rego" 
 
             # authenticate with Snyk
             snyk auth $SNYK_TOKEN 
@@ -32,7 +32,7 @@ Describe 'Contract test'
         The status should eq 1
         The output should include "Generated template" # the rule was tempalted successfully
         The output should include "PASS: 1/1" # the tests passed
-        The output should include "Bundle bundle.tar.gz has been generated" # the bundle has been generated
+        The output should include "Generated bundle: bundle.tar.gz" # the bundle has been generated
         The output should include "Test [Critical Severity] [CUSTOM-3]" # it should include the custom rule in its output
     End
 End
