@@ -3,11 +3,10 @@
 cleanup() { rm -rf ./fixtures/custom-rules/rules/test; }
 AfterAll 'cleanup'
 
-Describe './snyk-iac-custom-rules template ./fixtures/custom-rules --rule test'
+Describe './snyk-iac-rules template ./fixtures/custom-rules --rule test'
    It 'returns passing test status'
-      When call ./snyk-iac-custom-rules template ./fixtures/custom-rules --rule test
+      When call ./snyk-iac-rules template ./fixtures/custom-rules --rule test
       The status should be success
-      The output should include 'Templating rule...'
       The output should include 'Templated directory'
       The output should include '/fixtures/custom-rules/rules'
       The output should include 'Templated directory'
@@ -19,11 +18,11 @@ Describe './snyk-iac-custom-rules template ./fixtures/custom-rules --rule test'
    End
 End
 
-Describe './snyk-iac-custom-rules template ./fixtures/custom-rules --rule test'
+Describe './snyk-iac-rules template ./fixtures/custom-rules --rule test'
    It 'returns passing test status'
-      When call ./snyk-iac-custom-rules template ./fixtures/custom-rules --rule test
+      When call ./snyk-iac-rules template ./fixtures/custom-rules --rule test
+      Dump
       The status should be failure
-      The output should include 'Templating rule...'
       The output should include 'Rule with the provided name already exists'
       The stderr should be present
    End

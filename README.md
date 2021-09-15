@@ -35,8 +35,8 @@ This is a Golang SDK that will provide flags for writing, debugging, testing, an
 ### Running Locally
 
 1. Clone the repository
-2. Build and run the binary: `go build -o snyk-iac-custom-rules .`. Or, alternatively, `go run main.go {command}`.
+2. Build and run the binary: `go build -o snyk-iac-rules .`. Or, alternatively, `go run main.go {command}`.
 3. Run the command:
 ```
-$ ./snyk-iac-custom-rules {command}
+$ ./snyk-iac-rules {command}
 ```
