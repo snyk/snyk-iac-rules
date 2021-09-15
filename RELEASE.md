@@ -28,9 +28,9 @@ $ goreleaser release --rm-dist
 ```
 
 ## CI/CD
-As part of every PR from a feature branch to the `develop` branch, we run both CircleCI as well as the `Shellspec Tests` GitHub Action, which runs our e2e tests in Windows, Linux, and MacOS. The CircleCI pipeline runs the `golangci-lint` linter, `gofmt`, and `go mod tidy`, and then it runs `shellspec` and Golang unit tests inside a Linux distribution.
+As part of every PR from a feature branch to the `develop` branch, we run both CircleCI as well as the `E2E Tests` and `Contract Tests` GitHub Actions, which run our shellspec tests in Windows, Linux, and MacOS. The CircleCI pipeline runs the `golangci-lint` linter, `gofmt`, and `go mod tidy`, and then it runs `shellspec` end-to-end tests and the Golang unit tests on a Linux distribution.
 
-Once the PR is merged into `develop`, the `Shellspec Tests` GitHub Action runs again. This pipeline also runs in PRs from `develop` to `main`, but no longer once a PR was merged into `main`.
+Once the PR is merged into `develop`, the `E2E Tests` and `Contract Tests` GitHub Actions run again. These actions also run in PRs opened from `develop` to `main`.
 
 Once the PR for the `main` branch has been merged, the `Release SDK` GitHub action runs, which increments the GitHub tag and creates a new GitHub release of the SDK.
 
