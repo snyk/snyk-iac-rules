@@ -3,6 +3,7 @@ module github.com/snyk/snyk-iac-custom-rules
 go 1.16
 
 require (
+	github.com/cheggaaa/pb/v3 v3.0.8
 	github.com/ghodss/yaml v1.0.0
 	github.com/hashicorp/hcl/v2 v2.10.1 // indirect
 	github.com/open-policy-agent/opa v0.32.0

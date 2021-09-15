@@ -1,7 +1,7 @@
 version: 2.1
 
 defaults: &defaults
-  working_directory: ~/snyk-iac-custom-rules
+  working_directory: ~/snyk-iac-rules
 
 commands:
   install_shellspec:
@@ -15,11 +15,11 @@ commands:
     steps:
       - run:
           name: Build
-          command: go build -o snyk-iac-custom-rules .
+          command: go build -o snyk-iac-rules .
       - persist_to_workspace:
           root: ./ # relative to the working directory
           paths:
-            - snyk-iac-custom-rules # the file we want to store
+            - snyk-iac-rules # the file we want to store
 
 jobs:
   lint_and_format:
@@ -30,7 +30,7 @@ jobs:
     steps:
       - checkout
       - attach_workspace:
-          at: ~/snyk-iac-custom-rules
+          at: ~/snyk-iac-rules
       # Logs the version in our build logs, for posterity
       - run: go version
       - run:
@@ -54,10 +54,10 @@ jobs:
       - build
       - run:
           name: Run shellspec
-          command: shellspec
+          command: shellspec "spec/e2e"
       - run:
           name: Run Golang tests
-          command: go test
+          command: go test ./...
 
 workflows:
   version: 2

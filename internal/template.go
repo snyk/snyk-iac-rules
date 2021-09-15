@@ -3,8 +3,6 @@ package internal
 import (
 	"errors"
 	"fmt"
-	"os"
-	"path"
 	"strings"
 
 	"github.com/snyk/snyk-iac-custom-rules/util"
@@ -14,18 +12,18 @@ type TemplateCommandParams struct {
 	Rule string
 }
 
+var createDirectory = util.CreateDirectory
+var templateFile = util.TemplateFile
+var startProgress = util.StartProgress
+
 func RunTemplate(args []string, params *TemplateCommandParams) error {
-	currentDirectory, err := os.Getwd()
-	if err != nil {
-		return err
-	}
-	workingDirectory := path.Join(currentDirectory, args[0])
+	workingDirectory := args[0]
 
 	templating := util.Templating{
 		RuleName: params.Rule,
 		Replace:  strings.ReplaceAll,
 	}
-	err = templateRule(workingDirectory, templating)
+	err := templateRule(workingDirectory, templating)
 	if err != nil {
 		return err
 	}
@@ -34,27 +32,45 @@ func RunTemplate(args []string, params *TemplateCommandParams) error {
 }
 
 func templateRule(workingDirectory string, templating util.Templating) error {
-	rulesDir, err := util.CreateDirectory(workingDirectory, "rules", false)
-	if err != nil {
-		return err
-	}
-	fmt.Printf("Templated directory %s\n", rulesDir)
+	var rulesDir string
+	var ruleDir string
+	var err error
 
-	ruleDir, err := util.CreateDirectory(rulesDir, templating.RuleName, true)
-	if err != nil {
-		if strings.Contains(err.Error(), "Directory already exists") {
-			return errors.New("Rule with the provided name already exists")
+	err = startProgress("Template rules directory", func() error {
+		rulesDir, err = createDirectory(workingDirectory, "rules", false)
+		if err != nil {
+			return err
 		}
-		return err
-	}
-	fmt.Printf("Templated directory %s\n", ruleDir)
-
-	err = util.TemplateFile(ruleDir, "main.rego", "templates/main.tpl.rego", templating)
+		return nil
+	})
 	if err != nil {
 		return err
 	}
 
-	err = util.TemplateFile(ruleDir, "main_test.rego", "templates/main_test.tpl.rego", templating)
+	err = startProgress(fmt.Sprintf("Template rules/%s directory", templating.RuleName), func() error {
+		ruleDir, err = createDirectory(rulesDir, templating.RuleName, true)
+		if err != nil {
+			if strings.Contains(err.Error(), "Directory already exists") {
+				return errors.New("Rule with the provided name already exists")
+			}
+			return err
+		}
+		return nil
+	})
+	if err != nil {
+		return err
+	}
+
+	err = startProgress(fmt.Sprintf("Template rules/%s/main.rego file", templating.RuleName), func() error {
+		return templateFile(ruleDir, "main.rego", "templates/main.tpl.rego", templating)
+	})
+	if err != nil {
+		return err
+	}
+
+	err = startProgress(fmt.Sprintf("Template rules/%s/main_test.rego file", templating.RuleName), func() error {
+		return templateFile(ruleDir, "main_test.rego", "templates/main_test.tpl.rego", templating)
+	})
 	if err != nil {
 		return err
 	}
@@ -63,32 +79,46 @@ func templateRule(workingDirectory string, templating util.Templating) error {
 }
 
 func templateLib(workingDirectory string, templating util.Templating) error {
-	libDir, err := util.CreateDirectory(workingDirectory, "lib", true)
+	var libDir string
+	var testingDir string
+	var err error
+
+	err = startProgress("Template lib directory", func() error {
+		libDir, err = createDirectory(workingDirectory, "lib", true)
+		if err != nil {
+			return err
+		}
+		return nil
+	})
 	if err != nil {
 		if strings.Contains(err.Error(), "Directory already exists at") {
 			return nil
 		}
 		return err
 	}
-	fmt.Printf("Templated directory %s\n", libDir)
 
-	err = util.TemplateFile(libDir, "main.rego", "templates/lib/main.tpl.rego", templating)
+	err = startProgress("Template lib/main.rego file", func() error {
+		return templateFile(libDir, "main.rego", "templates/lib/main.tpl.rego", templating)
+	})
 	if err != nil {
 		return err
 	}
 
-	testingDir, err := util.CreateDirectory(libDir, "testing", true)
+	err = startProgress("Template lib/testing directory", func() error {
+		testingDir, err = createDirectory(libDir, "testing", true)
+		if err != nil {
+			return err
+		}
+		return nil
+	})
 	if err != nil {
 		if strings.Contains(err.Error(), "Directory already exists at") {
 			return nil
 		}
 		return err
 	}
-	fmt.Printf("Templated directory %s\n", testingDir)
 
-	err = util.TemplateFile(testingDir, "main.rego", "templates/lib/testing/main.tpl.rego", templating)
-	if err != nil {
-		return err
-	}
-	return nil
+	return startProgress("Template lib/testing/main.rego file", func() error {
+		return templateFile(testingDir, "main.rego", "templates/lib/testing/main.tpl.rego", templating)
+	})
 }

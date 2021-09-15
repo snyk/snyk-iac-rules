@@ -2,7 +2,8 @@ package util
 
 import (
 	"embed"
-	"fmt"
+	"io"
+	"io/fs"
 	"os"
 	"text/template"
 )
@@ -17,8 +18,13 @@ type Templating struct {
 	Replace  func(string, string, string) string
 }
 
+var createFile = CreateFile
+var openFile = func(name string, flag int, mode fs.FileMode) (io.Writer, error) {
+	return os.OpenFile(name, flag, mode)
+}
+
 func TemplateFile(workingDirectory string, fileName string, template string, templating Templating) error {
-	filePath, err := CreateFile(workingDirectory, fileName)
+	filePath, err := createFile(workingDirectory, fileName)
 	if err != nil {
 		return err
 	}
@@ -26,17 +32,16 @@ func TemplateFile(workingDirectory string, fileName string, template string, tem
 	if err != nil {
 		return err
 	}
-	fmt.Printf("Templated file %s\n", filePath)
 	return nil
 }
 
-func generateTemplate(fileName string, templateFile string, templating Templating) error {
+func generateTemplate(filePath string, templateFile string, templating Templating) error {
 	tpl, err := template.ParseFS(templateFs, templateFile)
 	if err != nil {
 		return err
 	}
 
-	file, err := os.OpenFile(fileName, os.O_APPEND|os.O_WRONLY, os.ModeAppend)
+	file, err := openFile(filePath, os.O_APPEND|os.O_WRONLY, os.ModeAppend)
 	if err != nil {
 		return err
 	}

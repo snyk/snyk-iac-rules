@@ -1,7 +1,9 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
+	"os"
 
 	"github.com/spf13/cobra"
 
@@ -13,23 +15,51 @@ var BuildIgnore = append(TestIgnore, "*_test.rego")
 
 var buildCommand = &cobra.Command{
 	Use:   "build <path>",
-	Short: "Build an OPA WASM bundle",
-	Long: `Build an OPA WASM bundle.
+	Short: "Build an OPA bundle",
+	Long: `Build an OPA bundle.
 
-The 'build' command packages OPA policy and data files into gzipped tarballs containing policies and data written as WASM.
+The 'build' command packages OPA policy and data files into bundles. Bundles are
+gzipped tarballs. Paths referring to directories are
+loaded recursively.
+
+To start, run:
+$ snyk-iac-rules build
+An optional path can be provided if the current directory contains more than just the rules for the bundle.
+
+To ignore test files, use the '--ignore' flag like so:
+$ snyk-iac-rules build --ignore testing --ignore "*_test.rego"
+
+If the 'template' command was used to generate the rules, then the default 
+entrypoint is "rules/deny". 
+Otherwise, override the entrypoint like so:
+$ snyk-iac-rules build --entrypoint "<package name>/<function name>"
+
+The generated bundle has the name 'bundle.tar.gz', but a custom name can be provided
+and used for versioning the bundle:
+$ snyk-iac-rules build -o bundle-v0.0.1.tar.gz
 `,
 	SilenceUsage: true,
-	RunE: func(cmd *cobra.Command, args []string) error {
-		fmt.Println("Building OPA WASM bundle...")
-		if len(args) == 0 {
-			args = append(args, "./")
+	Args: func(cmd *cobra.Command, args []string) error {
+		if len(args) > 1 {
+			return errors.New("Too many paths provided")
 		}
+		return nil
+	},
+	RunE: func(cmd *cobra.Command, args []string) error {
+		if len(args) == 0 {
+			currentDirectory, err := os.Getwd()
+			if err != nil {
+				return err
+			}
+			args = append(args, currentDirectory)
+		}
+
 		err := internal.RunBuild(args, buildParams)
 		if err != nil {
 			return err
 		}
 
-		fmt.Printf("Bundle %s has been generated\n", buildParams.OutputFile)
+		fmt.Printf("Generated bundle: %s \n", buildParams.OutputFile)
 		return nil
 	},
 }
