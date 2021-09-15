@@ -57,7 +57,7 @@ jobs:
           command: shellspec
       - run:
           name: Run Golang tests
-          command: go test
+          command: go test ./...
 
 workflows:
   version: 2

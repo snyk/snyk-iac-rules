@@ -6,14 +6,12 @@ import (
 
 type RepeatedStringFlag struct {
 	vs           []string
-	isSet        bool
 	defaultValue string
 }
 
 func NewRepeatedStringFlag(defaultValue string) RepeatedStringFlag {
 	f := RepeatedStringFlag{
 		vs:           []string{},
-		isSet:        true,
 		defaultValue: defaultValue,
 	}
 	return f
@@ -39,14 +37,9 @@ func (f *RepeatedStringFlag) Strings() []string {
 
 func (f *RepeatedStringFlag) Set(s string) error {
 	f.vs = append(f.vs, s)
-	f.isSet = true
 	return nil
 }
 
 func (f *RepeatedStringFlag) IsSet() bool {
-	return f.isFlagSet()
-}
-
-func (f *RepeatedStringFlag) isFlagSet() bool {
-	return f.isSet
+	return true
 }

@@ -8,7 +8,8 @@ import (
 	"github.com/open-policy-agent/opa/version"
 )
 
-// Term returns the runtime information as an ast.Term object.
+// Term was taken from https://github.com/open-policy-agent/opa/blob/v0.31.0/internal/runtime/runtime.go#L23
+
 func Term() (*ast.Term, error) {
 	obj := ast.NewObject()
 	env := ast.NewObject()

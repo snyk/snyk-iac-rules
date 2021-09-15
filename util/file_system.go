@@ -6,25 +6,54 @@ import (
 	"path"
 )
 
-func CreateDirectory(workingDirectory string, name string, strict bool) (string, error) {
-	dirName := path.Join(workingDirectory, name)
-	_, err := os.Stat(dirName)
+func checkIfDirectoryExists(path string) (bool, error) {
+	_, err := os.Stat(path)
+	if err == nil {
+		return true, nil
+	}
 	if os.IsNotExist(err) {
-		if err := os.Mkdir(dirName, 0755); err != nil {
-			return "", err
+		return false, nil
+	}
+	return false, err
+}
+
+var createDirectoryIfNotExists = func(dirPath string, strict bool) error {
+	fmt.Println(dirPath)
+	exists, _ := checkIfDirectoryExists(dirPath)
+	if !exists {
+		if err := os.Mkdir(dirPath, 0755); err != nil {
+			return err
 		}
 	} else if strict {
-		return "", fmt.Errorf("Directory already exists at path %s", dirName)
+		return fmt.Errorf("Directory already exists at path %s", dirPath)
 	}
-	return dirName, nil
+	return nil
+}
+
+func CreateDirectory(workingDirectory string, name string, strict bool) (string, error) {
+	dirPath := computePath(workingDirectory, name)
+	err := createDirectoryIfNotExists(dirPath, strict)
+	return dirPath, err
+}
+
+var createFileAndClose = func(filePath string) error {
+	file, err := os.Create(filePath)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+	return nil
+}
+
+var computePath = func(workingDirectory string, name string) string {
+	return path.Join(workingDirectory, name)
 }
 
 func CreateFile(workingDirectory string, name string) (string, error) {
-	fileName := path.Join(workingDirectory, name)
-	file, err := os.Create(fileName)
+	filePath := computePath(workingDirectory, name)
+	err := createFileAndClose(filePath)
 	if err != nil {
-		return "", err
+		return filePath, err
 	}
-	defer file.Close()
-	return fileName, nil
+	return filePath, nil
 }

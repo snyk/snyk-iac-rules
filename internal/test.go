@@ -14,6 +14,8 @@ import (
 	"github.com/snyk/snyk-iac-custom-rules/util"
 )
 
+// Most of the logic was taken from https://github.com/open-policy-agent/opa/blob/v0.31.0/cmd/test.go
+
 const (
 	ExplainModeFull  = "full"
 	ExplainModeNotes = "notes"
