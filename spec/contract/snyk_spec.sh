@@ -34,5 +34,6 @@ Describe 'Contract test'
         The output should include "PASS: 1/1" # the tests passed
         The output should include "Generated bundle: bundle.tar.gz" # the bundle has been generated
         The output should include "Test [Critical Severity] [CUSTOM-3]" # it should include the custom rule in its output
+        The stderr should be present # from the templating
     End
 End
