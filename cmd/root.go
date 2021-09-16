@@ -16,7 +16,7 @@ func NewRootCmd() cobra.Command {
 Not sure where to start?
 
 1. Run the following command to learn how to generate a scaffolded rule:
-$ snyk-iac-rules template --rule <rule>
+$ snyk-iac-rules template --help
 
 2. Run the following command to learn how to parse a file into the JSON structure that Rego understands:
 $ snyk-iac-rules parse --help
