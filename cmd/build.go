@@ -26,12 +26,12 @@ To start, run:
 $ snyk-iac-rules build
 An optional path can be provided if the current directory contains more than just the rules for the bundle.
 
-To ignore test files, use the '--ignore' flag like so:
+To ignore test files, use the '--ignore' flag:
 $ snyk-iac-rules build --ignore testing --ignore "*_test.rego"
 
 If the 'template' command was used to generate the rules, then the default 
 entrypoint is "rules/deny". 
-Otherwise, override the entrypoint like so:
+Otherwise, override the entrypoint:
 $ snyk-iac-rules build --entrypoint "<package name>/<function name>"
 
 The generated bundle has the name 'bundle.tar.gz', but a custom name can be provided
