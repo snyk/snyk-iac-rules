@@ -15,7 +15,7 @@ import (
 var templateCommand = &cobra.Command{
 	Use:   "template <path>",
 	Short: "Template a new rule",
-	Long: `Template a new rule.
+	Long: `Generate the template for a new rule.
 
 The 'template' command generates the scaffolding for writing new rules.
 
