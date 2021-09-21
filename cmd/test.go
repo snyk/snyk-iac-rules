@@ -17,7 +17,7 @@ var TestIgnore = []string{
 }
 
 var testCommand = &cobra.Command{
-	Use:   "test <path>",
+	Use:   "test [path]",
 	Short: "Execute Rego test cases",
 	Long: `Execute Rego test cases.
 
