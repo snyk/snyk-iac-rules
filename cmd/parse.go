@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"errors"
+	"os"
 
 	"github.com/spf13/cobra"
 
@@ -34,6 +35,18 @@ $ snyk-iac-rules test --help
 		}
 		if len(args) > 1 {
 			return errors.New("Too many paths provided")
+		}
+		file, err := os.Open(args[0])
+		if err != nil {
+			return errors.New("Invalid path provided")
+		}
+		fileInfo, err := file.Stat()
+		if err != nil {
+			return errors.New("Invalid path provided")
+		}
+
+		if fileInfo.IsDir() {
+			return errors.New("A path to a directory cannot be provided")
 		}
 		return nil
 	},
