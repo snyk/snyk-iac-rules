@@ -14,8 +14,10 @@ import (
 var templateFs embed.FS
 
 type Templating struct {
-	RuleName string
-	Replace  func(string, string, string) string
+	RuleID       string
+	RuleTitle    string
+	RuleSeverity string
+	Replace      func(string, string, string) string
 }
 
 var createFile = CreateFile
