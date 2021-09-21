@@ -61,10 +61,6 @@ $ snyk-iac-rules test --help
 			return fmt.Errorf("Rule name cannot start with \"SNYK-\"")
 		}
 
-		// Set default severity and title
-		if templateParams.RuleTitle == "" {
-			templateParams.RuleTitle = "Default rule title"
-		}
 		return nil
 	},
 	RunE: func(cmd *cobra.Command, args []string) error {
@@ -99,7 +95,7 @@ var templateParams = newTemplateCommandParams()
 
 func init() {
 	templateCommand.Flags().StringVarP(&templateParams.RuleID, "rule", "r", "", "provide rule id")
-	templateCommand.Flags().StringVarP(&templateParams.RuleTitle, "title", "s", "", "provide rule title")
+	templateCommand.Flags().StringVarP(&templateParams.RuleTitle, "title", "s", "Default title", "provide rule title")
 	templateCommand.Flags().VarP(&templateParams.RuleSeverity, "severity", "t", "provide rule severity")
 	templateCommand.MarkFlagRequired("rule") //nolint
 	RootCommand.AddCommand(templateCommand)

@@ -31,18 +31,20 @@ func TestTemplateFile(t *testing.T) {
 			expectedResult: `package rules
 
 deny[msg] {
-	input.spec.template.todo
+	resource := input.resource.test[name]
+	resource.todo
 	msg := {
-		"publicId": "Test Rule",
-		"title": "<TODO>",
-		"severity": "<TODO>",
+		"publicId": "Test Rule ID",
+		"title": "Test Rule Title",
+		"severity": "low",
 		"issue": "",
 		"impact": "",
 		"remediation": "",
-		"msg": "spec.template.todo",
+		"msg": sprintf("input.resource.test[%s].todo", [name]),
 		"references": [],
 	}
-}`,
+}
+`,
 		},
 		{
 			template: "templates/main_test.tpl.rego",
@@ -52,16 +54,21 @@ deny[msg] {
 import data.lib
 import data.lib.testing
 
-test_Test Rule {
-	test_cases := [{
+test_Test Rule ID {
+	# array containing test cases where the rule is allowed
+	allowed_test_cases := [{
 		"want_msgs": [],
 		"fixture": "allowed.json",
-	}, {
-		"want_msgs": ["spec.template.todo"],
+	}]
+
+	# array containing cases where the rule is denied
+	denied_test_cases := [{
+		"want_msgs": ["input.resource.test[denied].todo"], # verifies that the correct msg is returned by the denied rule
 		"fixture": "denied.json",
 	}]
 
-	testing.evaluate_test_cases("Test Rule", "rules/Test Rule/fixtures", test_cases)
+	test_cases := array.concat(allowed_test_cases, denied_test_cases)
+	testing.evaluate_test_cases("Test Rule ID", test_cases)
 }
 `,
 		},
