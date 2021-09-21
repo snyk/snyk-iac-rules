@@ -11,8 +11,10 @@ import (
 
 func TestTemplateFile(t *testing.T) {
 	templating := Templating{
-		RuleName: "Test Rule",
-		Replace:  strings.ReplaceAll,
+		RuleID:       "Test Rule ID",
+		RuleTitle:    "Test Rule Title",
+		RuleSeverity: "low",
+		Replace:      strings.ReplaceAll,
 	}
 
 	currentDirectory, err := os.Getwd()

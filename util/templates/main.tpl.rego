@@ -3,9 +3,9 @@ package rules
 deny[msg] {
 	input.spec.template.todo
 	msg := {
-		"publicId": "{{.RuleName}}",
-		"title": "<TODO>",
-		"severity": "<TODO>",
+		"publicId": "{{.RuleID}}",
+		"title": "{{.RuleTitle}}",
+		"severity": "{{.RuleSeverity}}",
 		"issue": "",
 		"impact": "",
 		"remediation": "",

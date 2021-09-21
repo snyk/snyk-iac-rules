@@ -11,7 +11,9 @@ import (
 
 func mockTemplateParams() *TemplateCommandParams {
 	return &TemplateCommandParams{
-		Rule: "Test Rule",
+		RuleID:       "Test Rule ID",
+		RuleTitle:    "Test Rule Title",
+		RuleSeverity: util.NewEnumFlag(LOW, []string{LOW, MEDIUM, HIGH, CRITICAL}),
 	}
 }
 
@@ -114,7 +116,9 @@ func TestTemplateInEmptyDirectory(t *testing.T) {
 		assert.Equal(t, files[filesIndex].workingDirectory, workingDirectory)
 		assert.Equal(t, files[filesIndex].name, name)
 		assert.Equal(t, files[filesIndex].template, template)
-		assert.Equal(t, "Test Rule", templating.RuleName)
+		assert.Equal(t, "Test Rule ID", templating.RuleID)
+		assert.Equal(t, "Test Rule Title", templating.RuleTitle)
+		assert.Equal(t, LOW, templating.RuleSeverity)
 		filesIndex++
 		return nil
 	}
@@ -165,7 +169,9 @@ func TestTemplateInDirectoryWithLib(t *testing.T) {
 		assert.Equal(t, files[filesIndex].workingDirectory, workingDirectory)
 		assert.Equal(t, files[filesIndex].name, name)
 		assert.Equal(t, files[filesIndex].template, template)
-		assert.Equal(t, "Test Rule", templating.RuleName)
+		assert.Equal(t, "Test Rule ID", templating.RuleID)
+		assert.Equal(t, "Test Rule Title", templating.RuleTitle)
+		assert.Equal(t, LOW, templating.RuleSeverity)
 		filesIndex++
 		return nil
 	}
@@ -216,7 +222,9 @@ func TestTemplateInDirectoryWithTesting(t *testing.T) {
 		assert.Equal(t, files[filesIndex].workingDirectory, workingDirectory)
 		assert.Equal(t, files[filesIndex].name, name)
 		assert.Equal(t, files[filesIndex].template, template)
-		assert.Equal(t, "Test Rule", templating.RuleName)
+		assert.Equal(t, "Test Rule ID", templating.RuleID)
+		assert.Equal(t, "Test Rule Title", templating.RuleTitle)
+		assert.Equal(t, LOW, templating.RuleSeverity)
 		filesIndex++
 		return nil
 	}
