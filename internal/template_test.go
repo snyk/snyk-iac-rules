@@ -27,10 +27,10 @@ var directories = []struct {
 	},
 	{
 		workingDirectory: "./test/rules",
-		name:             "Test Rule",
+		name:             "Test Rule ID",
 	},
 	{
-		workingDirectory: "./test/rules/Test Rule",
+		workingDirectory: "./test/rules/Test Rule ID",
 		name:             "fixtures",
 	},
 	{
@@ -49,22 +49,22 @@ var files = []struct {
 	template         string
 }{
 	{
-		workingDirectory: "./test/rules/Test Rule",
+		workingDirectory: "./test/rules/Test Rule ID",
 		name:             "main.rego",
 		template:         "templates/main.tpl.rego",
 	},
 	{
-		workingDirectory: "./test/rules/Test Rule",
+		workingDirectory: "./test/rules/Test Rule ID",
 		name:             "main_test.rego",
 		template:         "templates/main_test.tpl.rego",
 	},
 	{
-		workingDirectory: "./test/rules/Test Rule/fixtures",
+		workingDirectory: "./test/rules/Test Rule ID/fixtures",
 		name:             "allowed.json",
 		template:         "templates/fixtures/allowed.json",
 	},
 	{
-		workingDirectory: "./test/rules/Test Rule/fixtures",
+		workingDirectory: "./test/rules/Test Rule ID/fixtures",
 		name:             "denied.json",
 		template:         "templates/fixtures/denied.json",
 	},
@@ -254,7 +254,7 @@ func TestTemplateWithExistingRule(t *testing.T) {
 		if directoriesIndex >= len(directories) {
 			return "", errors.New("Tried to create more directories than expected")
 		}
-		if name == "Test Rule" {
+		if name == "Test Rule ID" {
 			return "", errors.New("Directory already exists at location")
 		}
 		assert.Equal(t, directories[directoriesIndex].workingDirectory, workingDirectory)

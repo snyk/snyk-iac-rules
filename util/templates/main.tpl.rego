@@ -1,7 +1,8 @@
 package rules
 
 deny[msg] {
-	input.spec.template.todo
+	resource := input.resource.test[name]
+	resource.todo
 	msg := {
 		"publicId": "{{.RuleID}}",
 		"title": "{{.RuleTitle}}",
@@ -9,7 +10,7 @@ deny[msg] {
 		"issue": "",
 		"impact": "",
 		"remediation": "",
-		"msg": "spec.template.todo",
+		"msg": sprintf("input.resource.test[%s].todo", [name]),
 		"references": [],
 	}
 }
