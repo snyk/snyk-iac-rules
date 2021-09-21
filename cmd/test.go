@@ -75,7 +75,7 @@ func init() {
 	testCommand.Flags().BoolVarP(&testParams.Verbose, "verbose", "v", false, "set verbose logging mode")
 	testCommand.Flags().VarP(&testParams.Explain, "explain", "", "enable query explanations")
 	testCommand.Flags().DurationVar(&testParams.Timeout, "timeout", 5*time.Second, "set test timeout")
-	testCommand.Flags().StringSliceVarP(&testParams.Ignore, "ignore", "", TestIgnore, "set file and directory names to ignore during loading (e.g., '.*' excludes hidden files)")
+	testCommand.Flags().StringSliceVarP(&testParams.Ignore, "ignore", "", TestIgnore, "set file and directory names to ignore during loading")
 	testCommand.Flags().StringVarP(&testParams.RunRegex, "run", "r", "", "run only test cases matching the regular expression")
 	RootCommand.AddCommand(testCommand)
 }
