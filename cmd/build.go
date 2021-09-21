@@ -14,7 +14,7 @@ import (
 var BuildIgnore = append(TestIgnore, "testing", "*_test.rego")
 
 var buildCommand = &cobra.Command{
-	Use:   "build <path>",
+	Use:   "build [path]",
 	Short: "Build an OPA bundle",
 	Long: `Build an OPA bundle.
 
