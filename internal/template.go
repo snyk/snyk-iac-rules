@@ -34,6 +34,7 @@ func RunTemplate(args []string, params *TemplateCommandParams) error {
 func templateRule(workingDirectory string, templating util.Templating) error {
 	var rulesDir string
 	var ruleDir string
+	var ruleFixtureDir string
 	var err error
 
 	err = startProgress("Template rules directory", func() error {
@@ -70,6 +71,28 @@ func templateRule(workingDirectory string, templating util.Templating) error {
 
 	err = startProgress(fmt.Sprintf("Template rules/%s/main_test.rego file", templating.RuleName), func() error {
 		return templateFile(ruleDir, "main_test.rego", "templates/main_test.tpl.rego", templating)
+	})
+	if err != nil {
+		return err
+	}
+
+	err = startProgress(fmt.Sprintf("Template rules/%s/fixtures directory", templating.RuleName), func() error {
+		ruleFixtureDir, err = createDirectory(ruleDir, "fixtures", true)
+		return nil
+	})
+	if err != nil {
+		return err
+	}
+
+	err = startProgress(fmt.Sprintf("Template rules/%s/fixtures/allowed.json file", templating.RuleName), func() error {
+		return templateFile(ruleFixtureDir, "allowed.json", "templates/fixtures/allowed.json", templating)
+	})
+	if err != nil {
+		return err
+	}
+
+	err = startProgress(fmt.Sprintf("Template rules/%s/fixtures/denied.json file", templating.RuleName), func() error {
+		return templateFile(ruleFixtureDir, "denied.json", "templates/fixtures/denied.json", templating)
 	})
 	if err != nil {
 		return err
