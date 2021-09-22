@@ -7,6 +7,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/open-policy-agent/opa/ast"
 	"github.com/open-policy-agent/opa/compile"
 	"github.com/snyk/snyk-iac-custom-rules/util"
 )
@@ -29,8 +30,10 @@ func RunBuild(args []string, params *BuildCommandParams) error {
 	buf := bytes.NewBuffer(nil)
 
 	compiler := compile.New().
+		WithCapabilities(ast.CapabilitiesForThisVersion()).
 		WithTarget(params.Target.String()).
 		WithAsBundle(false).
+		WithOptimizationLevel(0).
 		WithOutput(buf).
 		WithEntrypoints(params.Entrypoint.Strings()...).
 		WithPaths(args...).
