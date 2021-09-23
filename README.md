@@ -1,7 +1,9 @@
 # `snyk-iac-rules` SDK
 ---
 
-[![CircleCI](https://circleci.com/gh/snyk/snyk-iac-custom-rules/tree/develop.svg?style=svg&circle-token=5597b9f0189554f754f38400cbe9d8f8b334c72a)](https://circleci.com/gh/snyk/snyk-iac-custom-rules/tree/develop) [![Shellspec Tests](https://github.com/snyk/snyk-iac-custom-rules/actions/workflows/main.yml/badge.svg)](https://github.com/snyk/snyk-iac-custom-rules/actions/workflows/main.yml)
+[![CircleCI](https://circleci.com/gh/snyk/snyk-iac-custom-rules/tree/develop.svg?style=svg&circle-token=5597b9f0189554f754f38400cbe9d8f8b334c72a)](https://circleci.com/gh/snyk/snyk-iac-custom-rules/tree/develop) 
+[![Shellspec Tests](https://github.com/snyk/snyk-iac-custom-rules/actions/workflows/main.yml/badge.svg)](https://github.com/snyk/snyk-iac-custom-rules/actions/workflows/main.yml)
+[![Golang Version](https://img.shields.io/github/go-mod/go-version/snyk/snyk-iac-custom-rules)](https://github.com/snyk/snyk-iac-custom-rules)
 
 `snyk-iac-rules` is a Golang SDK that provides flags for writing, debugging, testing, and bundling custom rules for the [Snyk IaC CLI](https://github.com/snyk/snyk/).
 
@@ -12,8 +14,17 @@ The SDK can be installed through multiple channels.
 
 ## Install with npm or Yarn
 
-TO DO
+[snyk-iac-rules available as an npm package](https://www.npmjs.com/package/snyk-iac-rules). If you have Node.js installed locally, you can install it by running:
 
+```bash
+npm install snyk-iac-rules@latest -g
+```
+
+or if you are using Yarn:
+
+```bash
+yarn global add snyk-iac-rules
+```
 ## More installation methods
 
 <details>
