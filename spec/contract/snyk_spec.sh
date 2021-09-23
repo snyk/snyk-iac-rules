@@ -10,10 +10,14 @@ Describe 'Contract test'
             mkdir tmp
             
             # create a basic rule
-            ./snyk-iac-rules template ./tmp --rule Contract 
+            ./snyk-iac-rules template ./tmp --rule Contract
+            rm ./tmp/rules/Contract/fixtures/denied.json
+            rm ./tmp/rules/Contract/fixtures/allowed.json
 
             # write rule and test
             cp -r ./fixtures/custom-rules/rules/CUSTOM-3/* ./tmp/rules/Contract
+            # replace the fixture path so it's correct
+            sed -i '' -e 's#/fixtures/custom-rules/rules/CUSTOM-3/fixtures#/tmp/rules/Contract/fixtures#' ./tmp/rules/Contract/main_test.rego
 
             # run tests and make sure they pass
             ./snyk-iac-rules test ./tmp 
