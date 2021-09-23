@@ -28,6 +28,10 @@ var directories = []struct {
 		name:             "Test Rule",
 	},
 	{
+		workingDirectory: "./test/rules/Test Rule",
+		name:             "fixtures",
+	},
+	{
 		workingDirectory: "./test",
 		name:             "lib",
 	},
@@ -51,6 +55,16 @@ var files = []struct {
 		workingDirectory: "./test/rules/Test Rule",
 		name:             "main_test.rego",
 		template:         "templates/main_test.tpl.rego",
+	},
+	{
+		workingDirectory: "./test/rules/Test Rule/fixtures",
+		name:             "allowed.json",
+		template:         "templates/fixtures/allowed.json",
+	},
+	{
+		workingDirectory: "./test/rules/Test Rule/fixtures",
+		name:             "denied.json",
+		template:         "templates/fixtures/denied.json",
 	},
 	{
 		workingDirectory: "./test/lib",

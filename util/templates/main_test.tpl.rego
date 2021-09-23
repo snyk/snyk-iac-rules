@@ -6,23 +6,11 @@ import data.lib.testing
 test_{{ call .Replace .RuleName "-" "_" }} {
 	test_cases := [{
 		"want_msgs": [],
-		"fixture": {
-			"spec": {
-				"template": {
-					"todo": false
-				}
-			}
-		},
+		"fixture": "allowed.json",
 	}, {
 		"want_msgs": ["spec.template.todo"],
-		"fixture": {
-			"spec": {
-				"template": {
-					"todo": true
-				}
-			}
-		},
+		"fixture": "denied.json",
 	}]
 
-	testing.evaluate_test_cases("{{.RuleName}}", test_cases)
+	testing.evaluate_test_cases("{{.RuleName}}", "rules/{{.RuleName}}/fixtures", test_cases)
 }

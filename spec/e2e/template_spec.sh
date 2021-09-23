@@ -11,6 +11,9 @@ Describe './snyk-iac-rules template ./fixtures/custom-rules --rule test'
       The stderr should include 'Template rules/test directory'
       The stderr should include 'Template rules/test/main.rego file'
       The stderr should include 'Template rules/test/main_test.rego file'
+      The stderr should include 'Template rules/test/fixtures directory'
+      The stderr should include 'Template rules/test/fixtures/allowed.json file'
+      The stderr should include 'Template rules/test/fixtures/denied.json file'
       The output should include 'Generated template'
    End
 End
