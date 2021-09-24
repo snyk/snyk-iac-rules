@@ -39,7 +39,7 @@ $ ./scripts/release-npm.sh <commit> <tag>
 
 $ npm i -g dist/
 
-$ snyk-iac-custom-rules help
+$ snyk-iac-rules help
 ```
 
 

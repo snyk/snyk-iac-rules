@@ -1,9 +1,9 @@
 {
-  "name": "snyk-iac-custom-rules",
+  "name": "snyk-iac-rules",
   "version": "${VERSION}",
   "description": "An SDK to write, debug, test, and bundle custom rules for Snyk IaC.",
   "bin": {
-    "snyk-iac-custom-rules": "./snyk-iac-custom-rules"
+    "snyk-iac-rules": "./snyk-iac-rules"
   },
   "os": [
     "darwin",
