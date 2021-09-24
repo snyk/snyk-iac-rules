@@ -13,6 +13,30 @@ The SDK developed in this repo is tested by [shellspec](https://github.com/shell
 The SDK is linted by [golangci-lint](https://github.com/golangci/golangci-lint), which can be installed as documented in their [local installation page](https://golangci-lint.run/usage/install/#local-installation).
 
 ## How to add a new command
+
+The folder structure in this repository is:
+```
+│   
+└───builtins - rego builtins for custom functionality
+│
+└───cmd - commands and subcommands to register with the cobra CLI  
+│   root.go - the root command which needs each subcommand to be registered to
+│
+└───internal - internal implementation of OPA related functionality
+│   
+└───fixtures - test fixtures
+│   
+└───scripts - scripts for CircleCI or GitHub action
+│   
+└───spec - shellspec tests
+│   └─── e2e - shellspec end-to-end tests
+|   |
+│   └─── contract - shellspec contract tests
+│   
+└───util - other utility functions used throughout the code
+```
+
+To add a new command, you will need to add new files in various of the folders mentioned above so follow the steps below:
 1. Add a new file with the name of the command under `cmd`
 2. The minimal file should contain:
 ```go
@@ -83,6 +107,15 @@ Describe './snyk-iac-rules <command>'
    End
 End
 ```  
+
+### How to run the SDK locally
+
+1. Clone the repository
+2. Build and run the binary: `go build -o snyk-iac-rules .`. Or, alternatively, `go run main.go {command}`.
+3. Run the command:
+```
+$ ./snyk-iac-rules {command}
+```
 
 ### How to run the tests
 
