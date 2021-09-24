@@ -13,6 +13,7 @@ mkdir -p dist/
 
 for GOOS in linux darwin; do
     GOOS=$GOOS GOARCH=amd64 go build -a -o dist/snyk-iac-rules-$GOOS-amd64 .
+    GOOS=$GOOS GOARCH=arm64 go build -a -o dist/snyk-iac-rules-$GOOS-arm64 .
 done
 GOOS=windows GOARCH=amd64 go build -a -o dist/snyk-iac-rules.exe .
 
