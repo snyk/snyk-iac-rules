@@ -9,7 +9,7 @@ import (
 
 	"github.com/open-policy-agent/opa/ast"
 	"github.com/open-policy-agent/opa/compile"
-	"github.com/snyk/snyk-iac-custom-rules/util"
+	"github.com/snyk/snyk-iac-rules/util"
 )
 
 // Most of the logic was taken from https://github.com/open-policy-agent/opa/blob/v0.31.0/cmd/build.go

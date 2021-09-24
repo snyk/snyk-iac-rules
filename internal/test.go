@@ -11,7 +11,7 @@ import (
 	"github.com/open-policy-agent/opa/tester"
 	"github.com/open-policy-agent/opa/topdown"
 	"github.com/open-policy-agent/opa/topdown/lineage"
-	"github.com/snyk/snyk-iac-custom-rules/util"
+	"github.com/snyk/snyk-iac-rules/util"
 )
 
 // Most of the logic was taken from https://github.com/open-policy-agent/opa/blob/v0.31.0/cmd/test.go

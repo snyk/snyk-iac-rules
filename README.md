@@ -1,9 +1,9 @@
 # `snyk-iac-rules` SDK
 ---
 
-[![CircleCI](https://circleci.com/gh/snyk/snyk-iac-custom-rules/tree/develop.svg?style=svg&circle-token=5597b9f0189554f754f38400cbe9d8f8b334c72a)](https://circleci.com/gh/snyk/snyk-iac-custom-rules/tree/develop) 
-[![Shellspec Tests](https://github.com/snyk/snyk-iac-custom-rules/actions/workflows/main.yml/badge.svg)](https://github.com/snyk/snyk-iac-custom-rules/actions/workflows/main.yml)
-[![Golang Version](https://img.shields.io/github/go-mod/go-version/snyk/snyk-iac-custom-rules)](https://github.com/snyk/snyk-iac-custom-rules)
+[![CircleCI](https://circleci.com/gh/snyk/snyk-iac-rules/tree/develop.svg?style=svg&circle-token=5597b9f0189554f754f38400cbe9d8f8b334c72a)](https://circleci.com/gh/snyk/snyk-iac-rules/tree/develop) 
+[![Shellspec Tests](https://github.com/snyk/snyk-iac-rules/actions/workflows/main.yml/badge.svg)](https://github.com/snyk/snyk-iac-rules/actions/workflows/main.yml)
+[![Golang Version](https://img.shields.io/github/go-mod/go-version/snyk/snyk-iac-rules)](https://github.com/snyk/snyk-iac-rules)
 
 `snyk-iac-rules` is a Golang SDK that provides flags for writing, debugging, testing, and bundling custom rules for the [Snyk IaC CLI](https://github.com/snyk/snyk/).
 
@@ -32,12 +32,12 @@ yarn global add snyk-iac-rules
 
 ### Standalone executables
 
-Use [GitHub Releases](https://github.com/snyk/snyk-iac-custom-rules/releases) to download a standalone executable of Snyk CLI for your platform.
+Use [GitHub Releases](https://github.com/snyk/snyk-iac-rules/releases) to download a standalone executable of Snyk CLI for your platform.
 
 For example, to download and run the latest SDK on macOS, you could run:
 
 ```bash
-wget https://github.com/snyk/snyk-iac-custom-rules/releases/download/v0.1.0/snyk-iac-rules_0.1.0_Darwin_x86_64.tar.gz
+wget https://github.com/snyk/snyk-iac-rules/releases/download/v0.1.0/snyk-iac-rules_0.1.0_Darwin_x86_64.tar.gz
 chmod +x ./snyk-iac-rules
 mv ./snyk-iac-rules /usr/local/bin/
 ```
