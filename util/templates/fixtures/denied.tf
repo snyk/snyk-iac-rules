@@ -1,0 +1,3 @@
+resource "test" "denied" {
+  todo = true
+}
