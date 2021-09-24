@@ -1,16 +1,18 @@
 {
   "name": "snyk-iac-rules",
   "version": "${VERSION}",
-  "description": "An SDK to write, debug, test, and bundle custom rules for Snyk IaC.",
+  "description": "An SDK to write, debug, test, and bundle custom rules for Snyk Infrastructure as Code.",
   "bin": {
     "snyk-iac-rules": "./snyk-iac-rules"
   },
   "os": [
     "darwin",
-    "linux"
+    "linux",
+    "win32"
   ],
   "cpu": [
-    "x64"
+    "x64",
+    "arm64"
   ],
   "engines": {
     "node": ">=4.4.0"

@@ -3,7 +3,7 @@ Describe './snyk-iac-rules'
   It 'returns help info'
     When call ./snyk-iac-rules
     The status should be success
-    The output should include 'SDK to write, debug, test, and bundle custom rules for Snyk IaC.
+    The output should include 'SDK to write, debug, test, and bundle custom rules for Snyk Infrastructure as Code.
 
 Not sure where to start?
 

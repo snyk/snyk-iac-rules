@@ -11,7 +11,7 @@ func NewRootCmd() cobra.Command {
 	rootCommand := cobra.Command{
 		Use:   "snyk-iac-rules",
 		Short: "Snyk IaC Custom Rules",
-		Long: `SDK to write, debug, test, and bundle custom rules for Snyk IaC.
+		Long: `SDK to write, debug, test, and bundle custom rules for Snyk Infrastructure as Code.
 
 Not sure where to start?
 
