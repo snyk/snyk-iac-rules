@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/snyk/snyk-iac-custom-rules/builtins"
-	"github.com/snyk/snyk-iac-custom-rules/cmd"
+	"github.com/snyk/snyk-iac-rules/builtins"
+	"github.com/snyk/snyk-iac-rules/cmd"
 )
 
 func main() {

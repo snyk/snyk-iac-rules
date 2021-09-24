@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/snyk/snyk-iac-custom-rules/util"
+	"github.com/snyk/snyk-iac-rules/util"
 	"github.com/stretchr/testify/assert"
 )
 
