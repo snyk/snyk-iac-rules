@@ -11,7 +11,9 @@ import (
 
 func mockTemplateParams() *TemplateCommandParams {
 	return &TemplateCommandParams{
-		Rule: "Test Rule",
+		RuleID:       "Test Rule ID",
+		RuleTitle:    "Test Rule Title",
+		RuleSeverity: util.NewEnumFlag(LOW, []string{LOW, MEDIUM, HIGH, CRITICAL}),
 	}
 }
 
@@ -25,10 +27,10 @@ var directories = []struct {
 	},
 	{
 		workingDirectory: "./test/rules",
-		name:             "Test Rule",
+		name:             "Test Rule ID",
 	},
 	{
-		workingDirectory: "./test/rules/Test Rule",
+		workingDirectory: "./test/rules/Test Rule ID",
 		name:             "fixtures",
 	},
 	{
@@ -47,22 +49,22 @@ var files = []struct {
 	template         string
 }{
 	{
-		workingDirectory: "./test/rules/Test Rule",
+		workingDirectory: "./test/rules/Test Rule ID",
 		name:             "main.rego",
 		template:         "templates/main.tpl.rego",
 	},
 	{
-		workingDirectory: "./test/rules/Test Rule",
+		workingDirectory: "./test/rules/Test Rule ID",
 		name:             "main_test.rego",
 		template:         "templates/main_test.tpl.rego",
 	},
 	{
-		workingDirectory: "./test/rules/Test Rule/fixtures",
+		workingDirectory: "./test/rules/Test Rule ID/fixtures",
 		name:             "allowed.json",
 		template:         "templates/fixtures/allowed.json",
 	},
 	{
-		workingDirectory: "./test/rules/Test Rule/fixtures",
+		workingDirectory: "./test/rules/Test Rule ID/fixtures",
 		name:             "denied.json",
 		template:         "templates/fixtures/denied.json",
 	},
@@ -114,7 +116,9 @@ func TestTemplateInEmptyDirectory(t *testing.T) {
 		assert.Equal(t, files[filesIndex].workingDirectory, workingDirectory)
 		assert.Equal(t, files[filesIndex].name, name)
 		assert.Equal(t, files[filesIndex].template, template)
-		assert.Equal(t, "Test Rule", templating.RuleName)
+		assert.Equal(t, "Test Rule ID", templating.RuleID)
+		assert.Equal(t, "Test Rule Title", templating.RuleTitle)
+		assert.Equal(t, LOW, templating.RuleSeverity)
 		filesIndex++
 		return nil
 	}
@@ -165,7 +169,9 @@ func TestTemplateInDirectoryWithLib(t *testing.T) {
 		assert.Equal(t, files[filesIndex].workingDirectory, workingDirectory)
 		assert.Equal(t, files[filesIndex].name, name)
 		assert.Equal(t, files[filesIndex].template, template)
-		assert.Equal(t, "Test Rule", templating.RuleName)
+		assert.Equal(t, "Test Rule ID", templating.RuleID)
+		assert.Equal(t, "Test Rule Title", templating.RuleTitle)
+		assert.Equal(t, LOW, templating.RuleSeverity)
 		filesIndex++
 		return nil
 	}
@@ -216,7 +222,9 @@ func TestTemplateInDirectoryWithTesting(t *testing.T) {
 		assert.Equal(t, files[filesIndex].workingDirectory, workingDirectory)
 		assert.Equal(t, files[filesIndex].name, name)
 		assert.Equal(t, files[filesIndex].template, template)
-		assert.Equal(t, "Test Rule", templating.RuleName)
+		assert.Equal(t, "Test Rule ID", templating.RuleID)
+		assert.Equal(t, "Test Rule Title", templating.RuleTitle)
+		assert.Equal(t, LOW, templating.RuleSeverity)
 		filesIndex++
 		return nil
 	}
@@ -246,7 +254,7 @@ func TestTemplateWithExistingRule(t *testing.T) {
 		if directoriesIndex >= len(directories) {
 			return "", errors.New("Tried to create more directories than expected")
 		}
-		if name == "Test Rule" {
+		if name == "Test Rule ID" {
 			return "", errors.New("Directory already exists at location")
 		}
 		assert.Equal(t, directories[directoriesIndex].workingDirectory, workingDirectory)
