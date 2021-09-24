@@ -48,8 +48,8 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/snyk/snyk-iac-custom-rules/internal"
-	"github.com/snyk/snyk-iac-custom-rules/util"
+	"github.com/snyk/snyk-iac-rules/internal"
+	"github.com/snyk/snyk-iac-rules/util"
 )
 
 var <command>Command = &cobra.Command{
