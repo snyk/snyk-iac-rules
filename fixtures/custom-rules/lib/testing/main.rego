@@ -28,6 +28,16 @@ assert_response_set(result_set, test_case) {
 }
 
 parse_fixture_file(fixture_file) = fixture {
+	endswith(fixture_file, "yaml")
+	fixture := lib.normalize_to_array(yaml.unmarshal_file(fixture_file))
+} else = fixture {
+	endswith(fixture_file, "yml")
+	fixture := lib.normalize_to_array(yaml.unmarshal_file(fixture_file))
+} else = fixture {
+	endswith(fixture_file, "tf")
+	fixture := lib.normalize_to_array(hcl2.unmarshal_file(fixture_file))
+} else = fixture {
+	endswith(fixture_file, "json")
 	fixture := lib.normalize_to_array(yaml.unmarshal_file(fixture_file))
 }
 
@@ -35,10 +45,11 @@ get_result_set(fixture) = result_set {
 	result_set := data.rules.deny with input as fixture
 }
 
-evaluate_test_cases(publicId, test_cases) {
+evaluate_test_cases(publicId, fixture_directory, test_cases) {
 	passed_tests := {res |
 		tc := lib.merge_objects(test_cases[index], {"publicId": publicId, "index": index})
-		result_set := get_result_set(tc.fixture)
+		fixtures := parse_fixture_file(sprintf("%s/%s", [fixture_directory, tc.fixture]))
+		result_set := get_result_set(fixtures[doc_id])
 		assert_response_set(result_set, tc)
 		res := index
 	}

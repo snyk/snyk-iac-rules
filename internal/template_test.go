@@ -5,13 +5,15 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/snyk/snyk-iac-custom-rules/util"
+	"github.com/snyk/snyk-iac-rules/util"
 	"github.com/stretchr/testify/assert"
 )
 
 func mockTemplateParams() *TemplateCommandParams {
 	return &TemplateCommandParams{
-		Rule: "Test Rule",
+		RuleID:       "Test Rule ID",
+		RuleTitle:    "Test Rule Title",
+		RuleSeverity: util.NewEnumFlag(LOW, []string{LOW, MEDIUM, HIGH, CRITICAL}),
 	}
 }
 
@@ -25,7 +27,11 @@ var directories = []struct {
 	},
 	{
 		workingDirectory: "./test/rules",
-		name:             "Test Rule",
+		name:             "Test Rule ID",
+	},
+	{
+		workingDirectory: "./test/rules/Test Rule ID",
+		name:             "fixtures",
 	},
 	{
 		workingDirectory: "./test",
@@ -43,14 +49,24 @@ var files = []struct {
 	template         string
 }{
 	{
-		workingDirectory: "./test/rules/Test Rule",
+		workingDirectory: "./test/rules/Test Rule ID",
 		name:             "main.rego",
 		template:         "templates/main.tpl.rego",
 	},
 	{
-		workingDirectory: "./test/rules/Test Rule",
+		workingDirectory: "./test/rules/Test Rule ID",
 		name:             "main_test.rego",
 		template:         "templates/main_test.tpl.rego",
+	},
+	{
+		workingDirectory: "./test/rules/Test Rule ID/fixtures",
+		name:             "allowed.tf",
+		template:         "templates/fixtures/allowed.tf",
+	},
+	{
+		workingDirectory: "./test/rules/Test Rule ID/fixtures",
+		name:             "denied.tf",
+		template:         "templates/fixtures/denied.tf",
 	},
 	{
 		workingDirectory: "./test/lib",
@@ -100,7 +116,9 @@ func TestTemplateInEmptyDirectory(t *testing.T) {
 		assert.Equal(t, files[filesIndex].workingDirectory, workingDirectory)
 		assert.Equal(t, files[filesIndex].name, name)
 		assert.Equal(t, files[filesIndex].template, template)
-		assert.Equal(t, "Test Rule", templating.RuleName)
+		assert.Equal(t, "Test Rule ID", templating.RuleID)
+		assert.Equal(t, "Test Rule Title", templating.RuleTitle)
+		assert.Equal(t, LOW, templating.RuleSeverity)
 		filesIndex++
 		return nil
 	}
@@ -151,7 +169,9 @@ func TestTemplateInDirectoryWithLib(t *testing.T) {
 		assert.Equal(t, files[filesIndex].workingDirectory, workingDirectory)
 		assert.Equal(t, files[filesIndex].name, name)
 		assert.Equal(t, files[filesIndex].template, template)
-		assert.Equal(t, "Test Rule", templating.RuleName)
+		assert.Equal(t, "Test Rule ID", templating.RuleID)
+		assert.Equal(t, "Test Rule Title", templating.RuleTitle)
+		assert.Equal(t, LOW, templating.RuleSeverity)
 		filesIndex++
 		return nil
 	}
@@ -202,7 +222,9 @@ func TestTemplateInDirectoryWithTesting(t *testing.T) {
 		assert.Equal(t, files[filesIndex].workingDirectory, workingDirectory)
 		assert.Equal(t, files[filesIndex].name, name)
 		assert.Equal(t, files[filesIndex].template, template)
-		assert.Equal(t, "Test Rule", templating.RuleName)
+		assert.Equal(t, "Test Rule ID", templating.RuleID)
+		assert.Equal(t, "Test Rule Title", templating.RuleTitle)
+		assert.Equal(t, LOW, templating.RuleSeverity)
 		filesIndex++
 		return nil
 	}
@@ -232,7 +254,7 @@ func TestTemplateWithExistingRule(t *testing.T) {
 		if directoriesIndex >= len(directories) {
 			return "", errors.New("Tried to create more directories than expected")
 		}
-		if name == "Test Rule" {
+		if name == "Test Rule ID" {
 			return "", errors.New("Directory already exists at location")
 		}
 		assert.Equal(t, directories[directoriesIndex].workingDirectory, workingDirectory)

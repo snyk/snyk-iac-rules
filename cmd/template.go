@@ -9,11 +9,12 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/snyk/snyk-iac-custom-rules/internal"
+	"github.com/snyk/snyk-iac-rules/internal"
+	"github.com/snyk/snyk-iac-rules/util"
 )
 
 var templateCommand = &cobra.Command{
-	Use:   "template <path>",
+	Use:   "template [path]",
 	Short: "Template a new rule",
 	Long: `Generate the template for a new rule.
 
@@ -51,14 +52,15 @@ $ snyk-iac-rules test --help
 	},
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		// make sure rule name doesn't have any whitespace in it
-		if strings.Contains(templateParams.Rule, " ") {
+		if strings.Contains(templateParams.RuleID, " ") {
 			return fmt.Errorf("Rule name cannot contain whitespace")
 		}
 
-		// make sure rule name doesn't belong to Snyk namesapce
-		if strings.HasPrefix(templateParams.Rule, "SNYK-") {
+		// make sure rule name doesn't belong to Snyk namespace
+		if strings.HasPrefix(templateParams.RuleID, "SNYK-") {
 			return fmt.Errorf("Rule name cannot start with \"SNYK-\"")
 		}
+
 		return nil
 	},
 	RunE: func(cmd *cobra.Command, args []string) error {
@@ -84,13 +86,17 @@ $ snyk-iac-rules test --help
 }
 
 func newTemplateCommandParams() *internal.TemplateCommandParams {
-	return &internal.TemplateCommandParams{}
+	return &internal.TemplateCommandParams{
+		RuleSeverity: util.NewEnumFlag(internal.LOW, []string{internal.LOW, internal.MEDIUM, internal.HIGH, internal.CRITICAL}),
+	}
 }
 
 var templateParams = newTemplateCommandParams()
 
 func init() {
-	templateCommand.Flags().StringVarP(&templateParams.Rule, "rule", "r", "", "provide rule name")
+	templateCommand.Flags().StringVarP(&templateParams.RuleID, "rule", "r", "", "provide rule id")
+	templateCommand.Flags().StringVarP(&templateParams.RuleTitle, "title", "s", "Default title", "provide rule title")
+	templateCommand.Flags().VarP(&templateParams.RuleSeverity, "severity", "t", "provide rule severity")
 	templateCommand.MarkFlagRequired("rule") //nolint
 	RootCommand.AddCommand(templateCommand)
 }

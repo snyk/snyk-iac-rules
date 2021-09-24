@@ -7,16 +7,17 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/snyk/snyk-iac-custom-rules/internal"
-	"github.com/snyk/snyk-iac-custom-rules/util"
+	"github.com/snyk/snyk-iac-rules/internal"
+	"github.com/snyk/snyk-iac-rules/util"
 )
 
 var TestIgnore = []string{
 	".*",
+	"fixtures",
 }
 
 var testCommand = &cobra.Command{
-	Use:   "test <path>",
+	Use:   "test [path]",
 	Short: "Execute Rego test cases",
 	Long: `Execute Rego test cases.
 
@@ -74,7 +75,7 @@ func init() {
 	testCommand.Flags().BoolVarP(&testParams.Verbose, "verbose", "v", false, "set verbose logging mode")
 	testCommand.Flags().VarP(&testParams.Explain, "explain", "", "enable query explanations")
 	testCommand.Flags().DurationVar(&testParams.Timeout, "timeout", 5*time.Second, "set test timeout")
-	testCommand.Flags().StringSliceVarP(&testParams.Ignore, "ignore", "", []string{".*"}, "set file and directory names to ignore during loading (e.g., '.*' excludes hidden files)")
+	testCommand.Flags().StringSliceVarP(&testParams.Ignore, "ignore", "", TestIgnore, "set file and directory names to ignore during loading")
 	testCommand.Flags().StringVarP(&testParams.RunRegex, "run", "r", "", "run only test cases matching the regular expression")
 	RootCommand.AddCommand(testCommand)
 }

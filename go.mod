@@ -1,4 +1,4 @@
-module github.com/snyk/snyk-iac-custom-rules
+module github.com/snyk/snyk-iac-rules
 
 go 1.16
 

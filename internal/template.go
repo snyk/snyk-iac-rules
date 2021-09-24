@@ -5,11 +5,20 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/snyk/snyk-iac-custom-rules/util"
+	"github.com/snyk/snyk-iac-rules/util"
+)
+
+const (
+	LOW      = "low"
+	MEDIUM   = "medium"
+	HIGH     = "high"
+	CRITICAL = "critical"
 )
 
 type TemplateCommandParams struct {
-	Rule string
+	RuleID       string
+	RuleTitle    string
+	RuleSeverity util.EnumFlag
 }
 
 var createDirectory = util.CreateDirectory
@@ -20,8 +29,10 @@ func RunTemplate(args []string, params *TemplateCommandParams) error {
 	workingDirectory := args[0]
 
 	templating := util.Templating{
-		RuleName: params.Rule,
-		Replace:  strings.ReplaceAll,
+		RuleID:       params.RuleID,
+		RuleTitle:    params.RuleTitle,
+		RuleSeverity: params.RuleSeverity.String(),
+		Replace:      strings.ReplaceAll,
 	}
 	err := templateRule(workingDirectory, templating)
 	if err != nil {
@@ -34,6 +45,7 @@ func RunTemplate(args []string, params *TemplateCommandParams) error {
 func templateRule(workingDirectory string, templating util.Templating) error {
 	var rulesDir string
 	var ruleDir string
+	var ruleFixtureDir string
 	var err error
 
 	err = startProgress("Template rules directory", func() error {
@@ -47,8 +59,8 @@ func templateRule(workingDirectory string, templating util.Templating) error {
 		return err
 	}
 
-	err = startProgress(fmt.Sprintf("Template rules/%s directory", templating.RuleName), func() error {
-		ruleDir, err = createDirectory(rulesDir, templating.RuleName, true)
+	err = startProgress(fmt.Sprintf("Template rules/%s directory", templating.RuleID), func() error {
+		ruleDir, err = createDirectory(rulesDir, templating.RuleID, true)
 		if err != nil {
 			if strings.Contains(err.Error(), "Directory already exists") {
 				return errors.New("Rule with the provided name already exists")
@@ -61,15 +73,37 @@ func templateRule(workingDirectory string, templating util.Templating) error {
 		return err
 	}
 
-	err = startProgress(fmt.Sprintf("Template rules/%s/main.rego file", templating.RuleName), func() error {
+	err = startProgress(fmt.Sprintf("Template rules/%s/main.rego file", templating.RuleID), func() error {
 		return templateFile(ruleDir, "main.rego", "templates/main.tpl.rego", templating)
 	})
 	if err != nil {
 		return err
 	}
 
-	err = startProgress(fmt.Sprintf("Template rules/%s/main_test.rego file", templating.RuleName), func() error {
+	err = startProgress(fmt.Sprintf("Template rules/%s/main_test.rego file", templating.RuleID), func() error {
 		return templateFile(ruleDir, "main_test.rego", "templates/main_test.tpl.rego", templating)
+	})
+	if err != nil {
+		return err
+	}
+
+	err = startProgress(fmt.Sprintf("Template rules/%s/fixtures directory", templating.RuleID), func() error {
+		ruleFixtureDir, err = createDirectory(ruleDir, "fixtures", true)
+		return nil
+	})
+	if err != nil {
+		return err
+	}
+
+	err = startProgress(fmt.Sprintf("Template rules/%s/fixtures/allowed.tf file", templating.RuleID), func() error {
+		return templateFile(ruleFixtureDir, "allowed.tf", "templates/fixtures/allowed.tf", templating)
+	})
+	if err != nil {
+		return err
+	}
+
+	err = startProgress(fmt.Sprintf("Template rules/%s/fixtures/denied.tf file", templating.RuleID), func() error {
+		return templateFile(ruleFixtureDir, "denied.tf", "templates/fixtures/denied.tf", templating)
 	})
 	if err != nil {
 		return err

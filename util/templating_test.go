@@ -11,8 +11,10 @@ import (
 
 func TestTemplateFile(t *testing.T) {
 	templating := Templating{
-		RuleName: "Test Rule",
-		Replace:  strings.ReplaceAll,
+		RuleID:       "Test Rule ID",
+		RuleTitle:    "Test Rule Title",
+		RuleSeverity: "low",
+		Replace:      strings.ReplaceAll,
 	}
 
 	currentDirectory, err := os.Getwd()
@@ -29,18 +31,20 @@ func TestTemplateFile(t *testing.T) {
 			expectedResult: `package rules
 
 deny[msg] {
-	input.spec.template.todo
+	resource := input.resource.test[name]
+	resource.todo
 	msg := {
-		"publicId": "Test Rule",
-		"title": "<TODO>",
-		"severity": "<TODO>",
+		"publicId": "Test Rule ID",
+		"title": "Test Rule Title",
+		"severity": "low",
 		"issue": "",
 		"impact": "",
 		"remediation": "",
-		"msg": "spec.template.todo",
+		"msg": sprintf("input.resource.test[%s].todo", [name]),
 		"references": [],
 	}
-}`,
+}
+`,
 		},
 		{
 			template: "templates/main_test.tpl.rego",
@@ -50,29 +54,23 @@ deny[msg] {
 import data.lib
 import data.lib.testing
 
-test_Test Rule {
-	test_cases := [{
+test_Test Rule ID {
+	# array containing test cases where the rule is allowed
+	allowed_test_cases := [{
 		"want_msgs": [],
-		"fixture": {
-			"spec": {
-				"template": {
-					"todo": false
-				}
-			}
-		},
-	}, {
-		"want_msgs": ["spec.template.todo"],
-		"fixture": {
-			"spec": {
-				"template": {
-					"todo": true
-				}
-			}
-		},
+		"fixture": "allowed.tf",
 	}]
 
-	testing.evaluate_test_cases("Test Rule", test_cases)
-}`,
+	# array containing cases where the rule is denied
+	denied_test_cases := [{
+		"want_msgs": ["input.resource.test[denied].todo"], # verifies that the correct msg is returned by the denied rule
+		"fixture": "denied.tf",
+	}]
+
+	test_cases := array.concat(allowed_test_cases, denied_test_cases)
+	testing.evaluate_test_cases("Test Rule ID", "./rules/Test Rule ID/fixtures", test_cases)
+}
+`,
 		},
 		{
 			template: "templates/lib/main.tpl.rego",
@@ -142,6 +140,16 @@ assert_response_set(result_set, test_case) {
 }
 
 parse_fixture_file(fixture_file) = fixture {
+	endswith(fixture_file, "yaml")
+	fixture := lib.normalize_to_array(yaml.unmarshal_file(fixture_file))
+} else = fixture {
+	endswith(fixture_file, "yml")
+	fixture := lib.normalize_to_array(yaml.unmarshal_file(fixture_file))
+} else = fixture {
+	endswith(fixture_file, "tf")
+	fixture := lib.normalize_to_array(hcl2.unmarshal_file(fixture_file))
+} else = fixture {
+	endswith(fixture_file, "json")
 	fixture := lib.normalize_to_array(yaml.unmarshal_file(fixture_file))
 }
 
@@ -149,10 +157,11 @@ get_result_set(fixture) = result_set {
 	result_set := data.rules.deny with input as fixture
 }
 
-evaluate_test_cases(publicId, test_cases) {
+evaluate_test_cases(publicId, fixture_directory, test_cases) {
 	passed_tests := {res |
 		tc := lib.merge_objects(test_cases[index], {"publicId": publicId, "index": index})
-		result_set := get_result_set(tc.fixture)
+		fixtures := parse_fixture_file(sprintf("%s/%s", [fixture_directory, tc.fixture]))
+		result_set := get_result_set(fixtures[doc_id])
 		assert_response_set(result_set, tc)
 		res := index
 	}
@@ -161,7 +170,8 @@ evaluate_test_cases(publicId, test_cases) {
 	count(passed_tests) == count(test_cases)
 } else = false {
 	true
-}`,
+}
+`,
 		},
 	}
 	for _, test := range testTable {

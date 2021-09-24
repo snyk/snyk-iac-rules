@@ -7,14 +7,14 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/snyk/snyk-iac-custom-rules/internal"
-	"github.com/snyk/snyk-iac-custom-rules/util"
+	"github.com/snyk/snyk-iac-rules/internal"
+	"github.com/snyk/snyk-iac-rules/util"
 )
 
-var BuildIgnore = append(TestIgnore, "*_test.rego")
+var BuildIgnore = append(TestIgnore, "testing", "*_test.rego")
 
 var buildCommand = &cobra.Command{
-	Use:   "build <path>",
+	Use:   "build [path]",
 	Short: "Build an OPA bundle",
 	Long: `Build an OPA bundle.
 
@@ -76,7 +76,7 @@ var buildParams = newBuildCommandParams()
 func init() {
 	buildCommand.Flags().VarP(&buildParams.Entrypoint, "entrypoint", "e", "set slash separated entrypoint path")
 	buildCommand.Flags().StringVarP(&buildParams.OutputFile, "output", "o", "bundle.tar.gz", "set the output filename")
-	buildCommand.Flags().StringSliceVarP(&buildParams.Ignore, "ignore", "", BuildIgnore, "set file and directory names to ignore during loading (e.g., '.*' excludes hidden files)")
+	buildCommand.Flags().StringSliceVarP(&buildParams.Ignore, "ignore", "", BuildIgnore, "set file and directory names to ignore during loading")
 	buildCommand.Flags().VarP(&buildParams.Target, "target", "t", "set the output bundle target type")
 	RootCommand.AddCommand(buildCommand)
 }
