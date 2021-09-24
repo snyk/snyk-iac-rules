@@ -8,7 +8,7 @@ import (
 
 	"github.com/open-policy-agent/opa/rego"
 	"github.com/open-policy-agent/opa/topdown"
-	"github.com/snyk/snyk-iac-custom-rules/util"
+	"github.com/snyk/snyk-iac-rules/util"
 
 	"github.com/stretchr/testify/assert"
 )

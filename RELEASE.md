@@ -10,7 +10,7 @@ For the release process we use [GoReleaser](https://goreleaser.com/), which can 
 
 If you're not creating a new major release of the SDK, then click the [create a pull request][develop-release-pr] link to open a PR from `develop` to `main`
 
-[develop-release-pr]: https://github.com/snyk/snyk-iac-custom-rules/compare/main...develop?expand=1&title=Release%20develop%20to%20production&body=Release%20stable%20to%20production
+[develop-release-pr]: https://github.com/snyk/snyk-iac-rules/compare/main...develop?expand=1&title=Release%20develop%20to%20production&body=Release%20stable%20to%20production
 
 Once this PR is merged, the `Release SDK` GitHub action will generate a new GitHub Tag from the commit message using [svu](https://github.com/caarlos0/svu) and push it to GitHub. Then, using `goreleaser`, it will create a new release and publish it to GitHub, containing the SDK binaries.
 

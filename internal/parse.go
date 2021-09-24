@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 
-	"github.com/snyk/snyk-iac-custom-rules/util"
+	"github.com/snyk/snyk-iac-rules/util"
 )
 
 const (
