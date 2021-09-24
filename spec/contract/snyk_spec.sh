@@ -11,13 +11,9 @@ Describe 'Contract test'
             
             # create a basic rule
             ./snyk-iac-rules template ./tmp --rule Contract
-            rm ./tmp/rules/Contract/fixtures/denied.tf
-            rm ./tmp/rules/Contract/fixtures/allowed.tf
 
-            # write rule and test
-            cp -r ./fixtures/custom-rules/rules/CUSTOM-3/* ./tmp/rules/Contract
             # replace the fixture path so it's correct
-            sed -i '' -e 's#/fixtures/custom-rules/rules/CUSTOM-3/fixtures#/tmp/rules/Contract/fixtures#' ./tmp/rules/Contract/main_test.rego
+            sed -i '' -e 's#/rules/Contract/fixtures#/tmp/rules/Contract/fixtures#' ./tmp/rules/Contract/main_test.rego
 
             # run tests and make sure they pass
             ./snyk-iac-rules test ./tmp 
@@ -29,7 +25,7 @@ Describe 'Contract test'
             snyk auth $SNYK_TOKEN 
 
             # use bundle with Snyk
-            snyk iac test --rules=./bundle.tar.gz ./tmp/rules/Contract/fixtures/test.yaml
+            snyk iac test --rules=./bundle.tar.gz ./tmp/rules/Contract/fixtures/denied.tf
         }
 
         When call snyk_iac_test
@@ -37,7 +33,7 @@ Describe 'Contract test'
         The output should include "Generated template" # the rule was tempalted successfully
         The output should include "PASS: 1/1" # the tests passed
         The output should include "Generated bundle: bundle.tar.gz" # the bundle has been generated
-        The output should include "Test [Critical Severity] [CUSTOM-3]" # it should include the custom rule in its output
+        The output should include "Default title [Low Severity] [Contract]" # it should include the custom rule in its output
         The stderr should be present # from the templating
     End
 End
