@@ -11,8 +11,8 @@ Describe 'Contract test'
             
             # create a basic rule
             ./snyk-iac-rules template ./tmp --rule Contract
-            rm ./tmp/rules/Contract/fixtures/denied.json
-            rm ./tmp/rules/Contract/fixtures/allowed.json
+            rm ./tmp/rules/Contract/fixtures/denied.tf
+            rm ./tmp/rules/Contract/fixtures/allowed.tf
 
             # write rule and test
             cp -r ./fixtures/custom-rules/rules/CUSTOM-3/* ./tmp/rules/Contract

@@ -95,15 +95,15 @@ func templateRule(workingDirectory string, templating util.Templating) error {
 		return err
 	}
 
-	err = startProgress(fmt.Sprintf("Template rules/%s/fixtures/allowed.json file", templating.RuleID), func() error {
-		return templateFile(ruleFixtureDir, "allowed.json", "templates/fixtures/allowed.json", templating)
+	err = startProgress(fmt.Sprintf("Template rules/%s/fixtures/allowed.tf file", templating.RuleID), func() error {
+		return templateFile(ruleFixtureDir, "allowed.tf", "templates/fixtures/allowed.tf", templating)
 	})
 	if err != nil {
 		return err
 	}
 
-	err = startProgress(fmt.Sprintf("Template rules/%s/fixtures/denied.json file", templating.RuleID), func() error {
-		return templateFile(ruleFixtureDir, "denied.json", "templates/fixtures/denied.json", templating)
+	err = startProgress(fmt.Sprintf("Template rules/%s/fixtures/denied.tf file", templating.RuleID), func() error {
+		return templateFile(ruleFixtureDir, "denied.tf", "templates/fixtures/denied.tf", templating)
 	})
 	if err != nil {
 		return err
