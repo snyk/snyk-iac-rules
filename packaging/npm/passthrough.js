@@ -9,9 +9,9 @@ var arch = 'amd64';
 // Select the right binary for this platform, then exec it with the original
 // arguments. This is a true exec(3), which will take over the pid, env, and
 // file descriptors.
-var iacCustomRulesPath = path.join(__dirname, './snyk-iac-custom-rules-' + os + '-' + arch);
+var iacCustomRulesPath = path.join(__dirname, './snyk-iac-rules-' + os + '-' + arch);
 if (os === 'win32') {
-  iacCustomRulesPath = path.join(__dirname, './snyk-iac-custom-rules.exe');
+  iacCustomRulesPath = path.join(__dirname, './snyk-iac-rules.exe');
 }
 
 try {
