@@ -4,9 +4,7 @@ cd $(dirname $0)/..
 
 rm -rf dist
 
-GIT_COMMIT="$1"
-
-VERSION=$(./scripts/compute-release-tag.sh $GIT_COMMIT)
+VERSION="$1"
 export VERSION="${VERSION}"
 
 echo "Updating NPM package version to ${VERSION}"
