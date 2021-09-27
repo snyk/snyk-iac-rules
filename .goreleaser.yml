@@ -79,7 +79,7 @@ brews:
 
     homepage: "https://snyk.io/"
     license: Apache-2.0
-    description: "Write, debug, test, and bundle custom rules for Snyk IaC."
+    description: "Write, debug, test, and bundle custom rules for Snyk Infrastructure as Code."
 
 scoop:
   # If set to auto, the release will not be uploaded to the scoop bucket
@@ -94,16 +94,16 @@ scoop:
 
   homepage: "https://snyk.io/"
   license: Apache-2.0
-  description: "Write, debug, test, and bundle custom rules for Snyk IaC."
+  description: "Write, debug, test, and bundle custom rules for Snyk Infrastructure as Code."
 
 # Publishes the deb and rpm files to the GitHub releases page.
 nfpms:
   - bindir: /usr/bin
-    description: "Write, debug, test, and bundle custom rules for Snyk IaC."
+    description: "Write, debug, test, and bundle custom rules for Snyk Infrastructure as Code."
     formats:
       - deb
       - rpm
-    homepage: https://github.com/snyk/snyk-iac-custom-rules
+    homepage: https://github.com/snyk/snyk-iac-rules
     license: Apache-2.0
 
 announce:
