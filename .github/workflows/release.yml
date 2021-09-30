@@ -3,7 +3,7 @@ name: Release SDK
 on:
   push:
     branches:
-      - 'main'
+       - 'main'
 
 permissions:
   contents: write
@@ -20,15 +20,24 @@ jobs:
       - uses: actions/setup-go@v2
         with:
           go-version: 1.16
-
-      - name: Push a new GitHub tag
+      - name: Create a new GitHub tag
         run: |
-          # Compute new tag from commit message
+          # Install svu for semantic releases
           echo 'deb [trusted=yes] https://apt.fury.io/caarlos0/ /' | sudo tee /etc/apt/sources.list.d/caarlos0.list
           sudo apt update
           sudo apt install svu
-          NEW_TAG=$(svu)
+          CURRENT_TAG=$(git describe --abbrev=0)
+          echo 'Current released tag is: ' $CURRENT_TAG
 
+          # Compute new tag from commit message
+          NEW_TAG=$(svu next)
+          echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
+
+      - name: Push a new GitHub tag
+        # skips pushing a new tag if tag already exists
+
+        if: "!contains(github.ref, 'refs/tags/v${{env.NEW_TAG}}')"
+        run: |
           # Hard-code user config
           git config user.email "snyksec@users.noreply.github.com"
           git config user.name "Snyk"
@@ -43,3 +52,4 @@ jobs:
           args: release --rm-dist
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SNYK_ACCESS_TOKEN: ${{ secrets.SNYK_ACCESS_TOKEN }}
