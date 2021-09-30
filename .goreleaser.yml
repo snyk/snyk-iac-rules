@@ -76,7 +76,12 @@ brews:
     tap:
       owner: snyk
       name: homebrew-tap
+      token: "{{ .Env.SNYK_ACCESS_TOKEN }}"
 
+    folder: Formula
+    commit_author:
+      name: snyk
+      email: snyksec@users.noreply.github.com
     homepage: "https://snyk.io/"
     license: Apache-2.0
     description: "Write, debug, test, and bundle custom rules for Snyk Infrastructure as Code."
@@ -91,7 +96,11 @@ scoop:
   bucket:
     owner: snyk
     name: scoop-snyk
+    token: "{{ .Env.SNYK_ACCESS_TOKEN }}"
 
+  commit_author:
+    name: snyk
+    email: snyksec@users.noreply.github.com
   homepage: "https://snyk.io/"
   license: Apache-2.0
   description: "Write, debug, test, and bundle custom rules for Snyk Infrastructure as Code."
