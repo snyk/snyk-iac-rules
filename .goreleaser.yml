@@ -71,21 +71,40 @@ brews:
     # If set to auto, the release will not be uploaded to the homebrew tap
     # in case there is an indicator for prerelease in the tag e.g. v1.0.0-rc1
     # Default is false.
-    skip_upload: true
+    skip_upload: false
+    # GitHub repository to push the formula to
+    tap:
+      owner: snyk
+      name: homebrew-tap
+
+    homepage: "https://snyk.io/"
+    license: Apache-2.0
+    description: "Write, debug, test, and bundle custom rules for Snyk Infrastructure as Code."
 
 scoop:
   # If set to auto, the release will not be uploaded to the scoop bucket
   # in case there is an indicator for prerelease in the tag e.g. v1.0.0-rc1
   # Default is false.
-  skip_upload: true
+  skip_upload: false
 
-dockers:
-  -
-    # If set to auto, the release will not be pushed to the Docker repository
-    #  in case there is an indicator of a prerelease in the tag, e.g. v1.0.0-rc1.
-    #
-    # Defaults to false.
-    skip_push: false
+  # Repository to push the app manifest to.
+  bucket:
+    owner: snyk
+    name: scoop-snyk
+
+  homepage: "https://snyk.io/"
+  license: Apache-2.0
+  description: "Write, debug, test, and bundle custom rules for Snyk Infrastructure as Code."
+
+# Publishes the deb and rpm files to the GitHub releases page.
+nfpms:
+  - bindir: /usr/bin
+    description: "Write, debug, test, and bundle custom rules for Snyk Infrastructure as Code."
+    formats:
+      - deb
+      - rpm
+    homepage: https://github.com/snyk/snyk-iac-rules
+    license: Apache-2.0
 
 announce:
   twitter:
