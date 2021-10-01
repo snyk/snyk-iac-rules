@@ -52,5 +52,6 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
       - run: ./scripts/release-npm.sh "${{ env.NEW_TAG }}"
       - run: npm publish
+        working-directory: dist
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
