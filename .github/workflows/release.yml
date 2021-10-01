@@ -3,7 +3,7 @@ name: Release SDK
 on:
   push:
     branches:
-       - 'main'
+      - 'main'
 
 permissions:
   contents: write
@@ -20,24 +20,16 @@ jobs:
       - uses: actions/setup-go@v2
         with:
           go-version: 1.16
-      - name: Create a new GitHub tag
+
+      - name: Push a new GitHub tag
         run: |
-          # Install svu for semantic releases
+          # Compute new tag from commit message
           echo 'deb [trusted=yes] https://apt.fury.io/caarlos0/ /' | sudo tee /etc/apt/sources.list.d/caarlos0.list
           sudo apt update
           sudo apt install svu
-          CURRENT_TAG=$(git describe --abbrev=0)
-          echo 'Current released tag is: ' $CURRENT_TAG
+          NEW_TAG=$(svu)
+          echo "NEW_TAG=${NEW_TAG}" >> $GITHUB_ENV
 
-          # Compute new tag from commit message
-          NEW_TAG=$(svu next)
-          echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
-
-      - name: Push a new GitHub tag
-        # skips pushing a new tag if tag already exists
-
-        if: "!contains(github.ref, 'refs/tags/v${{env.NEW_TAG}}')"
-        run: |
           # Hard-code user config
           git config user.email "snyksec@users.noreply.github.com"
           git config user.name "Snyk"
@@ -53,3 +45,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SNYK_ACCESS_TOKEN: ${{ secrets.SNYK_ACCESS_TOKEN }}
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '12.x'
+          registry-url: 'https://registry.npmjs.org'
+      - run: ./scripts/release-npm.sh "${{ env.NEW_TAG }}"
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
