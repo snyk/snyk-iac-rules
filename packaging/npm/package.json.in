@@ -1,0 +1,37 @@
+{
+  "name": "snyk-iac-rules",
+  "version": "${VERSION}",
+  "description": "An SDK to write, debug, test, and bundle custom rules for Snyk Infrastructure as Code.",
+  "bin": {
+    "snyk-iac-rules": "./snyk-iac-rules"
+  },
+  "os": [
+    "darwin",
+    "linux",
+    "win32"
+  ],
+  "cpu": [
+    "x64",
+    "arm64"
+  ],
+  "engines": {
+    "node": ">=4.4.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/snyk/snyk-iac-custom-rules.git"
+  },
+  "license": "Proprietary",
+  "dependencies": {},
+  "devDependencies": {},
+  "optionalDependencies": {
+    "@jcoreio/kexec": "^4.0.0"
+  },
+  "release": {
+    "branches": [
+      {
+        "name": "main"
+      }
+    ]
+  },
+}
