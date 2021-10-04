@@ -21,7 +21,7 @@ jobs:
         with:
           go-version: 1.16
 
-      - name: Push a new GitHub tag
+      - name: Check for new GitHub tag
         run: |
           # Compute new tag from commit message
           echo 'deb [trusted=yes] https://apt.fury.io/caarlos0/ /' | sudo tee /etc/apt/sources.list.d/caarlos0.list
@@ -30,7 +30,10 @@ jobs:
           NEW_TAG=$(svu)
           echo "NEW_TAG=${NEW_TAG}" >> $GITHUB_ENV
 
-          # Hard-code user config
+      - name: Push a new GitHub tag
+        if: "!contains(github.ref, 'refs/tags/v${{env.NEW_TAG}}')"
+        run: |
+         # Hard-code user config
           git config user.email "snyksec@users.noreply.github.com"
           git config user.name "Snyk"
 
@@ -39,6 +42,7 @@ jobs:
           git push origin "${NEW_TAG}"
 
       - name: Push a new GitHub release
+        if: "!contains(github.ref, 'refs/tags/v${{env.NEW_TAG}}')"
         uses: goreleaser/goreleaser-action@v2
         with:
           args: release --rm-dist
