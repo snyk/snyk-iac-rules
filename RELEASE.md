@@ -10,7 +10,7 @@ For the release process we use [GoReleaser](https://goreleaser.com/), which can 
 
 Click the [create a pull request][develop-release-pr] link to open a PR from `develop` to `main`
 
-[develop-release-pr]: https://github.com/snyk/snyk-iac-custom-rules/compare/main...develop?expand=1&title=Release%20develop%20to%20production&body=Release%20stable%20to%20production
+[develop-release-pr]: https://github.com/snyk/snyk-iac-rules/compare/main...develop?expand=1&title=Release%20develop%20to%20production&body=Release%20stable%20to%20production
 
 There are two release processes:
 1. Release of Golang binaries via GitHub Releases
