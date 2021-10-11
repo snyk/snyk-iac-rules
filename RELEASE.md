@@ -35,7 +35,7 @@ Once the PR from `develop` to `master` is merged, the `Release SDK` GitHub actio
 
 To test the NPM distribution process, run the following commands using the latest commit SHA:
 ```
-$ ./scripts/release-npm.sh <commit> <tag>
+$ ./scripts/release-npm.sh --tag=v0.2.3
 
 $ npm i -g dist/
 
