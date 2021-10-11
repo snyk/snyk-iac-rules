@@ -9,6 +9,9 @@
 
 ---
 
+# About
+The SDK is a tool for writing, debugging, testing, and bundling custom rules for [Snyk Infrastructure as Code](https://snyk.io/product/infrastructure-as-code-security/). See our [Custom Rules documentation](https://docs.snyk.io/products/snyk-infrastructure-as-code/custom-rules) to learn more.
+
 # Install
 The SDK can be installed through multiple channels.
 
