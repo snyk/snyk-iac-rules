@@ -26,7 +26,7 @@ jobs:
     <<: *defaults
     description: Lint & formatting
     docker:
-      - image: golangci/golangci-lint:v1.41
+      - image: golangci/golangci-lint:v1.42
     steps:
       - checkout
       - attach_workspace:
@@ -47,7 +47,7 @@ jobs:
   regression-test:
     <<: *defaults
     docker:
-      - image: circleci/golang:1.16-node
+      - image: circleci/golang:1.17
     steps:
       - checkout
       - install_shellspec

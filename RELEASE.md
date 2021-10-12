@@ -33,9 +33,9 @@ Once the PR from `develop` to `master` is merged, the `Release SDK` GitHub actio
 
 Once the PR from `develop` to `master` is merged, the `Release SDK` GitHub action will publish a new version of the NPM package to the Snyk registry.
 
-To test the NPM distribution process, run the following commands using the latest commit SHA:
+To test the NPM distribution process, run the following command using the latest tag in GitHub:
 ```
-$ ./scripts/release-npm.sh <commit> <tag>
+$ ./scripts/release-npm.sh --tag=v0.2.3
 
 $ npm i -g dist/
 
