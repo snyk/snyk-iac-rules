@@ -4,7 +4,7 @@
 
 ### Go
 
-This repo is written in the [Go](https://golang.org) programming language, which can be installed from their [installation page](https://golang.org/doc/install). The version it was developed with was v1.16, which is the minimum required version for this SDK.
+This repo is written in the [Go](https://golang.org) programming language, which can be installed from their [installation page](https://golang.org/doc/install). The version it was developed with was v1.17, which is the minimum required version for this SDK.
 
 ### Shellspec
 The SDK developed in this repo is tested by [shellspec](https://github.com/shellspec/shellspec), which can be installed as documented in [their README](https://github.com/shellspec/shellspec#installation).
