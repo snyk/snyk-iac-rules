@@ -25,8 +25,8 @@ The '--format' flag can be left out when parsing Terraform files, as we default 
 And to parse a YAML file run the following command:
 $ snyk-iac-rules parse test.yaml --format yaml
 
-The output of this command can be used when writing tests. Run the following command to find out how:
-$ snyk-iac-rules test --help
+See our documentation to learn more: 
+https://docs.snyk.io/products/snyk-infrastructure-as-code/custom-rules/getting-started-with-the-sdk/parsing-an-input-file
 `,
 	SilenceUsage: true,
 	Args: func(cmd *cobra.Command, args []string) error {

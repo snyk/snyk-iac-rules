@@ -19,24 +19,26 @@ var buildCommand = &cobra.Command{
 	Long: `Build an OPA bundle.
 
 The 'build' command packages OPA policy and data files into bundles. Bundles are
-gzipped tarballs. Paths referring to directories are
-loaded recursively.
+gzipped tarballs. Paths referring to directories are loaded recursively.
 
 To start, run:
 $ snyk-iac-rules build
-An optional path can be provided if the current directory contains more than just the rules for the bundle.
+An optional path can be provided if the current directory contains more than just 
+the rules for the bundle.
 
 To ignore test files, use the '--ignore' flag:
 $ snyk-iac-rules build --ignore testing --ignore "*_test.rego"
 
 If the 'template' command was used to generate the rules, then the default 
 entrypoint is "rules/deny". 
-Otherwise, override the entrypoint:
+Otherwise, you can also override the entrypoint:
 $ snyk-iac-rules build --entrypoint "<package name>/<function name>"
 
-The generated bundle has the name 'bundle.tar.gz', but a custom name can be provided
-and used for versioning the bundle:
-$ snyk-iac-rules build -o bundle-v0.0.1.tar.gz
+The generated bundle has the name 'bundle.tar.gz', but a custom name can be provided:
+$ snyk-iac-rules build -o custom-bundle.tar.gz
+
+See our documentation to learn more: 
+https://docs.snyk.io/products/snyk-infrastructure-as-code/custom-rules/getting-started-with-the-sdk/bundling-rules
 `,
 	SilenceUsage: true,
 	Args: func(cmd *cobra.Command, args []string) error {

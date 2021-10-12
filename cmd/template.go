@@ -24,8 +24,8 @@ To start, run the following command, replacing <rule> with the name of a rule.
 $ snyk-iac-rules template --rule <rule>
 
 A rules/ folder is created, which will contain a folder named after the provided
-rule name. In this folder the rule definition can be found in the main.rego file,
-along with a test in the main_test.rego file.
+rule name. In this folder the rule definition can be found in the 'main.rego' file,
+along with a test in the 'main_test.rego' file.
 
 Each rule must return a JSON structure containing the following required fields:
 - 'publicId': the name of the rule (automatically filled in by the command)
@@ -33,14 +33,16 @@ Each rule must return a JSON structure containing the following required fields:
 - 'severity': the severity of the rule; can be one of 'low', 'medium', 'high', and 'critical'
 - 'msg': the misconfigured path in the fixture
 
+See our documentation to learn more: 
+https://docs.snyk.io/products/snyk-infrastructure-as-code/custom-rules/getting-started-with-the-sdk/writing-a-rule
+
 By default, the deny function is where the rule will be implemented. A different 
 folder structure can be used, but overrides must be provided when generating the
 bundle. To find out how, run the following command:
 $ snyk-iac-rules build --help
 
 On top of generating the scaffolding for the rule, the command also generates a
-testing framework.
-To learn more about this, run the following command:
+testing framework. To learn more about this, run the following command:
 $ snyk-iac-rules test --help 
 `,
 	SilenceUsage: true,
