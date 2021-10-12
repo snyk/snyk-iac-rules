@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"errors"
-	"os"
 
 	"github.com/spf13/cobra"
 
@@ -36,13 +35,10 @@ https://docs.snyk.io/products/snyk-infrastructure-as-code/custom-rules/getting-s
 		if len(args) > 1 {
 			return errors.New("Too many paths provided")
 		}
-		file, err := os.Open(args[0])
+
+		fileInfo, err := util.ValidateFilePath(args[0])
 		if err != nil {
-			return errors.New("Invalid path provided")
-		}
-		fileInfo, err := file.Stat()
-		if err != nil {
-			return errors.New("Invalid path provided")
+			return err
 		}
 
 		if fileInfo.IsDir() {

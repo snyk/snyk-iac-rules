@@ -121,9 +121,16 @@ $ ./snyk-iac-rules {command}
 
 Make sure to build the Golang binary first by following the instructions in the README.
 
+To run `shellspec` tests, set the following environment variables based on the registry you want to push your bundle to:
+```
+export OCI_REGISTRY_NAME=<e.g. docker.io/<username>/<repo>>
+export OCI_REGISTRY_USERNAME=<username>
+export OCI_REGISTRY_PASSWORD=<password>
+```
+
 From the project's root folder, run `shellspec "spec/e2e"` to run [shellspec](https://github.com/shellspec/shellspec) tests for the end-to-end flow. This will verify the behaviour of the commands against the fixtures in the `./fixtures` folder and make sure the output and exit codes are correct.
 
-To run the contract tests with Snyk, install Snyk by running `npm i -g snyk` and set the `SNYK_TOKEN` to the Auth Token from https://app.snyk.io/account. Then, run `shellspec "spec/contract"` to verify if the generated bundle from the SDK is valid for the Snyk CLI(make sure the custom rules feature flag is enabled: `iacCustomRules`).
+To run the contract tests with Snyk, install Snyk by running `npm i -g snyk` and set the `SNYK_TOKEN` to the Auth Token from https://app.snyk.io/account. Finally, run `shellspec "spec/contract"` to verify if the generated bundle from the SDK is valid for the Snyk CLI(make sure the custom rules feature flag is enabled: `iacCustomRules`).
 
 Alternatively, you can run `go test ./...` for Golang unit tests. These test the files under `./internal` and `./util` and make sure complex behaviour is maintained between code changes.
 

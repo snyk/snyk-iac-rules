@@ -4,7 +4,7 @@ cleanup() { rm -rf ./tmp; rm bundle.tar.gz; }
 AfterAll 'cleanup'
 
 Describe 'Contract test'
-    It 'verifies contract between the SDK and Snyk'
+    It 'verifies contract between the SDK and Snyk via flag'
         snyk_iac_test() {
             # create tmp test directory for contract tests
             mkdir tmp
