@@ -19,7 +19,10 @@ $ snyk-iac-rules test --help
 4. Run the following command to learn how to build the bundle for the Snyk IaC CLI:
 $ snyk-iac-rules build --help
 
-See our documentation to learn more: 
+5. Run the following command to learn how to push the bundle to a Container Registry:
+$ snyk-iac-rules push --help
+
+See our documentation to learn more:
 https://docs.snyk.io/products/snyk-infrastructure-as-code/custom-rules
 
 Usage:
@@ -29,6 +32,7 @@ Available Commands:
   build       Build an OPA bundle
   help        Help about any command
   parse       Parse a fixture into JSON format
+  push        Push generated bundle
   template    Template a new rule
   test        Execute Rego test cases
 

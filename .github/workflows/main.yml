@@ -24,6 +24,13 @@ jobs:
       - name: Build Golang CLI
         run: go build -o snyk-iac-rules .
 
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        if: ${{ matrix.os != 'macos' }}
+        with:
+          username: ${{ secrets.OCI_REGISTRY_USERNAME }}
+          password: ${{ secrets.OCI_REGISTRY_PASSWORD }}
+
       - name: Install Shellspec - non-Windows
         if: ${{ matrix.os != 'windows' }}
         run: |
@@ -52,6 +59,8 @@ jobs:
           export PATH="/usr/local/bin/snyk-mac/docker:$PATH"
 
           shellspec "spec/e2e"
+        env:
+          OCI_REGISTRY_NAME: ${{ secrets.OCI_REGISTRY_NAME }}
 
       - name: Run shellspec tests - MacOS
         if: ${{ matrix.os == 'macos'}}
@@ -61,6 +70,9 @@ jobs:
           export PATH=${GOROOT}/bin:$PATH
 
           shellspec "spec/e2e"
+        env:
+          SKIP_PUSH_TEST: true # Docker is not supported in MacOS: https://github.com/docker/login-action/issues/14
+          OCI_REGISTRY_NAME: ${{ secrets.OCI_REGISTRY_NAME }}
 
       - name: Run shellspec tests - Windows
         if: ${{ matrix.os == 'windows' }}
@@ -68,3 +80,6 @@ jobs:
         shell: powershell
         run: |
           sh ./scripts/run-e2e-win.sh
+        env:
+          OCI_REGISTRY_NAME: ${{ secrets.OCI_REGISTRY_NAME }}
+
