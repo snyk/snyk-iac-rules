@@ -2,6 +2,7 @@ package internal
 
 import (
 	"context"
+	"errors"
 	"os"
 	"time"
 
@@ -85,9 +86,13 @@ func runTests(ctx context.Context, txn storage.Transaction, runner *tester.Runne
 
 	dup := make(chan *tester.Result)
 
+	exitCode := 0
 	go func() {
 		defer close(dup)
 		for tr := range ch {
+			if !tr.Pass() {
+				exitCode = 2
+			}
 			tr.Trace = filterTrace(tr.Trace, params)
 			dup <- tr
 		}
@@ -95,6 +100,10 @@ func runTests(ctx context.Context, txn storage.Transaction, runner *tester.Runne
 
 	if err := reporter.Report(dup); err != nil {
 		return err
+	}
+
+	if exitCode != 0 {
+		return errors.New("")
 	}
 
 	return nil
