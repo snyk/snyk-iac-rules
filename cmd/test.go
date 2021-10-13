@@ -39,7 +39,8 @@ package, which takes the name of a rule as a first argument and an array of test
 See our documentation to learn more: 
 https://docs.snyk.io/products/snyk-infrastructure-as-code/custom-rules/getting-started-with-the-sdk/testing-a-rule
 `,
-	SilenceUsage: true,
+	SilenceUsage:  true,
+	SilenceErrors: true,
 	Args: func(cmd *cobra.Command, args []string) error {
 		if len(args) > 1 {
 			return errors.New("Too many paths provided")
