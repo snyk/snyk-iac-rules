@@ -20,11 +20,8 @@ We will discuss both now, but both of them are dependant on GitHub tags for vers
 
 ### Versioning
 
-We use [svu](https://github.com/caarlos0/svu) to generate a new tag based on the commit message. The tag can then be pushed as per the following example:
-```bash
-$ git tag -a v1.0.0 -m "Major release v1"
-$ git push origin v1.0.0
-```
+We use [svu](https://github.com/caarlos0/svu) to generate a new tag based on the commit message. 
+
 ### GitHub Release
 
 Once the PR from `develop` to `master` is merged, the `Release SDK` GitHub action will generate a new GitHub tag based on the commit message and push an updated tag to GitHub. Then, using `goreleaser`, it will create a new release and publish it to GitHub, containing the SDK binaries.
