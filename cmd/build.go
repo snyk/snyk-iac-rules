@@ -3,7 +3,6 @@ package cmd
 import (
 	"errors"
 	"fmt"
-	"os"
 
 	"github.com/spf13/cobra"
 
@@ -49,13 +48,9 @@ https://docs.snyk.io/products/snyk-infrastructure-as-code/custom-rules/getting-s
 	},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if len(args) == 0 {
-			currentDirectory, err := os.Getwd()
-			if err != nil {
-				return err
-			}
-			args = append(args, currentDirectory)
+			// add default path if not provided
+			args = append(args, ".")
 		}
-
 		err := internal.RunBuild(args, buildParams)
 		if err != nil {
 			return err
