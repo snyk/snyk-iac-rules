@@ -97,8 +97,8 @@ var templateParams = newTemplateCommandParams()
 
 func init() {
 	templateCommand.Flags().StringVarP(&templateParams.RuleID, "rule", "r", "", "provide rule id")
-	templateCommand.Flags().StringVarP(&templateParams.RuleTitle, "title", "s", "Default title", "provide rule title")
-	templateCommand.Flags().VarP(&templateParams.RuleSeverity, "severity", "t", "provide rule severity")
+	templateCommand.Flags().StringVarP(&templateParams.RuleTitle, "title", "t", "Default title", "provide rule title")
+	templateCommand.Flags().VarP(&templateParams.RuleSeverity, "severity", "s", "provide rule severity")
 	templateCommand.MarkFlagRequired("rule") //nolint
 	RootCommand.AddCommand(templateCommand)
 }
