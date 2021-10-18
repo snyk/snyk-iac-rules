@@ -3,6 +3,21 @@
 cleanup() { rm -rf ./fixtures/custom-rules/rules/test; }
 AfterAll 'cleanup'
 
+Describe './snyk-iac-rules template --help'
+   It 'returns passing test status'
+      When call ./snyk-iac-rules template --help
+      The status should be success
+      The output should include 'Usage:
+  snyk-iac-rules template [path] [flags]
+
+Flags:
+  -h, --help                                  help for template
+  -r, --rule string                           provide rule id
+  -s, --severity {low,medium,high,critical}   provide rule severity (default low)
+  -t, --title string                          provide rule title (default "Default title")'
+   End
+End
+
 Describe './snyk-iac-rules template ./fixtures/custom-rules --rule test'
    It 'returns passing test status'
       When call ./snyk-iac-rules template ./fixtures/custom-rules --rule test
