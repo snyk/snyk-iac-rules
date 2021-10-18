@@ -1,7 +1,9 @@
 package util
 
 import (
+	"errors"
 	"fmt"
+	"io/fs"
 	"os"
 	"path"
 )
@@ -55,4 +57,18 @@ func CreateFile(workingDirectory string, name string) (string, error) {
 		return filePath, err
 	}
 	return filePath, nil
+}
+
+func ValidateFilePath(path string) (fs.FileInfo, error) {
+	invalidFilePath := errors.New("Failed to read from the provided path")
+
+	file, err := os.Open(path)
+	if err != nil {
+		return nil, invalidFilePath
+	}
+	fileInfo, err := file.Stat()
+	if err != nil {
+		return nil, invalidFilePath
+	}
+	return fileInfo, nil
 }
