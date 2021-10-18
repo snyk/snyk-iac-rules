@@ -1,4 +1,18 @@
 #!/bin/bash
+
+Describe './snyk-iac-rules parse --help'
+   It 'returns passing test status'
+      When call ./snyk-iac-rules parse --help
+      The status should be success
+      The output should include 'Usage:
+  snyk-iac-rules parse <path> [flags]
+
+Flags:
+  -f, --format {hcl2,yaml}   choose the format for the parser (default hcl2)
+  -h, --help                 help for parse'
+	End
+End
+
 Describe './snyk-iac-rules parse ./fixtures/custom-rules/rules/CUSTOM-1/fixtures/test.tf'
    It 'returns passing test status'
       When call ./snyk-iac-rules parse ./fixtures/custom-rules/rules/CUSTOM-1/fixtures/test.tf
