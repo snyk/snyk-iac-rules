@@ -52,6 +52,12 @@ jobs:
       - checkout
       - install_shellspec
       - build
+      - setup_remote_docker:
+          version: 19.03.13
+          docker_layer_caching: true
+      - run:
+          name: Login to Docker Hub
+          command: echo $OCI_REGISTRY_PASSWORD | docker login -u $OCI_REGISTRY_USERNAME --password-stdin
       - run:
           name: Run shellspec
           command: shellspec "spec/e2e"
