@@ -3,13 +3,12 @@ description: 'Sets up Shellspec testing by installing the Snyk CLI, Shellspec, a
 runs:
   using: "composite"
   steps:
-    - uses: actions/checkout@v2
-
     - uses: actions/setup-node@v1
       with:
         node-version: 15
 
     - name: Install Snyk with npm
+      shell: bash
       run: |
         echo "node_version: ${{ matrix.node_version }}"
         node -v
@@ -21,9 +20,11 @@ runs:
         go-version: '1.17'
 
     - name: Build custom rules SDK
+      shell: bash
       run: go build -o snyk-iac-rules .
 
     - name: Install shellspec
+      shell: bash
       run: |
         curl -fsSL https://git.io/shellspec | sh -s -- -y
         sudo ln -s ${HOME}/.local/lib/shellspec/shellspec /usr/local/bin/shellspec

@@ -1,0 +1,18 @@
+# Script generated with shellspec --gen-bin
+# Runs the `snyk` command authenticated with Snyk and with the OCI Registry URLs set.
+# It expects the `SNYK_TOKEN` environment variable to be set to the authentication token
+# of the org.
+# Usage within Shellspec tests:
+#     % @registry_test <registry_url> <registry_username> <registry_password> <file_path>
+#!/bin/sh -e
+. "$SHELLSPEC_SUPPORT_BIN"
+# authenticate with Snyk
+snyk auth $SNYK_TOKEN 
+
+# set environment variables for the CLI
+export OCI_REGISTRY_URL=$1
+export OCI_REGISTRY_USERNAME=$2
+export OCI_REGISTRY_PASSWORD=$3
+
+# use bundle with Snyk
+snyk iac test $4

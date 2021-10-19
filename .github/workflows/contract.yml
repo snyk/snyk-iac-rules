@@ -7,7 +7,7 @@ on:
       - '!main'     # excludes main
 
 jobs:
-  smoke_test:
+  contract_test:
     # The type of runner that the job will run on
     runs-on: ${{ matrix.os }}-latest
     strategy:
