@@ -80,7 +80,7 @@ Describe 'Contract test between the SDK and the Snyk CLI'
     Describe 'Via push and pull'
         skip_push_test() { ! [ -z "$SKIP_PUSH_TEST" ]; }
         Skip if 'skip environment variable is set' skip_push_test
-        It 'verifies contract between the SDK and Snyk via distribution'
+        It 'verifies contract between the SDK and Snyk'
             snyk_iac_test() {
                 # create tmp test directory for contract tests
                 mkdir tmp
@@ -98,16 +98,7 @@ Describe 'Contract test between the SDK and the Snyk CLI'
                 # push bundle
                 ../snyk-iac-rules push --registry $OCI_REGISTRY_NAME-$OS bundle.tar.gz
 
-                # authenticate with Snyk
-                snyk auth $SNYK_TOKEN 
-
-                # set environment variables for the CLI
-                export OCI_REGISTRY_URL=https://registry-1.$OCI_REGISTRY_NAME-$OS
-                export OCI_REGISTRY_USERNAME=$OCI_REGISTRY_USERNAME
-                export OCI_REGISTRY_PASSWORD=$OCI_REGISTRY_PASSWORD
-
-                # use bundle with Snyk
-                snyk iac test ./rules/Contract/fixtures/denied.tf
+                @registry_test https://registry-1.$OCI_REGISTRY_NAME-$OS $OCI_REGISTRY_USERNAME $OCI_REGISTRY_PASSWORD ./rules/Contract/fixtures/denied.tf
                 echo $?
             }
 
