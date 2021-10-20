@@ -3,8 +3,6 @@ package cmd
 import (
 	"errors"
 	"fmt"
-	"os"
-	"path"
 	"strings"
 
 	"github.com/spf13/cobra"
@@ -66,18 +64,11 @@ $ snyk-iac-rules test --help
 		return nil
 	},
 	RunE: func(cmd *cobra.Command, args []string) error {
-		// prepare directory for templating
-		currentDirectory, err := os.Getwd()
-		if err != nil {
-			return err
-		}
 		if len(args) == 0 {
-			args = append(args, currentDirectory)
-		} else {
-			args = []string{path.Join(currentDirectory, args[0])}
+			// add default path if not provided
+			args = append(args, ".")
 		}
-
-		err = internal.RunTemplate(args, templateParams)
+		err := internal.RunTemplate(args, templateParams)
 		if err != nil {
 			return err
 		}
