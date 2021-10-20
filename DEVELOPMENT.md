@@ -123,7 +123,8 @@ Make sure to build the Golang binary first by following the instructions in the 
 
 To run `shellspec` tests, set the following environment variables based on the registry you want to push your bundle to:
 ```
-export OCI_REGISTRY_NAME=<e.g. docker.io/<username>/<repo>>
+export OS=<your OS>
+export OCI_REGISTRY_NAME=<e.g. docker.io/<username>/<repo>:latest>
 export OCI_REGISTRY_USERNAME=<username>
 export OCI_REGISTRY_PASSWORD=<password>
 ```
