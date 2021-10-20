@@ -8,6 +8,19 @@ cleanup() { rm bundle.tar.gz; }
 BeforeEach 'setup'
 AfterEach 'cleanup'
 
+Describe './snyk-iac-rules push --help'
+   It 'returns passing test status'
+      When call ./snyk-iac-rules push --help
+      The status should be success
+      The output should include 'Usage:
+  snyk-iac-rules push <path> [flags]
+
+Flags:
+  -h, --help              help for push
+  -r, --registry string   provide container registry'
+   End
+End
+
 Describe './snyk-iac-rules push -r docker.io/test/test test.jpg'
    It 'returns failing test status'
       When call ./snyk-iac-rules push -r docker.io/test/test test.jpg
