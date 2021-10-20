@@ -96,13 +96,13 @@ Describe 'Contract test between the SDK and the Snyk CLI'
                 ../snyk-iac-rules build --ignore "testing" --ignore "*_test.rego" 
 
                 # push bundle
-                ../snyk-iac-rules push --registry $OCI_REGISTRY_NAME bundle.tar.gz
+                ../snyk-iac-rules push --registry $OCI_REGISTRY_NAME-$OS bundle.tar.gz
 
                 # authenticate with Snyk
                 snyk auth $SNYK_TOKEN 
 
                 # set environment variables for the CLI
-                export OCI_REGISTRY_URL=https://registry-1.$OCI_REGISTRY_NAME
+                export OCI_REGISTRY_URL=https://registry-1.$OCI_REGISTRY_NAME-$OS
                 export OCI_REGISTRY_USERNAME=$OCI_REGISTRY_USERNAME
                 export OCI_REGISTRY_PASSWORD=$OCI_REGISTRY_PASSWORD
 
