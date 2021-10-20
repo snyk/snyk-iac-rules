@@ -75,6 +75,7 @@ jobs:
           OCI_REGISTRY_NAME: ${{ secrets.OCI_REGISTRY_NAME }}
           OCI_REGISTRY_USERNAME: ${{ secrets.OCI_REGISTRY_USERNAME }}
           OCI_REGISTRY_PASSWORD: ${{ secrets.OCI_REGISTRY_PASSWORD }}
+          OS: ${{ matrix.os }}
 
       - name: Run shellspec tests - MacOS
         if: ${{ matrix.os == 'macos'}}
@@ -102,4 +103,5 @@ jobs:
           OCI_REGISTRY_NAME: ${{ secrets.OCI_REGISTRY_NAME }}
           OCI_REGISTRY_USERNAME: ${{ secrets.OCI_REGISTRY_USERNAME }}
           OCI_REGISTRY_PASSWORD: ${{ secrets.OCI_REGISTRY_PASSWORD }}
+          OS: ${{ matrix.os }}
 
