@@ -34,13 +34,15 @@ deny[msg] {
 	resource := input.resource.test[name]
 	resource.todo
 	msg := {
+		# Mandatory fields
 		"publicId": "Test Rule ID",
 		"title": "Test Rule Title",
 		"severity": "low",
+		"msg": sprintf("input.resource.test[%s].todo", [name]),
+		# Optional fields
 		"issue": "",
 		"impact": "",
 		"remediation": "",
-		"msg": sprintf("input.resource.test[%s].todo", [name]),
 		"references": [],
 	}
 }
