@@ -16,12 +16,15 @@ var pushCommand = &cobra.Command{
 	Short: "Push generated bundle",
 	Long: `Push a custom rules bundle to an OCI registry.
 
-To start, run:
+To start, log into your OCI registry locally and then run:
 $ snyk-iac-rules push <path to generated bundle> --registry <container registry>
 If the tag is not provided at the end of the provided registry, the tool defaults to 'latest'.
 
 The 'push' command takes in the container registry and pushes the bundle at the provided 
 path. The container registry must support OCI artifacts.
+
+See our documentation to learn more: 
+https://docs.snyk.io/products/snyk-infrastructure-as-code/custom-rules/getting-started-with-the-sdk/pushing-a-bundle
 `,
 	SilenceUsage: true,
 	Args: func(cmd *cobra.Command, args []string) error {
