@@ -10,6 +10,7 @@ import (
 	"github.com/containerd/containerd/remotes"
 	ocispec "github.com/opencontainers/image-spec/specs-go/v1"
 	auth "oras.land/oras-go/pkg/auth/docker"
+	orascontext "oras.land/oras-go/pkg/context"
 
 	"oras.land/oras-go/pkg/content"
 	"oras.land/oras-go/pkg/oras"
@@ -31,7 +32,7 @@ const configContents = `{
 }`
 
 func RunPush(args []string, params *PushCommandParams) error {
-	ctx := context.Background()
+	ctx := orascontext.Background()
 	memoryStore := content.NewMemoryStore()
 
 	return pushBundle(ctx, memoryStore, params.BundleRegistry, args[0])
@@ -72,7 +73,6 @@ var login = func(ctx context.Context) (remotes.Resolver, error) {
 	if err != nil {
 		return nil, fmt.Errorf("Failed to login: " + err.Error())
 	}
-
 	return resolver, nil
 }
 
@@ -92,7 +92,9 @@ var loadBundle = func(ctx context.Context, memoryStore *content.Memorystore, pat
 }
 
 var loadConfig = func(memoryStore *content.Memorystore) ocispec.Descriptor {
-	return memoryStore.Add("config.json", customConfigMediaType, []byte(configContents))
+	descriptor := memoryStore.Add("config.json", customConfigMediaType, []byte(configContents))
+	descriptor.Annotations = nil
+	return descriptor
 }
 
 var configurePushOpts = func(config ocispec.Descriptor) []oras.PushOpt {
