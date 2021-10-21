@@ -1,3 +1,5 @@
+# File was generated automatically by the snyk-iac-rules tool
+# It contains the utility functions for writing Snyk custom rules - modify at your own risk!
 package lib
 
 has_field(obj, field) {
