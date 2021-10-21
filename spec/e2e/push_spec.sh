@@ -64,7 +64,7 @@ End
 Describe './snyk-iac-rules push -r $OCI_REGISTRY_NAME bundle.tar.gz'
    It 'returns passing test status'
       skip_push_test() { ! [ -z "$SKIP_PUSH_TEST" ]; }
-      Skip if 'skip environment variable is set' skip_push_test
+      Skip if 'environment variable is set' skip_push_test
       When call ./snyk-iac-rules push -r $OCI_REGISTRY_NAME bundle.tar.gz
       The status should be success
       The output should include 'bundle.tar.gz'
