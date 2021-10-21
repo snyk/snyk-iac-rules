@@ -10,9 +10,9 @@
 snyk auth $SNYK_TOKEN 
 
 # set environment variables for the CLI
-snyk config set oci-registry-url=$1
-snyk config set oci-registry-username=$2
-snyk config set oci-registry-password=$3
+snyk config set oci-registry-url="$1"
+snyk config set oci-registry-username="$2"
+snyk config set oci-registry-password="$3"
 
 # use bundle with Snyk
 snyk iac test $4
