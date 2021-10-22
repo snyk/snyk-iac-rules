@@ -20,17 +20,27 @@ const (
 )
 
 type BuildCommandParams struct {
-	Entrypoint util.RepeatedStringFlag
-	OutputFile string
-	Ignore     []string
-	Target     util.EnumFlag
+	Entrypoint   util.RepeatedStringFlag
+	OutputFile   string
+	Ignore       []string
+	Target       util.EnumFlag
+	Capabilities util.CapabilitiesFlag
 }
 
 func RunBuild(args []string, params *BuildCommandParams) error {
 	buf := bytes.NewBuffer(nil)
 
+	var capabilities *ast.Capabilities
+	// if capabilities are not provided as a cmd flag,
+	// then ast.CapabilitiesForThisVersion must be called
+	// within dobuild to ensure custom builtins are properly captured
+	if params.Capabilities.C != nil {
+		capabilities = params.Capabilities.C
+	} else {
+		capabilities = ast.CapabilitiesForThisVersion()
+	}
 	compiler := compile.New().
-		WithCapabilities(ast.CapabilitiesForThisVersion()).
+		WithCapabilities(capabilities).
 		WithTarget(params.Target.String()).
 		WithAsBundle(false).
 		WithOptimizationLevel(0).
