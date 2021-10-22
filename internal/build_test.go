@@ -161,3 +161,110 @@ func TestBuildErrorDoesNotWriteFile(t *testing.T) {
 		assert.NotNil(t, err)
 	})
 }
+
+func TestBuildRespectsCapabilitiesSuccess(t *testing.T) {
+	capabilitiesJSON := `{
+    "builtins": [
+		{
+			"name": "eq",
+			"decl": {
+			  	"args": [
+					{
+				  		"type": "any"
+					},
+					{
+				 		"type": "any"
+					}
+			  	],
+			  	"result": {
+					"type": "boolean"
+			  	},
+			  		"type": "function"
+			},
+			"infix": "="
+		},
+		{
+			"name": "is_foo",
+			"decl": {
+			  	"args": [
+					{
+				  		"type": "string"
+					}
+			  	],
+			 	"result": {
+					"type": "boolean"
+			  	},
+			  	"type": "function"
+			}
+		}
+	]
+  }`
+
+	files := map[string]string{
+		"capabilities.json": capabilitiesJSON,
+		"test.rego": `
+			package test
+			p { is_foo("bar") }
+		`,
+	}
+
+	test.WithTempFS(files, func(root string) {
+		caps := util.NewCapabilitiesFlag()
+		if err := caps.Set(path.Join(root, "capabilities.json")); err != nil {
+			t.Fatal(err)
+		}
+		buildParams := mockBuildParams()
+		buildParams.OutputFile = path.Join(root, "bundle.tar.gz")
+		buildParams.Capabilities = caps
+
+		err := RunBuild([]string{root}, buildParams)
+		assert.Nil(t, err)
+	})
+}
+
+func TestBuildRespectsCapabilitiesFailure(t *testing.T) {
+	capabilitiesJSON := `{
+    "builtins": [
+		{
+			"name": "eq",
+			"decl": {
+			  	"args": [
+					{
+				  		"type": "any"
+					},
+					{
+				 		"type": "any"
+					}
+			  	],
+			  	"result": {
+					"type": "boolean"
+			  	},
+			  		"type": "function"
+			},
+			"infix": "="
+		}
+    ]
+  }`
+
+	files := map[string]string{
+		"capabilities.json": capabilitiesJSON,
+		"test.rego": `
+			package test
+			p { is_foo("bar") }
+		`,
+	}
+
+	test.WithTempFS(files, func(root string) {
+		caps := util.NewCapabilitiesFlag()
+		if err := caps.Set(path.Join(root, "capabilities.json")); err != nil {
+			t.Fatal(err)
+		}
+		buildParams := mockBuildParams()
+		buildParams.OutputFile = path.Join(root, "bundle.tar.gz")
+		buildParams.Capabilities = caps
+
+		err := RunBuild([]string{root}, buildParams)
+		assert.NotNil(t, err)
+		assert.Contains(t, err.Error(), "undefined function is_foo")
+	})
+}

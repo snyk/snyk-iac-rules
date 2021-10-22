@@ -63,8 +63,9 @@ https://docs.snyk.io/products/snyk-infrastructure-as-code/custom-rules/getting-s
 
 func newBuildCommandParams() *internal.BuildCommandParams {
 	return &internal.BuildCommandParams{
-		Entrypoint: util.NewRepeatedStringFlag("rules/deny"),
-		Target:     util.NewEnumFlag(internal.TargetWasm, []string{internal.TargetRego, internal.TargetWasm}),
+		Entrypoint:   util.NewRepeatedStringFlag("rules/deny"),
+		Target:       util.NewEnumFlag(internal.TargetWasm, []string{internal.TargetRego, internal.TargetWasm}),
+		Capabilities: util.NewCapabilitiesFlag(),
 	}
 }
 
@@ -75,5 +76,7 @@ func init() {
 	buildCommand.Flags().StringVarP(&buildParams.OutputFile, "output", "o", "bundle.tar.gz", "set the output filename")
 	buildCommand.Flags().StringSliceVarP(&buildParams.Ignore, "ignore", "", BuildIgnore, "set file and directory names to ignore during loading")
 	buildCommand.Flags().VarP(&buildParams.Target, "target", "t", "set the output bundle target type")
+	buildCommand.Flags().VarP(&buildParams.Capabilities, "capabilities", "c", "set configurable set of OPA capabilities")
+
 	RootCommand.AddCommand(buildCommand)
 }
