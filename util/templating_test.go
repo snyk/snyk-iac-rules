@@ -34,13 +34,15 @@ deny[msg] {
 	resource := input.resource.test[name]
 	resource.todo
 	msg := {
+		# Mandatory fields
 		"publicId": "Test Rule ID",
 		"title": "Test Rule Title",
 		"severity": "low",
+		"msg": sprintf("input.resource.test[%s].todo", [name]),
+		# Optional fields
 		"issue": "",
 		"impact": "",
 		"remediation": "",
-		"msg": sprintf("input.resource.test[%s].todo", [name]),
 		"references": [],
 	}
 }
@@ -75,7 +77,9 @@ test_Test Rule ID {
 		{
 			template: "templates/lib/main.tpl.rego",
 			fileName: "test.rego",
-			expectedResult: `package lib
+			expectedResult: `# File was generated automatically by the snyk-iac-rules tool
+# It contains the utility functions for writing Snyk custom rules - modify at your own risk!
+package lib
 
 has_field(obj, field) {
 	_ := obj[field]
@@ -110,7 +114,9 @@ normalize_to_array(resource) = out_array {
 		{
 			template: "templates/lib/testing/main.tpl.rego",
 			fileName: "test.rego",
-			expectedResult: `package lib.testing
+			expectedResult: `# File was generated automatically by the snyk-iac-rules tool
+# It contains the testing framework for Snyk custom rules - modify at your own risk!
+package lib.testing
 
 import data.lib
 
