@@ -11,11 +11,12 @@ Describe './snyk-iac-rules build --help'
   snyk-iac-rules build [path] [flags]
 
 Flags:
-  -e, --entrypoint string    set slash separated entrypoint path (default "rules/deny")
-  -h, --help                 help for build
-      --ignore strings       set file and directory names to ignore during loading (default [.*,fixtures,testing,*_test.rego])
-  -o, --output string        set the output filename (default "bundle.tar.gz")
-  -t, --target {rego,wasm}   set the output bundle target type (default wasm)'
+  -c, --capabilities string   set configurable set of OPA capabilities
+  -e, --entrypoint string     set slash separated entrypoint path (default "rules/deny")
+  -h, --help                  help for build
+      --ignore strings        set file and directory names to ignore during loading (default [.*,fixtures,testing,*_test.rego])
+  -o, --output string         set the output filename (default "bundle.tar.gz")
+  -t, --target {rego,wasm}    set the output bundle target type (default wasm)'
    End
 End
 
