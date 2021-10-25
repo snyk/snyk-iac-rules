@@ -1,3 +1,5 @@
+# File was generated automatically by the snyk-iac-rules tool
+# It contains the testing framework for Snyk custom rules - modify at your own risk!
 package lib.testing
 
 import data.lib

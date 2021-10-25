@@ -121,20 +121,57 @@ $ ./snyk-iac-rules {command}
 
 Make sure to build the Golang binary first by following the instructions in the README.
 
+#### End-to-end tests
+**Note** These instructions are for internal use only, as the  feature is behind a feature flag and entitlement.
+
 To run `shellspec` tests, set the following environment variables based on the registry you want to push your bundle to:
 ```
-export OCI_REGISTRY_NAME=<e.g. docker.io/<username>/<repo>>
+export OS=<your OS>
+export OCI_REGISTRY_NAME=<e.g. docker.io/<username>/<repo>:latest>
 export OCI_REGISTRY_USERNAME=<username>
 export OCI_REGISTRY_PASSWORD=<password>
 ```
 
 From the project's root folder, run `shellspec "spec/e2e"` to run [shellspec](https://github.com/shellspec/shellspec) tests for the end-to-end flow. This will verify the behaviour of the commands against the fixtures in the `./fixtures` folder and make sure the output and exit codes are correct.
 
-To run the contract tests with Snyk, install Snyk by running `npm i -g snyk` and set the `SNYK_TOKEN` to the Auth Token from https://app.snyk.io/account. Finally, run `shellspec "spec/contract"` to verify if the generated bundle from the SDK is valid for the Snyk CLI(make sure the custom rules feature flag is enabled: `iacCustomRules`).
+These tests run as part of the entire CI/CD for our three supported OS's (Linux, MacOs, and Windows), apart from when we release a new version of the SDK.
+
+#### Contract tests with the Snyk CLI
+**Note** These instructions are for internal use only, as the  feature is behind a feature flag and entitlement.
+
+To run the contract tests with Snyk, install Snyk by running `npm i -g snyk` and set the `SNYK_TOKEN` to the Auth Token from https://app.snyk.io/account. 
+
+Finally, run `shellspec "spec/contract"` to verify if the generated bundle from the SDK is valid for the Snyk CLI. 
+
+These tests run as part of the entire CI/CD for our three supported OS's (Linux, MacOs, and Windows), apart from when we release a new version of the SDK.
+
+#### End-to-End tests for Supported Registries
+**Note** These instructions are for internal use only, as the  feature is behind a feature flag and entitlement.
+
+To run the tests for supported registries, follow the same steps as the contract tests but also set the following environment variables and log into the registries manually:
+```
+export OCI_DOCKERHUB_REGISTRY_URL=
+export OCI_DOCKERHUB_REGISTRY_NAME=
+export OCI_DOCKERHUB_REGISTRY_USERNAME=
+export OCI_DOCKERHUB_REGISTRY_PASSWORD=
+
+export OCI_AZURE_REGISTRY_URL=
+export OCI_AZURE_REGISTRY_NAME=
+export OCI_AZURE_REGISTRY_USERNAME=
+export OCI_AZURE_REGISTRY_PASSWORD=
+```
+
+Finally, run `shellspec "spec/registries"` to verify if the generated bundle from the SDK is valid for the Snyk CLI.
+
+These tests run as part of the CI/CD for the `develop` branch on Linux only.
+
+#### Unit tests
 
 Alternatively, you can run `go test ./...` for Golang unit tests. These test the files under `./internal` and `./util` and make sure complex behaviour is maintained between code changes.
 
 For test coverage, run `go test -coverprofile cover.out fmt ./...` and then `go tool cover -html=cover.out` to see what is missing.
+
+These tests run as part of the entire CI/CD, apart from when we release a new version of the SDK.
 
 **Note**
 All the fixtures under the `./fixture` folder are used for all Shellspec tests.
