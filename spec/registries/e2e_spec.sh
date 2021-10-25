@@ -28,7 +28,6 @@ Describe 'Supported Registry'
             When call registry_test "$OCI_DOCKERHUB_REGISTRY_NAME" "$OCI_DOCKERHUB_REGISTRY_URL" "$OCI_DOCKERHUB_REGISTRY_USERNAME" "$OCI_DOCKERHUB_REGISTRY_PASSWORD"
             The status should eq 1
             The output should include 'Missing tags [Low Severity] [CUSTOM-1]' # it should include the custom rule in its output
-            The stderr should be present # from the test limit
         End
     End
 
@@ -38,7 +37,6 @@ Describe 'Supported Registry'
             When call registry_test "$OCI_AZURE_REGISTRY_NAME" "$OCI_AZURE_REGISTRY_URL" "$OCI_AZURE_REGISTRY_USERNAME" "$OCI_AZURE_REGISTRY_PASSWORD"
             The status should eq 1
             The output should include 'Missing tags [Low Severity] [CUSTOM-1]' # it should include the custom rule in its output
-            The stderr should be present # from the test limit
         End
     End
 
