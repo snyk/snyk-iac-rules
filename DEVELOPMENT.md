@@ -159,6 +159,11 @@ export OCI_AZURE_REGISTRY_URL=
 export OCI_AZURE_REGISTRY_NAME=
 export OCI_AZURE_REGISTRY_USERNAME=
 export OCI_AZURE_REGISTRY_PASSWORD=
+
+export OCI_HARBOR_REGISTRY_URL=
+export OCI_HARBOR_REGISTRY_NAME=
+export OCI_HARBOR_REGISTRY_USERNAME=
+export OCI_HARBOR_REGISTRY_PASSWORD=
 ```
 
 Finally, run `shellspec "spec/registries"` to verify if the generated bundle from the SDK is valid for the Snyk CLI.

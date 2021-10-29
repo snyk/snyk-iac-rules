@@ -40,4 +40,12 @@ Describe 'Supported Registry'
         End
     End
 
+    Describe "Harbor"
+        Skip if 'environment variable is not set'  [ -z "$OCI_HARBOR_REGISTRY_URL" ]
+        It "can push and pull"
+            When call registry_test "$OCI_HARBOR_REGISTRY_NAME" "$OCI_HARBOR_REGISTRY_URL" "$OCI_HARBOR_REGISTRY_USERNAME" "$OCI_HARBOR_REGISTRY_PASSWORD"
+            The status should eq 1
+            The output should include 'Missing tags [Low Severity] [CUSTOM-1]' # it should include the custom rule in its output
+        End
+    End
 End
