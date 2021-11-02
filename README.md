@@ -12,6 +12,8 @@
 # About
 The SDK is a tool for writing, debugging, testing, and bundling custom rules for [Snyk Infrastructure as Code](https://snyk.io/product/infrastructure-as-code-security/). See our [Custom Rules documentation](https://docs.snyk.io/products/snyk-infrastructure-as-code/custom-rules) to learn more.
 
+![system overview](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.github.com/snyk/snyk-iac-rules/main/assets/overview-activity-swimlanes.puml)
+
 # Install
 The SDK can be installed through multiple channels.
 

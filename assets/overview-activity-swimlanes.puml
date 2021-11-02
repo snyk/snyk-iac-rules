@@ -1,0 +1,30 @@
+@startuml
+skinparam activity {
+    FontColor          white
+    AttributeFontColor white
+    FontSize           14
+    AttributeFontSize  14
+    AttributeFontname  Corbel
+    BackgroundColor    #527BC6
+    BorderColor        black
+    ArrowColor         #222266
+}
+skinparam activityDiamondFontSize 14
+skinparam activityArrowFontSize 12
+
+|Development|
+start
+    :generate templates;
+    :write a rule in Rego;
+|Unit Testing|
+    :prepare a fixture file;
+    :write unit tests for the rule;
+    :run the tests against a fixture file;
+    #c69d52:while (do tests pass?) is (no)
+      :update tests/rule;
+    endwhile (yes)
+|Distribution|
+    :build the bundle;
+    :push the bundle;
+    stop
+@enduml

@@ -1,0 +1,31 @@
+@startuml
+skinparam activity {
+    FontColor          white
+    AttributeFontColor white
+    FontSize           15
+    AttributeFontSize  15
+    AttributeFontname  Corbel
+    BackgroundColor    #527BC6
+    BorderColor        black
+    ArrowColor         #222266
+}
+partition "snyk-iac-rules " {
+    start
+    partition "development " {
+        :generate templates;
+        :write a rule in Rego;
+        partition "unit testing " {
+            :prepare a fixture file;
+            :write unit tests for the rule;
+            :run the tests against a fixture file;
+            #c69d52:while (do tests pass?) is (no)
+              :update tests/rule;
+            endwhile (yes)
+        }
+        :build the bundle;
+        :push the bundle;
+        stop
+    }
+
+}
+@enduml
