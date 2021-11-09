@@ -32,3 +32,11 @@ Describe './snyk-iac-rules test ./fixtures/custom-rules --run test_CUSTOM_1'
       The output should include 'PASS: 1/1'
    End
 End
+
+Describe './snyk-iac-rules test ./fixtures --run test_CUSTOM_1'
+   It 'returns passing test status'
+      When call ./snyk-iac-rules test ./fixtures --run test_CUSTOM_1
+      The status should be success
+      The output should include 'WARNING: The command must point at a folder that contains the package for the rules'
+   End
+End
