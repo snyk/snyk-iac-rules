@@ -8,7 +8,7 @@ deny[msg] {
 		"publicId": "{{.RuleID}}",
 		"title": "{{.RuleTitle}}",
 		"severity": "{{.RuleSeverity}}",
-		"msg": sprintf("input.resource.test[%s].todo", [name]),
+		"msg": sprintf("input.resource.test[%s].todo", [name]), # must be the JSON path to the resource field that triggered the deny rule
 		# Optional fields
 		"issue": "",
 		"impact": "",
