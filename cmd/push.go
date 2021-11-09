@@ -20,7 +20,7 @@ To start, log into your OCI registry locally and then run:
 $ snyk-iac-rules push <path to generated bundle> --registry <desired location of OCI artifact in your OCI registry>
 If the tag is not provided at the end of the provided registry, the tool defaults to 'latest'.
 
-For example, if your generated bundle is called bundle.tar.gz and the OCI registry you're using is DockerHub, the following command must be run: 
+For example, if your generated bundle is called 'bundle.tar.gz' and the OCI registry you're using is DockerHub, the following command must be run: 
 $ snyk-iac-rules push bundle.tar.gz --registry docker.io/example/bundle
 
 Once the bundle has been pushed to an OCI registry, the Snyk IaC CLI can be configured to pull it down for scanning:
