@@ -60,13 +60,16 @@ test_Test Rule ID {
 	# array containing test cases where the rule is allowed
 	allowed_test_cases := [{
 		"want_msgs": [],
-		"fixture": "allowed.tf",
+		"fixture": "allowed.json",
 	}]
 
 	# array containing cases where the rule is denied
 	denied_test_cases := [{
 		"want_msgs": ["input.resource.test[denied].todo"], # verifies that the correct msg is returned by the denied rule
-		"fixture": "denied.tf",
+		"fixture": "denied2.tf",
+	}, {
+		"want_msgs": ["input.resource.test[denied].todo"], # verifies that the correct msg is returned by the denied rule
+		"fixture": "denied1.yaml",
 	}]
 
 	test_cases := array.concat(allowed_test_cases, denied_test_cases)

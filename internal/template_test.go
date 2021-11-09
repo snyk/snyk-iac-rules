@@ -60,13 +60,18 @@ var files = []struct {
 	},
 	{
 		workingDirectory: "./test/rules/Test Rule ID/fixtures",
-		name:             "allowed.tf",
-		template:         "templates/fixtures/allowed.tf",
+		name:             "allowed.json",
+		template:         "templates/fixtures/allowed.json",
 	},
 	{
 		workingDirectory: "./test/rules/Test Rule ID/fixtures",
-		name:             "denied.tf",
-		template:         "templates/fixtures/denied.tf",
+		name:             "denied1.yaml",
+		template:         "templates/fixtures/denied1.yaml",
+	},
+	{
+		workingDirectory: "./test/rules/Test Rule ID/fixtures",
+		name:             "denied2.tf",
+		template:         "templates/fixtures/denied2.tf",
 	},
 	{
 		workingDirectory: "./test/lib",
