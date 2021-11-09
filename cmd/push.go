@@ -17,11 +17,16 @@ var pushCommand = &cobra.Command{
 	Long: `Push a custom rules bundle to an OCI registry.
 
 To start, log into your OCI registry locally and then run:
-$ snyk-iac-rules push <path to generated bundle> --registry <container registry>
+$ snyk-iac-rules push <path to generated bundle> --registry <desired location of OCI artifact in your OCI registry>
 If the tag is not provided at the end of the provided registry, the tool defaults to 'latest'.
 
-The 'push' command takes in the container registry and pushes the bundle at the provided 
-path. The container registry must support OCI artifacts.
+For example, if your generated bundle is called bundle.tar.gz and the OCI registry you're using is DockerHub, the following command must be run: 
+$ snyk-iac-rules push bundle.tar.gz --registry docker.io/example/bundle
+
+Once the bundle has been pushed to an OCI registry, the Snyk IaC CLI can be configured to pull it down for scanning:
+$ snyk config set oci-registry-url=https://registry-1.docker.io/example/bundle:latest
+$ snyk config set oci-registry-username=username
+$ snyk config set oci-registry-password=password
 
 See our documentation to learn more: 
 https://docs.snyk.io/products/snyk-infrastructure-as-code/custom-rules/getting-started-with-the-sdk/pushing-a-bundle
