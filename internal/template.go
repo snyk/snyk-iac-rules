@@ -80,17 +80,23 @@ func templateRule(workingDirectory string, templating util.Templating) error {
 	}
 	fmt.Printf("[/] Template rules/%s/fixtures directory\n", templating.RuleID)
 
-	err = templateFile(ruleFixtureDir, "allowed.tf", "templates/fixtures/allowed.tf", templating)
+	err = templateFile(ruleFixtureDir, "allowed.json", "templates/fixtures/allowed.json", templating)
 	if err != nil {
 		return err
 	}
-	fmt.Printf("[/] Template rules/%s/fixtures/allowed.tf file\n", templating.RuleID)
+	fmt.Printf("[/] Template rules/%s/fixtures/allowed.json file\n", templating.RuleID)
 
-	err = templateFile(ruleFixtureDir, "denied.tf", "templates/fixtures/denied.tf", templating)
+	err = templateFile(ruleFixtureDir, "denied1.yaml", "templates/fixtures/denied1.yaml", templating)
 	if err != nil {
 		return err
 	}
-	fmt.Printf("[/] Template rules/%s/fixtures/denied.tf file\n", templating.RuleID)
+	fmt.Printf("[/] Template rules/%s/fixtures/denied1.yaml file\n", templating.RuleID)
+
+	err = templateFile(ruleFixtureDir, "denied2.tf", "templates/fixtures/denied2.tf", templating)
+	if err != nil {
+		return err
+	}
+	fmt.Printf("[/] Template rules/%s/fixtures/denied2.tf file\n", templating.RuleID)
 	return nil
 }
 

@@ -27,7 +27,7 @@ Describe 'Contract test between the SDK and the Snyk CLI'
                 snyk auth $SNYK_TOKEN 
 
                 # use bundle with Snyk
-                snyk iac test --rules=./bundle.tar.gz ./rules/Contract/fixtures/denied.tf
+                snyk iac test --rules=./bundle.tar.gz ./rules/Contract/fixtures/denied2.tf
                 echo $?
             }
 
@@ -68,7 +68,7 @@ Describe 'Contract test between the SDK and the Snyk CLI'
                 snyk auth $SNYK_TOKEN 
 
                 # use bundle with Snyk
-                snyk iac test --rules=./bundle.tar.gz ./tmp/rules/Contract/fixtures/denied.tf
+                snyk iac test --rules=./bundle.tar.gz ./tmp/rules/Contract/fixtures/denied2.tf
                 echo $?
             }
 
@@ -103,7 +103,7 @@ Describe 'Contract test between the SDK and the Snyk CLI'
                 # push bundle
                 ../snyk-iac-rules push --registry $OCI_REGISTRY_NAME-$OS bundle.tar.gz
 
-                @registry_test https://registry-1.$OCI_REGISTRY_NAME-$OS $OCI_REGISTRY_USERNAME $OCI_REGISTRY_PASSWORD ./rules/Contract/fixtures/denied.tf
+                @registry_test https://registry-1.$OCI_REGISTRY_NAME-$OS $OCI_REGISTRY_USERNAME $OCI_REGISTRY_PASSWORD ./rules/Contract/fixtures/denied2.tf
                 echo $?
             }
 
