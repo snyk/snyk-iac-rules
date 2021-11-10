@@ -48,4 +48,13 @@ Describe 'Supported Registry'
             The output should include 'Missing tags [Low Severity] [CUSTOM-1]' # it should include the custom rule in its output
         End
     End
+
+    Describe "GitHub"
+        Skip if 'environment variable is not set'  [ -z "$OCI_GITHUB_REGISTRY_URL" ]
+        It "can push and pull"
+            When call registry_test "$OCI_GITHUB_REGISTRY_NAME" "$OCI_GITHUB_REGISTRY_URL" "$OCI_GITHUB_REGISTRY_USERNAME" "$OCI_GITHUB_REGISTRY_PASSWORD"
+            The status should eq 1
+            The output should include 'Missing tags [Low Severity] [CUSTOM-1]' # it should include the custom rule in its output
+        End
+    End
 End
