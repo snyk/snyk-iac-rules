@@ -50,8 +50,13 @@ Describe 'Contract test between the SDK and the Snyk CLI'
                 # create a basic rule
                 ./snyk-iac-rules template ./tmp --rule Contract
 
+                OS=$(uname)
                 # replace the fixture path so it's correct
-                sed -i '' -e 's#/rules/Contract/fixtures#/tmp/rules/Contract/fixtures#' ./tmp/rules/Contract/main_test.rego
+                if [ "$OS" = "Darwin" ]; then
+                    sed -i '' -e 's#/rules/Contract/fixtures#/tmp/rules/Contract/fixtures#' ./tmp/rules/Contract/main_test.rego
+                else
+                    sed -i -e 's#/rules/Contract/fixtures#/tmp/rules/Contract/fixtures#' ./tmp/rules/Contract/main_test.rego
+                fi
 
                 # run tests and make sure they pass
                 ./snyk-iac-rules test ./tmp 
