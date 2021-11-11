@@ -1,5 +1,8 @@
 version: 2.1
 
+orbs:
+  snyk: snyk/snyk@1.1.1
+
 defaults: &defaults
   working_directory: ~/snyk-iac-rules
 
@@ -64,7 +67,27 @@ jobs:
       - run:
           name: Run Golang tests
           command: go test ./...
-
+  security-oss:
+    docker:
+      - image: cimg/go:1.17.2 
+    steps:
+      - checkout
+      - snyk/scan:
+          severity-threshold: medium 
+          monitor-on-build: true
+          project: ${CIRCLE_PROJECT_REPONAME}
+          organization: snyk-iac-group-seceng
+  security-code:
+    docker:
+      - image: cimg/go:1.17.2 
+    steps:
+      - checkout
+      - snyk/scan:
+          command: code test
+          severity-threshold: medium 
+          monitor-on-build: false
+          project: ${CIRCLE_PROJECT_REPONAME}
+          organization: snyk-iac-group-seceng
 workflows:
   version: 2
   test:
@@ -76,6 +99,10 @@ workflows:
               ignore:
                 - main
                 - develop
+      - security-oss:
+          name: Snyk oss
+      - security-code:
+          name: Snyk code
       - regression-test:
           name: Regression Test
           filters:
