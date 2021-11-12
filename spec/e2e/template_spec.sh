@@ -27,8 +27,9 @@ Describe './snyk-iac-rules template ./fixtures/custom-rules --rule test'
       The output should include 'Template rules/test/main.rego file'
       The output should include 'Template rules/test/main_test.rego file'
       The output should include 'Template rules/test/fixtures directory'
-      The output should include 'Template rules/test/fixtures/allowed.tf file'
-      The output should include 'Template rules/test/fixtures/denied.tf file'
+      The output should include 'Template rules/test/fixtures/allowed.json file'
+      The output should include 'Template rules/test/fixtures/denied1.yaml file'
+      The output should include 'Template rules/test/fixtures/denied2.tf file'
       The output should include 'Generated template'
    End
 End

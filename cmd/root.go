@@ -27,8 +27,14 @@ $ snyk-iac-rules test --help
 4. Run the following command to learn how to build the bundle for the Snyk IaC CLI:
 $ snyk-iac-rules build --help
 
-5. Run the following command to learn how to push the bundle to a Container Registry:
+5. Verify your bundle locally using the Snyk IaC CLI:
+$ snyk iac test --rules --help
+
+6. Run the following command to learn how to push the bundle to an OCI Registry:
 $ snyk-iac-rules push --help
+
+7. Use the bundle stored in the OCI registry in the Snyk IaC CLI:
+$ snyk --help
 
 See our documentation to learn more:
 https://docs.snyk.io/products/snyk-infrastructure-as-code/custom-rules
