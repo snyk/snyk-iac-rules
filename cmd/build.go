@@ -46,6 +46,15 @@ https://docs.snyk.io/products/snyk-infrastructure-as-code/custom-rules/getting-s
 		}
 		return nil
 	},
+	PostRun: func(cmd *cobra.Command, args []string) {
+		var path string
+		if len(args) == 0 {
+			path = "."
+		} else {
+			path = args[0]
+		}
+		util.CheckIfRunningInRootDirectory(path)
+	},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if len(args) == 0 {
 			// add default path if not provided
