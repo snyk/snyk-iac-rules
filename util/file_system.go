@@ -72,3 +72,10 @@ func ValidateFilePath(path string) (fs.FileInfo, error) {
 	}
 	return fileInfo, nil
 }
+
+func CheckIfRunningInRootDirectory(path string) {
+	_, err := os.Stat(computePath(path, "rules/"))
+	if err != nil && os.IsNotExist(err) {
+		fmt.Println("WARNING: The command must point at a folder that contains the package for the rules.\n	 If the rules were generated using the template command, make sure you have the\n	 /rules and /lib folder in your current running directory or provide an optional path argument pointing to that location.")
+	}
+}

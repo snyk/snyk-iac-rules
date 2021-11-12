@@ -28,7 +28,11 @@ jobs:
           sudo apt update
           sudo apt install svu
           NEW_TAG=$(svu)
-          echo "NEW_TAG=${NEW_TAG}" >> $GITHUB_ENV
+          if [ $(git tag -l "$NEW_TAG") ]; then
+              echo "Tag already exists!"
+          else
+              echo "NEW_TAG=${NEW_TAG}" >> $GITHUB_ENV
+          fi
 
       - name: Push a new GitHub tag
         if: "!contains(github.ref, 'refs/tags/v${{env.NEW_TAG}}')"

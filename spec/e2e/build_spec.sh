@@ -27,3 +27,11 @@ Describe './snyk-iac-rules build ./fixtures/custom-rules --ignore testing --igno
       The output should include 'Generated bundle: bundle.tar.gz'
    End
 End
+
+Describe './snyk-iac-rules build ./fixtures--ignore testing --ignore "*_test.rego"'
+   It 'returns passing test status'
+      When call ./snyk-iac-rules build ./fixtures --ignore testing --ignore "*_test.rego"
+      The status should be success
+      The output should include 'WARNING: The command must point at a folder that contains the package for the rules'
+   End
+End

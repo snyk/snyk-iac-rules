@@ -27,7 +27,7 @@ Describe 'Contract test between the SDK and the Snyk CLI'
                 snyk auth $SNYK_TOKEN 
 
                 # use bundle with Snyk
-                snyk iac test --rules=./bundle.tar.gz ./rules/Contract/fixtures/denied.tf
+                snyk iac test --rules=./bundle.tar.gz ./rules/Contract/fixtures/denied2.tf
                 echo $?
             }
 
@@ -37,7 +37,7 @@ Describe 'Contract test between the SDK and the Snyk CLI'
             The output should include "PASS: 1/1" # the tests passed
             The output should include "Generated bundle: bundle.tar.gz" # the bundle has been generated
             The output should include "Default title [Low Severity] [Contract]" # it should include the custom rule in its output
-            The stderr should be present # from the templating
+            The stderr should not be present
 
             cd ../
         End
@@ -50,8 +50,13 @@ Describe 'Contract test between the SDK and the Snyk CLI'
                 # create a basic rule
                 ./snyk-iac-rules template ./tmp --rule Contract
 
+                OS=$(uname)
                 # replace the fixture path so it's correct
-                sed -i '' -e 's#/rules/Contract/fixtures#/tmp/rules/Contract/fixtures#' ./tmp/rules/Contract/main_test.rego
+                if [ "$OS" = "Darwin" ]; then
+                    sed -i '' -e 's#/rules/Contract/fixtures#/tmp/rules/Contract/fixtures#' ./tmp/rules/Contract/main_test.rego
+                else
+                    sed -i -e 's#/rules/Contract/fixtures#/tmp/rules/Contract/fixtures#' ./tmp/rules/Contract/main_test.rego
+                fi
 
                 # run tests and make sure they pass
                 ./snyk-iac-rules test ./tmp 
@@ -63,7 +68,7 @@ Describe 'Contract test between the SDK and the Snyk CLI'
                 snyk auth $SNYK_TOKEN 
 
                 # use bundle with Snyk
-                snyk iac test --rules=./bundle.tar.gz ./tmp/rules/Contract/fixtures/denied.tf
+                snyk iac test --rules=./bundle.tar.gz ./tmp/rules/Contract/fixtures/denied2.tf
                 echo $?
             }
 
@@ -73,7 +78,7 @@ Describe 'Contract test between the SDK and the Snyk CLI'
             The output should include "PASS: 1/1" # the tests passed
             The output should include "Generated bundle: bundle.tar.gz" # the bundle has been generated
             The output should include "Default title [Low Severity] [Contract]" # it should include the custom rule in its output
-            The stderr should be present # from the templating
+            The stderr should not be present
         End
     End
 
@@ -98,7 +103,7 @@ Describe 'Contract test between the SDK and the Snyk CLI'
                 # push bundle
                 ../snyk-iac-rules push --registry $OCI_REGISTRY_NAME-$OS bundle.tar.gz
 
-                @registry_test https://registry-1.$OCI_REGISTRY_NAME-$OS $OCI_REGISTRY_USERNAME $OCI_REGISTRY_PASSWORD ./rules/Contract/fixtures/denied.tf
+                @registry_test https://registry-1.$OCI_REGISTRY_NAME-$OS $OCI_REGISTRY_USERNAME $OCI_REGISTRY_PASSWORD ./rules/Contract/fixtures/denied2.tf
                 echo $?
             }
 
@@ -108,7 +113,7 @@ Describe 'Contract test between the SDK and the Snyk CLI'
             The output should include "PASS: 1/1" # the tests passed
             The output should include "Generated bundle: bundle.tar.gz" # the bundle has been generated
             The output should include "Default title [Low Severity] [Contract]" # it should include the custom rule in its output
-            The stderr should be present # from the templating
+            The stderr should not be present
 
             cd ../
         End

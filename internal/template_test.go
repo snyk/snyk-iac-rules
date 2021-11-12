@@ -60,13 +60,18 @@ var files = []struct {
 	},
 	{
 		workingDirectory: "./test/rules/Test Rule ID/fixtures",
-		name:             "allowed.tf",
-		template:         "templates/fixtures/allowed.tf",
+		name:             "allowed.json",
+		template:         "templates/fixtures/allowed.json",
 	},
 	{
 		workingDirectory: "./test/rules/Test Rule ID/fixtures",
-		name:             "denied.tf",
-		template:         "templates/fixtures/denied.tf",
+		name:             "denied1.yaml",
+		template:         "templates/fixtures/denied1.yaml",
+	},
+	{
+		workingDirectory: "./test/rules/Test Rule ID/fixtures",
+		name:             "denied2.tf",
+		template:         "templates/fixtures/denied2.tf",
 	},
 	{
 		workingDirectory: "./test/lib",
@@ -81,14 +86,6 @@ var files = []struct {
 }
 
 func TestTemplateInEmptyDirectory(t *testing.T) {
-	oldStartProgress := startProgress
-	defer func() {
-		startProgress = oldStartProgress
-	}()
-	startProgress = func(progressName string, progress util.ProgressFunc) error {
-		return progress()
-	}
-
 	directoriesIndex := 0
 	oldCreateDirectory := createDirectory
 	defer func() {
@@ -131,14 +128,6 @@ func TestTemplateInEmptyDirectory(t *testing.T) {
 }
 
 func TestTemplateInDirectoryWithLib(t *testing.T) {
-	oldStartProgress := startProgress
-	defer func() {
-		startProgress = oldStartProgress
-	}()
-	startProgress = func(progressName string, progress util.ProgressFunc) error {
-		return progress()
-	}
-
 	directoriesIndex := 0
 	oldCreateDirectory := createDirectory
 	defer func() {
@@ -184,14 +173,6 @@ func TestTemplateInDirectoryWithLib(t *testing.T) {
 }
 
 func TestTemplateInDirectoryWithTesting(t *testing.T) {
-	oldStartProgress := startProgress
-	defer func() {
-		startProgress = oldStartProgress
-	}()
-	startProgress = func(progressName string, progress util.ProgressFunc) error {
-		return progress()
-	}
-
 	directoriesIndex := 0
 	oldCreateDirectory := createDirectory
 	defer func() {
@@ -237,14 +218,6 @@ func TestTemplateInDirectoryWithTesting(t *testing.T) {
 }
 
 func TestTemplateWithExistingRule(t *testing.T) {
-	oldStartProgress := startProgress
-	defer func() {
-		startProgress = oldStartProgress
-	}()
-	startProgress = func(progressName string, progress util.ProgressFunc) error {
-		return progress()
-	}
-
 	directoriesIndex := 0
 	oldCreateDirectory := createDirectory
 	defer func() {
