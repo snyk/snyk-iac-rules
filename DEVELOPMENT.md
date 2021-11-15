@@ -164,6 +164,11 @@ export OCI_HARBOR_REGISTRY_URL=
 export OCI_HARBOR_REGISTRY_NAME=
 export OCI_HARBOR_REGISTRY_USERNAME=
 export OCI_HARBOR_REGISTRY_PASSWORD=
+
+export OCI_GITHUB_REGISTRY_URL=
+export OCI_GITHUB_REGISTRY_NAME=
+export OCI_GITHUB_REGISTRY_USERNAME=<GitHub username>
+export OCI_GITHUB_REGISTRY_PASSWORD=<personal access token>
 ```
 
 Finally, run `shellspec "spec/registries"` to verify if the generated bundle from the SDK is valid for the Snyk CLI.
