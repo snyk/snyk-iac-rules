@@ -54,7 +54,12 @@ https://docs.snyk.io/products/snyk-infrastructure-as-code/custom-rules/getting-s
 			return fmt.Errorf("The provided container registry is invalid")
 		}
 
+		if strings.Contains(pushParams.BundleRegistry, "://") {
+			return fmt.Errorf("The provided container registry includes a protocol. Please remove it and try again")
+		}
+
 		repository := strings.Split(pushParams.BundleRegistry, "/")
+
 		tag := repository[len(repository)-1]
 		if !strings.Contains(tag, ":") {
 			pushParams.BundleRegistry = pushParams.BundleRegistry + ":latest"
