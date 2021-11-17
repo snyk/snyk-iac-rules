@@ -170,11 +170,15 @@ export OCI_ELASTIC_REGISTRY_URL=https://${OCI_GITHUB_REGISTRY_NAME}
 export OCI_GITHUB_REGISTRY_USERNAME=<GitHub username>
 export OCI_GITHUB_REGISTRY_PASSWORD=<personal access token>
 
+export AWS_ACCESS_KEY_ID=
+export AWS_SECRET_ACCESS_KEY=
 export OCI_ELASTIC_REGISTRY_NAME=<registry>/<repo name>:<repo tag>
 export OCI_ELASTIC_REGISTRY_URL=https://${OCI_ELASTIC_REGISTRY_NAME}
 export OCI_ELASTIC_REGISTRY_USERNAME=AWS
-export OCI_ELASTIC_REGISTRY_PASSWORD=$(aws ecr get-login-password)
 ```
+**Note** To run one test at a time, only set the environment variables for one of these registries.
+
+Make sure to have the aws CLI installed locally if you're running the Elastic tests and to do a `docker login -u <username> -p <password>` prior to running the test
 
 Finally, run `shellspec "spec/registries"` to verify if the generated bundle from the SDK is valid for the Snyk CLI.
 
