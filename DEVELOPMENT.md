@@ -150,21 +150,35 @@ These tests run as part of the entire CI/CD for our three supported OS's (Linux,
 
 To run the tests for supported registries, follow the same steps as the contract tests but also set the following environment variables and log into the registries manually:
 ```
-export OCI_DOCKERHUB_REGISTRY_URL=
-export OCI_DOCKERHUB_REGISTRY_NAME=
+export OCI_DOCKERHUB_REGISTRY_NAME=docker.io/<repo name>:<repo tag>
+export OCI_DOCKERHUB_REGISTRY_URL=https://registry-1.${OCI_DOCKERHUB_REGISTRY_NAME}
 export OCI_DOCKERHUB_REGISTRY_USERNAME=
 export OCI_DOCKERHUB_REGISTRY_PASSWORD=
 
-export OCI_AZURE_REGISTRY_URL=
-export OCI_AZURE_REGISTRY_NAME=
-export OCI_AZURE_REGISTRY_USERNAME=
-export OCI_AZURE_REGISTRY_PASSWORD=
+export OCI_AZURE_REGISTRY_NAME=<registry>/<account name>/<repo name>:<repo tag>
+export OCI_AZURE_REGISTRY_URL=https://${OCI_AZURE_REGISTRY_NAME}
+export OCI_AZURE_REGISTRY_USERNAME=<client id>
+export OCI_AZURE_REGISTRY_PASSWORD=<client secret>
 
-export OCI_HARBOR_REGISTRY_URL=
-export OCI_HARBOR_REGISTRY_NAME=
+export OCI_HARBOR_REGISTRY_NAME=<registry>/<account name>/<repo name>:<repo tag>
+export OCI_HARBOR_REGISTRY_URL=https://${OCI_HARBOR_REGISTRY_NAME}
 export OCI_HARBOR_REGISTRY_USERNAME=
 export OCI_HARBOR_REGISTRY_PASSWORD=
+
+export OCI_GITHUB_REGISTRY_NAME=<registry>/<repo name>:<repo tag>
+export OCI_ELASTIC_REGISTRY_URL=https://${OCI_GITHUB_REGISTRY_NAME}
+export OCI_GITHUB_REGISTRY_USERNAME=<GitHub username>
+export OCI_GITHUB_REGISTRY_PASSWORD=<personal access token>
+
+export AWS_ACCESS_KEY_ID=
+export AWS_SECRET_ACCESS_KEY=
+export OCI_ELASTIC_REGISTRY_NAME=<registry>/<repo name>:<repo tag>
+export OCI_ELASTIC_REGISTRY_URL=https://${OCI_ELASTIC_REGISTRY_NAME}
+export OCI_ELASTIC_REGISTRY_USERNAME=AWS
 ```
+**Note** To run one test at a time, only set the environment variables for one of these registries.
+
+Make sure to have the aws CLI installed locally if you're running the Elastic tests and to do a `docker login -u <username> -p <password>` prior to running the test
 
 Finally, run `shellspec "spec/registries"` to verify if the generated bundle from the SDK is valid for the Snyk CLI.
 

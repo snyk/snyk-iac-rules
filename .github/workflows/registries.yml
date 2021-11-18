@@ -15,7 +15,7 @@ jobs:
       - name: Setup
         uses: ./.github/actions/setup_shellspec # use local action
         
-      - name: Login to Docker Hub
+      - name: Login to registry via Docker
         uses: docker/login-action@v1
         if: ${{ matrix.os != 'macos' }}
         with:
@@ -45,7 +45,7 @@ jobs:
       - name: Setup
         uses: ./.github/actions/setup_shellspec # use local action
 
-      - name: Login to Azure
+      - name: Login to registry via Docker
         uses: docker/login-action@v1
         with:
           registry: ${{ secrets.OCI_AZURE_REGISTRY }}
@@ -75,7 +75,7 @@ jobs:
       - name: Setup
         uses: ./.github/actions/setup_shellspec # use local action
 
-      - name: Login to Harbor
+      - name: Login to registry via Docker
         uses: docker/login-action@v1
         with:
           registry: ${{ secrets.OCI_HARBOR_REGISTRY }}
@@ -95,3 +95,70 @@ jobs:
           OCI_HARBOR_REGISTRY_URL: ${{ secrets.OCI_HARBOR_REGISTRY_URL }}
           OCI_HARBOR_REGISTRY_USERNAME: ${{ secrets.OCI_HARBOR_REGISTRY_USERNAME }}
           OCI_HARBOR_REGISTRY_PASSWORD: ${{ secrets.OCI_HARBOR_REGISTRY_PASSWORD }}
+
+  github:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup
+        uses: ./.github/actions/setup_shellspec # use local action
+
+      - name: Login to registry via Docker
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ secrets.OCI_GITHUB_REGISTRY_USERNAME }}
+          password: ${{ secrets.OCI_GITHUB_REGISTRY_PASSWORD }}
+
+      - name: Run shellspec tests
+        working-directory: ./
+        shell: bash -l {0} # run bash with --login flag to load .bash_profile that's used by yarn install method
+        run: |
+          export PATH="/usr/local/bin/snyk-mac/docker:$PATH"
+
+          shellspec "spec/registries"
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+          OCI_GITHUB_REGISTRY_NAME: ${{ secrets.OCI_GITHUB_REGISTRY_NAME }}
+          OCI_GITHUB_REGISTRY_URL: ${{ secrets.OCI_GITHUB_REGISTRY_URL }}
+          OCI_GITHUB_REGISTRY_USERNAME: ${{ secrets.OCI_GITHUB_REGISTRY_USERNAME }}
+          OCI_GITHUB_REGISTRY_PASSWORD: ${{ secrets.OCI_GITHUB_REGISTRY_PASSWORD }}
+
+  elastic:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup
+        uses: ./.github/actions/setup_shellspec # use local action
+              
+      -
+        name: Login to registry via Docker
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ secrets.OCI_ELASTIC_REGISTRY }}
+          username: ${{ secrets.OCI_ELASTIC_REGISTRY_ACCESS_KEY }}
+          password: ${{ secrets.OCI_ELASTIC_REGISTRY_SECRET_KEY }}
+      
+      - name: Login with AWS
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.OCI_ELASTIC_REGISTRY_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.OCI_ELASTIC_REGISTRY_SECRET_KEY }}
+          aws-region: eu-west-1
+
+      - name: Run shellspec tests
+        working-directory: ./
+        shell: bash -l {0} # run bash with --login flag to load .bash_profile that's used by yarn install method
+        run: |
+          export PATH="/usr/local/bin/snyk-mac/docker:$PATH"
+
+          shellspec "spec/registries"
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+          OCI_ELASTIC_REGISTRY_NAME: ${{ secrets.OCI_ELASTIC_REGISTRY_NAME }}
+          OCI_ELASTIC_REGISTRY_URL: ${{ secrets.OCI_ELASTIC_REGISTRY_URL }}
+          OCI_ELASTIC_REGISTRY_USERNAME: AWS
