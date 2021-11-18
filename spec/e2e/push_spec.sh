@@ -30,6 +30,15 @@ Describe './snyk-iac-rules push -r docker.io/test/test test.jpg'
    End
 End
 
+Describe 'When call ./snyk-iac-rules push -r https://docker.io/test/test bundle.tar.gz'
+   It 'returns failing test status'
+      When call ./snyk-iac-rules push -r https://docker.io/test/test bundle.tar.gz
+      The status should be failure
+      The output should include 'The provided container registry includes a protocol. Please remove it and try again'
+      The stderr should be present
+   End
+End
+
 # This tries to push a non-existant bundle to a DockerHub container registry
 Describe './snyk-iac-rules push -r docker.io/test/test bundle-incorrect.tar.gz'
    It 'returns failing test status'
