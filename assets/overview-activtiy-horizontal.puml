@@ -9,6 +9,7 @@ skinparam activity {
     BorderColor        black
     ArrowColor         #222266
 }
+title Build and use your own custom rules
 
 partition snyk/iac-rules {
     partition development {
@@ -21,13 +22,31 @@ partition snyk/iac-rules {
         }
     }
     ---> if "        do the tests pass?" then
-    partition distribution {
-        --->[ yes] "build the bundle"
-        -r> "push the bundle to a container registry"
-        -r> (*)
+     partition build {
+        -->[ yes] "build the bundle"
+     }
+    partition configuration {
+        ---> set the container registry URL
+        note right
+            You can configure this via:
+            1. the UI
+            2. the API
+            3. the CLI
+        end note
     }
+    partition distribution {
+        -d> "push the bundle to a container registry"
+        note right
+            The Container Registry
+            must support OCI Artifacts
+        end note
+    }
+}
+partition scanning {
+    --> run 'snyk iac test' with Snyk CLI
+}
+    -r> (*)
     else
         endif
     --> [ no] "write unit tests for the rule"
-}
 @enduml
