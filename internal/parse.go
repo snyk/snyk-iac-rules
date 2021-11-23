@@ -4,19 +4,22 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	parsers "github.com/snyk/snyk-iac-parsers/pkg"
 	"io/ioutil"
 
 	"github.com/snyk/snyk-iac-rules/util"
 )
 
 const (
-	HCL2 = "hcl2"
-	YAML = "yaml"
+	HCL2           = "hcl2"
+	YAML           = "yaml"
+	TERRAFORM_PLAN = "tf-plan"
 )
 
 var readFile = ioutil.ReadFile
-var parseYAML = util.ParseYAML
-var parseHCL2 = util.ParseHCL2
+var parseYAML = parsers.ParseYAML
+var parseHCL2 = parsers.ParseHCL2
+var parseTerraformPlan = parsers.ParseTerraformPlan
 
 type ParseCommandParams struct {
 	Format util.EnumFlag
@@ -36,8 +39,11 @@ func RunParse(args []string, params *ParseCommandParams) error {
 		if err := parseYAML(content, &parsedInput); err != nil {
 			return err
 		}
+	case TERRAFORM_PLAN:
+		if err := parseTerraformPlan(content, &parsedInput); err != nil {
+			return err
+		}
 	default:
-		// HCL2 is the only other option here
 		if err := parseHCL2(content, &parsedInput); err != nil {
 			return err
 		}

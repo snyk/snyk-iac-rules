@@ -13,7 +13,7 @@ import (
 
 func mockParseParams() *ParseCommandParams {
 	return &ParseCommandParams{
-		Format: util.NewEnumFlag(HCL2, []string{HCL2, YAML}),
+		Format: util.NewEnumFlag(HCL2, []string{HCL2, YAML, TERRAFORM_PLAN}),
 	}
 }
 
@@ -87,6 +87,44 @@ func TestParse(t *testing.T) {
 
 		parseParams := mockParseParams()
 		err = parseParams.Format.Set(HCL2)
+		assert.Nil(t, err)
+
+		err = RunParse([]string{"test"}, parseParams)
+		assert.Nil(t, err)
+
+		outC := make(chan string)
+		// copy the output in a separate goroutine so printing can't block indefinitely
+		go func() {
+			var buf bytes.Buffer
+			_, err = io.Copy(&buf, r)
+			assert.Nil(t, err)
+			outC <- buf.String()
+		}()
+
+		w.Close()
+		os.Stdout = rescueStdout
+		out := <-outC
+
+		assert.Equal(t, expected, out)
+	})
+
+	t.Run("Prints out a JSON formatted version of Terraform Plan JSON output", func(t *testing.T) {
+		rescueStdout := os.Stdout
+		r, w, err := os.Pipe()
+		assert.Nil(t, err)
+		os.Stdout = w
+
+		oldParseTerraformPlan := parseTerraformPlan
+		defer func() {
+			parseTerraformPlan = oldParseTerraformPlan
+		}()
+		parseTerraformPlan = func(content []byte, parsedInput *interface{}) error {
+			assert.Equal(t, "Test", string(content))
+			return json.Unmarshal(input, parsedInput)
+		}
+
+		parseParams := mockParseParams()
+		err = parseParams.Format.Set(TERRAFORM_PLAN)
 		assert.Nil(t, err)
 
 		err = RunParse([]string{"test"}, parseParams)

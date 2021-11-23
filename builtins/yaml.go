@@ -1,13 +1,12 @@
 package builtins
 
 import (
+	parsers "github.com/snyk/snyk-iac-parsers/pkg"
 	"io/ioutil"
 
 	"github.com/open-policy-agent/opa/ast"
 	"github.com/open-policy-agent/opa/rego"
 	"github.com/open-policy-agent/opa/types"
-
-	"github.com/snyk/snyk-iac-rules/util"
 )
 
 func RegisterYAMLBuiltin() {
@@ -31,7 +30,7 @@ func RegisterYAMLBuiltin() {
 			}
 
 			var parsedInput interface{}
-			if err := util.ParseYAML(content, &parsedInput); err != nil {
+			if err := parsers.ParseYAML(content, &parsedInput); err != nil {
 				return nil, err
 			}
 			v, err := ast.InterfaceToValue(parsedInput)

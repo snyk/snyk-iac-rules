@@ -1,12 +1,12 @@
 package builtins
 
 import (
+	parsers "github.com/snyk/snyk-iac-parsers/pkg"
 	"io/ioutil"
 
 	"github.com/open-policy-agent/opa/ast"
 	"github.com/open-policy-agent/opa/rego"
 	"github.com/open-policy-agent/opa/types"
-	"github.com/snyk/snyk-iac-rules/util"
 )
 
 func RegisterHCLBuiltin() {
@@ -30,7 +30,7 @@ func RegisterHCLBuiltin() {
 			}
 
 			var parsedInput interface{}
-			if err := util.ParseHCL2(content, &parsedInput); err != nil {
+			if err := parsers.ParseHCL2(content, &parsedInput); err != nil {
 				return nil, err
 			}
 			v, err := ast.InterfaceToValue(parsedInput)
