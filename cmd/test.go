@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"errors"
 	"time"
 
 	"github.com/spf13/cobra"
@@ -16,7 +15,7 @@ var TestIgnore = []string{
 }
 
 var testCommand = &cobra.Command{
-	Use:   "test [path]",
+	Use:   "test [path...]",
 	Short: "Execute Rego test cases",
 	Long: `Execute Rego test cases.
 
@@ -25,7 +24,8 @@ Test cases are rules whose names have the prefix "test_".
 
 To start, run:
 $ snyk-iac-rules test
-An optional path can be provided if the current directory contains more than just the rules for the bundle.
+An optional list of paths can be provided if the current directory contains more than just 
+the rules for the bundle.
 
 The command can run one test at a time with the help of the --run flag as such:
 $ snyk-iac-rules test --run test_<rule>
@@ -40,12 +40,6 @@ https://docs.snyk.io/products/snyk-infrastructure-as-code/custom-rules/getting-s
 `,
 	SilenceUsage:  true,
 	SilenceErrors: true,
-	Args: func(cmd *cobra.Command, args []string) error {
-		if len(args) > 1 {
-			return errors.New("Too many paths provided")
-		}
-		return nil
-	},
 	PreRunE: func(Cmd *cobra.Command, args []string) error {
 		// If an --explain flag was set, turn on verbose output
 		if testParams.Explain.IsSet() {
@@ -55,18 +49,16 @@ https://docs.snyk.io/products/snyk-infrastructure-as-code/custom-rules/getting-s
 		return nil
 	},
 	PostRun: func(cmd *cobra.Command, args []string) {
-		var path string
 		if len(args) == 0 {
-			path = "."
-		} else {
-			path = args[0]
+			// add default path if not provided
+			args = append(args, "rules/", "lib/")
 		}
-		util.CheckIfRunningInRootDirectory(path)
+		util.CheckIfRunningInRootDirectory(args)
 	},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if len(args) == 0 {
 			// add default path if not provided
-			args = append(args, ".")
+			args = append(args, "rules/", "lib/")
 		}
 		return internal.RunTest(args, testParams)
 	},

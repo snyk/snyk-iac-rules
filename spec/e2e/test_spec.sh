@@ -5,7 +5,7 @@ Describe './snyk-iac-rules test --help'
       When call ./snyk-iac-rules test --help
       The status should be success
       The output should include 'Usage:
-  snyk-iac-rules test [path] [flags]
+  snyk-iac-rules test [path...] [flags]
 
 Flags:
       --explain {fails,full,notes}   enable query explanations (default fails)
@@ -22,6 +22,7 @@ Describe './snyk-iac-rules test ./fixtures/custom-rules'
       When call ./snyk-iac-rules test ./fixtures/custom-rules
       The status should be success
       The output should include 'PASS: 3/3'
+      The output should not include 'WARNING: The command must point at a folder that contains the package for the rules'
    End
 End
 
@@ -30,6 +31,7 @@ Describe './snyk-iac-rules test ./fixtures/custom-rules --run test_CUSTOM_1'
       When call ./snyk-iac-rules test ./fixtures/custom-rules --run test_CUSTOM_1
       The status should be success
       The output should include 'PASS: 1/1'
+      The output should not include 'WARNING: The command must point at a folder that contains the package for the rules'
    End
 End
 
@@ -38,5 +40,14 @@ Describe './snyk-iac-rules test ./fixtures --run test_CUSTOM_1'
       When call ./snyk-iac-rules test ./fixtures --run test_CUSTOM_1
       The status should be success
       The output should include 'WARNING: The command must point at a folder that contains the package for the rules'
+   End
+End
+
+Describe './snyk-iac-rules test ./fixtures/custom-rules/rules ./fixtures/custom-rules/lib'
+   It 'returns passing test status'
+      When call ./snyk-iac-rules test ./fixtures/custom-rules/rules ./fixtures/custom-rules/lib
+      The status should be success
+      The output should include 'PASS: 3/3'
+      The output should not include 'WARNING: The command must point at a folder that contains the package for the rules'
    End
 End

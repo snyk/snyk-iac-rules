@@ -6,6 +6,7 @@ import (
 	"io/fs"
 	"os"
 	"path"
+	"strings"
 )
 
 func checkIfDirectoryExists(path string) (bool, error) {
@@ -73,9 +74,18 @@ func ValidateFilePath(path string) (fs.FileInfo, error) {
 	return fileInfo, nil
 }
 
-func CheckIfRunningInRootDirectory(path string) {
-	_, err := os.Stat(computePath(path, "rules/"))
-	if err != nil && os.IsNotExist(err) {
-		fmt.Println("WARNING: The command must point at a folder that contains the package for the rules.\n	 If the rules were generated using the template command, make sure you have the\n	 /rules and /lib folder in your current running directory or provide an optional path argument pointing to that location.")
+func CheckIfRunningInRootDirectory(paths []string) {
+	for _, providedPath := range paths {
+		// the user can provide the path to the rules folder
+		if strings.HasSuffix(providedPath, "/rules") {
+			return
+		}
+		// otherwise, check that the path contains the rules folder
+		_, err := os.Stat(computePath(providedPath, "rules/"))
+		if err == nil || !os.IsNotExist(err) {
+			return
+		}
 	}
+	// TODO: what if not templated
+	fmt.Println("WARNING: The command must point at a folder that contains the package for the rules.\n	 If the rules were generated using the template command, make sure you have the\n	 /rules and /lib folder in your current running directory or provide an optional path argument pointing to that location.")
 }

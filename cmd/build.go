@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/spf13/cobra"
@@ -13,7 +12,7 @@ import (
 var BuildIgnore = append(TestIgnore, "testing", "*_test.rego")
 
 var buildCommand = &cobra.Command{
-	Use:   "build [path]",
+	Use:   "build [path...]",
 	Short: "Build an OPA bundle",
 	Long: `Build an OPA bundle.
 
@@ -22,7 +21,7 @@ gzipped tarballs. Paths referring to directories are loaded recursively.
 
 To start, run:
 $ snyk-iac-rules build
-An optional path can be provided if the current directory contains more than just 
+An optional list of paths can be provided if the current directory contains more than just 
 the rules for the bundle.
 
 To ignore test files, use the '--ignore' flag:
@@ -40,25 +39,17 @@ See our documentation to learn more:
 https://docs.snyk.io/products/snyk-infrastructure-as-code/custom-rules/getting-started-with-the-sdk/bundling-rules
 `,
 	SilenceUsage: true,
-	Args: func(cmd *cobra.Command, args []string) error {
-		if len(args) > 1 {
-			return errors.New("Too many paths provided")
-		}
-		return nil
-	},
 	PostRun: func(cmd *cobra.Command, args []string) {
-		var path string
 		if len(args) == 0 {
-			path = "."
-		} else {
-			path = args[0]
+			// add default path if not provided
+			args = append(args, "rules/", "lib/")
 		}
-		util.CheckIfRunningInRootDirectory(path)
+		util.CheckIfRunningInRootDirectory(args)
 	},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if len(args) == 0 {
 			// add default path if not provided
-			args = append(args, ".")
+			args = append(args, "rules/", "lib/")
 		}
 		err := internal.RunBuild(args, buildParams)
 		if err != nil {
