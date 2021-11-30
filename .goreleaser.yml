@@ -65,6 +65,9 @@ release:
     ## Thanks!
 
     Those were the changes on {{ .Tag }}!
+    
+  extra_files:
+    glob: ./acknowledgements.tar.gz
 
 brews:
   -
