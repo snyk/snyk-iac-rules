@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/spf13/cobra"
@@ -50,14 +51,17 @@ https://docs.snyk.io/products/snyk-infrastructure-as-code/custom-rules/getting-s
 	},
 	PostRun: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
-			// add default path if not provided
+			// add default paths if none were provided
 			args = append(args, "rules/", "lib/")
 		}
-		util.CheckIfRunningInRootDirectory(args)
+		err := util.IsPointingAtTemplatedRules(args)
+		if err != nil {
+			fmt.Println(err.Error())
+		}
 	},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if len(args) == 0 {
-			// add default path if not provided
+			// add default paths if none were provided
 			args = append(args, "rules/", "lib/")
 		}
 		return internal.RunTest(args, testParams)

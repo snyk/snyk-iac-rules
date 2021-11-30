@@ -74,18 +74,20 @@ func ValidateFilePath(path string) (fs.FileInfo, error) {
 	return fileInfo, nil
 }
 
-func CheckIfRunningInRootDirectory(paths []string) {
+func IsPointingAtTemplatedRules(paths []string) error {
 	for _, providedPath := range paths {
+		var computedPath string
 		// the user can provide the path to the rules folder
 		if strings.HasSuffix(providedPath, "/rules") {
-			return
+			computedPath = providedPath
+		} else {
+			computedPath = computePath(providedPath, "rules/")
 		}
-		// otherwise, check that the path contains the rules folder
-		_, err := os.Stat(computePath(providedPath, "rules/"))
+		// still check that the path actually exists
+		_, err := os.Stat(computedPath)
 		if err == nil || !os.IsNotExist(err) {
-			return
+			return nil
 		}
 	}
-	// TODO: what if not templated
-	fmt.Println("WARNING: The command must point at a folder that contains the package for the rules.\n	 If the rules were generated using the template command, make sure you have the\n	 /rules and /lib folder in your current running directory or provide an optional path argument pointing to that location.")
+	return fmt.Errorf("WARNING: The command must point at a folder that contains the package for the rules.\n	 If the rules were generated using the template command, make sure you have the\n	 /rules and /lib folder in your current running directory or provide an optional path argument pointing to that location.")
 }

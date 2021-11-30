@@ -114,3 +114,11 @@ func TestComputePath(t *testing.T) {
 	assert.Equal(t, "workingDirectory/name", computePath("./workingDirectory", "name"))
 	assert.Equal(t, "../workingDirectory/name", computePath("../workingDirectory", "name"))
 }
+
+func TestIsPointingAtTemplatedRules(t *testing.T) {
+	assert.NotNil(t, IsPointingAtTemplatedRules([]string{"../fixtures/rules"}))
+	assert.NotNil(t, IsPointingAtTemplatedRules([]string{"../fixtures"}))
+	assert.Nil(t, IsPointingAtTemplatedRules([]string{"../fixtures/custom-rules/rules"}))
+	assert.Nil(t, IsPointingAtTemplatedRules([]string{"invalid-path", "../fixtures/custom-rules/rules"}))
+	assert.Nil(t, IsPointingAtTemplatedRules([]string{"invalid-path", "../fixtures/custom-rules"}))
+}
