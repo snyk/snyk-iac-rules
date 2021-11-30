@@ -26,7 +26,7 @@ jobs:
           # Compute new tag from commit message
           echo 'deb [trusted=yes] https://apt.fury.io/caarlos0/ /' | sudo tee /etc/apt/sources.list.d/caarlos0.list
           sudo apt update
-          sudo apt install svu
+          sudo apt install svu=1.7.0
           NEW_TAG=$(svu)
           if [ $(git tag -l "$NEW_TAG") ]; then
               echo "Tag already exists!"
