@@ -26,18 +26,27 @@ jobs:
           # Compute new tag from commit message
           echo 'deb [trusted=yes] https://apt.fury.io/caarlos0/ /' | sudo tee /etc/apt/sources.list.d/caarlos0.list
           sudo apt update
-          sudo apt install svu
+          sudo apt install svu=1.7.0
           NEW_TAG=$(svu)
           if [ $(git tag -l "$NEW_TAG") ]; then
               echo "Tag already exists!"
           else
               echo "NEW_TAG=${NEW_TAG}" >> $GITHUB_ENV
           fi
+      - name: Check tag presence
+        id: checktag
+        shell: bash
+        run: |
+          if [ "$NEW_TAG" == "" ]; then
+            echo ::set-output name=tagpresent::false
+          else
+            echo ::set-output name=tagpresent::true
+          fi
 
       - name: Push a new GitHub tag
-        if: "!contains(github.ref, 'refs/tags/v${{env.NEW_TAG}}')"
+        if: ${{ steps.checktag.outputs.tagpresent }}
         run: |
-         # Hard-code user config
+          # Hard-code user config
           git config user.email "snyksec@users.noreply.github.com"
           git config user.name "Snyk"
 
@@ -46,7 +55,7 @@ jobs:
           git push origin "${NEW_TAG}"
 
       - name: Push a new GitHub release
-        if: "!contains(github.ref, 'refs/tags/v${{env.NEW_TAG}}')"
+        if: ${{ steps.checktag.outputs.tagpresent }}
         uses: goreleaser/goreleaser-action@v2
         with:
           args: release --rm-dist
@@ -55,10 +64,13 @@ jobs:
           SNYK_ACCESS_TOKEN: ${{ secrets.SNYK_ACCESS_TOKEN }}
 
       - uses: actions/setup-node@v2
+        if: ${{ steps.checktag.outputs.tagpresent }}
         with:
           node-version: '12.x'
           registry-url: 'https://registry.npmjs.org'
       - run: ./scripts/release-npm.sh --tag="${{ env.NEW_TAG }}"
+        if: ${{ steps.checktag.outputs.tagpresent }}
       - run: npm publish
+        if: ${{ steps.checktag.outputs.tagpresent }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
