@@ -116,6 +116,7 @@ func TestComputePath(t *testing.T) {
 }
 
 func TestIsPointingAtTemplatedRules(t *testing.T) {
+	assert.NotNil(t, IsPointingAtTemplatedRules([]string{"../fixtures/rules/"}))
 	assert.NotNil(t, IsPointingAtTemplatedRules([]string{"../fixtures/rules"}))
 	assert.NotNil(t, IsPointingAtTemplatedRules([]string{"../fixtures"}))
 	assert.Nil(t, IsPointingAtTemplatedRules([]string{"../fixtures/custom-rules/rules"}))
