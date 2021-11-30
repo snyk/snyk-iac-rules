@@ -72,5 +72,6 @@ jobs:
         if: ${{ steps.checktag.outputs.tagpresent }}
       - run: npm publish
         if: ${{ steps.checktag.outputs.tagpresent }}
+        working-directory: dist
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
