@@ -38,7 +38,7 @@ for GOOS in linux darwin; do
     GOOS=$GOOS GOARCH=amd64 go build -a -o dist/snyk-iac-rules-$GOOS-x64 .
     GOOS=$GOOS GOARCH=arm64 go build -a -o dist/snyk-iac-rules-$GOOS-arm64 .
 done
-GOOS=windows GOARCH=amd64 go build -a -o dist/snyk-iac-rules.exe .
+GOOS=windows GOARCH=amd64 go build -a -o dist/snyk-iac-rules-win.exe .
 
 cp packaging/npm/passthrough.js dist/snyk-iac-rules
 cp README.md dist/README.md
