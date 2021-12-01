@@ -36,6 +36,7 @@ Describe 'Contract test between the SDK and the Snyk CLI'
             The output should include "Generated template" # the rule was tempalted successfully
             The output should include "PASS: 1/1" # the tests passed
             The output should include "Generated bundle: bundle.tar.gz" # the bundle has been generated
+            The output should include "Using custom rules to generate misconfigurations." # uses the custom rules to generate misconfigurations
             The output should include "Default title [Low Severity] [Contract]" # it should include the custom rule in its output
             The stderr should not be present
 
@@ -77,6 +78,7 @@ Describe 'Contract test between the SDK and the Snyk CLI'
             The output should include "Generated template" # the rule was tempalted successfully
             The output should include "PASS: 1/1" # the tests passed
             The output should include "Generated bundle: bundle.tar.gz" # the bundle has been generated
+            The output should include "Using custom rules to generate misconfigurations." # uses the custom rules to generate misconfigurations
             The output should include "Default title [Low Severity] [Contract]" # it should include the custom rule in its output
             The stderr should not be present
         End
@@ -112,6 +114,7 @@ Describe 'Contract test between the SDK and the Snyk CLI'
             The output should include "Generated template" # the rule was tempalted successfully
             The output should include "PASS: 1/1" # the tests passed
             The output should include "Generated bundle: bundle.tar.gz" # the bundle has been generated
+            The output should include "Using custom rules to generate misconfigurations." # uses the custom rules to generate misconfigurations
             The output should include "Default title [Low Severity] [Contract]" # it should include the custom rule in its output
             The stderr should not be present
 
