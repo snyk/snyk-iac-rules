@@ -8,8 +8,8 @@ Describe './snyk-iac-rules parse --help'
   snyk-iac-rules parse <path> [flags]
 
 Flags:
-  -f, --format {hcl2,yaml}   choose the format for the parser (default hcl2)
-  -h, --help                 help for parse'
+  -f, --format {hcl2,yaml,tf-plan}   choose the format for the parser (default hcl2)
+  -h, --help                         help for parse'
 	End
 End
 
@@ -63,6 +63,27 @@ Describe './snyk-iac-rules parse ./fixtures/custom-rules/rules/CUSTOM-3/fixtures
 		],
 		"selector": {
 			"app": "MyApp"
+		}
+	}
+}'
+   End
+End
+
+Describe './snyk-iac-rules parse ./fixtures/custom-rules/rules/CUSTOM-4/fixtures/test.tfplan.json --format tf-plan'
+   It 'returns passing test status'
+      When call ./snyk-iac-rules parse ./fixtures/custom-rules/rules/CUSTOM-4/fixtures/test.tfplan.json --format tf-plan
+      The status should be success
+      The output should include '{
+	"data": {},
+	"resource": {
+		"aws_vpc": {
+			"example": {
+				"assign_generated_ipv6_cidr_block": false,
+				"cidr_block": "10.0.0.0/16",
+				"enable_dns_support": true,
+				"instance_tenancy": "default",
+				"tags": null
+			}
 		}
 	}
 }'

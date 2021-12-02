@@ -21,8 +21,11 @@ For example, to parse a Terraform file run the following command:
 $ snyk-iac-rules parse test.tf --format hcl2
 The '--format' flag can be left out when parsing Terraform files, as we default to hcl2.
 
-And to parse a YAML file run the following command:
+To parse a YAML file run the following command:
 $ snyk-iac-rules parse test.yaml --format yaml
+
+And to parse a Terraform plan output in JSON format (Terraform plan output is binary by default, to convert it to JSON you can run 'terraform show -json tfplan.binary > tf-plan.json') run the following command:
+$ snyk-iac-rules parse tf-plan.json --format tf-plan
 
 See our documentation to learn more: 
 https://docs.snyk.io/products/snyk-infrastructure-as-code/custom-rules/getting-started-with-the-sdk/parsing-an-input-file
@@ -53,7 +56,7 @@ https://docs.snyk.io/products/snyk-infrastructure-as-code/custom-rules/getting-s
 
 func newParseCommandParams() *internal.ParseCommandParams {
 	return &internal.ParseCommandParams{
-		Format: util.NewEnumFlag(internal.HCL2, []string{internal.HCL2, internal.YAML}),
+		Format: util.NewEnumFlag(internal.HCL2, []string{internal.HCL2, internal.YAML, internal.TERRAFORM_PLAN}),
 	}
 }
 

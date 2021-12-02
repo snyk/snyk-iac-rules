@@ -6,7 +6,7 @@ import (
 	"io/fs"
 	"os"
 	"path"
-	"strings"
+	"path/filepath"
 )
 
 func checkIfDirectoryExists(path string) (bool, error) {
@@ -78,7 +78,7 @@ func IsPointingAtTemplatedRules(paths []string) error {
 	for _, providedPath := range paths {
 		var computedPath string
 		// the user can provide the path to the rules folder
-		if strings.HasSuffix(providedPath, "/rules") {
+		if filepath.Base(providedPath) == "rules" {
 			computedPath = providedPath
 		} else {
 			computedPath = computePath(providedPath, "rules/")

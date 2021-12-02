@@ -101,7 +101,7 @@ jobs:
         run: |
           ./scripts/release-npm.sh --tag=v0.0.1
 
-          npm i -g dist
+          npm i -g ./dist
 
           # verifies that the installation works
           snyk-iac-rules
@@ -116,7 +116,7 @@ jobs:
 
           npm install -g npm
 
-          npm install -g dist
+          npm install -g ./dist
           
           # verifies that the installation works
-          C:/npm/prefix/dist
+          snyk-iac-rules
