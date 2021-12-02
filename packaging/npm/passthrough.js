@@ -11,7 +11,7 @@ var arch = process.arch;
 // file descriptors.
 var iacCustomRulesPath = path.join(__dirname, './snyk-iac-rules-' + os + '-' + arch);
 if (os === 'win32') {
-  iacCustomRulesPath = path.join(__dirname, './snyk-iac-rules.exe');
+  iacCustomRulesPath = path.join(__dirname, './snyk-iac-rules-win.exe');
 }
 
 try {
