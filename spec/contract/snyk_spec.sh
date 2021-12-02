@@ -38,6 +38,7 @@ Describe 'Contract test between the SDK and the Snyk CLI'
             The output should include "Generated bundle: bundle.tar.gz" # the bundle has been generated
             The output should include "Using custom rules to generate misconfigurations." # uses the custom rules to generate misconfigurations
             The output should include "Default title [Low Severity] [Contract]" # it should include the custom rule in its output
+            The output should not include 'WARNING: The command must point at a folder that contains the package for the rules'
             The stderr should not be present
 
             cd ../
@@ -80,6 +81,7 @@ Describe 'Contract test between the SDK and the Snyk CLI'
             The output should include "Generated bundle: bundle.tar.gz" # the bundle has been generated
             The output should include "Using custom rules to generate misconfigurations." # uses the custom rules to generate misconfigurations
             The output should include "Default title [Low Severity] [Contract]" # it should include the custom rule in its output
+            The output should not include 'WARNING: The command must point at a folder that contains the package for the rules'
             The stderr should not be present
         End
     End
@@ -116,6 +118,7 @@ Describe 'Contract test between the SDK and the Snyk CLI'
             The output should include "Generated bundle: bundle.tar.gz" # the bundle has been generated
             The output should include "Using custom rules to generate misconfigurations." # uses the custom rules to generate misconfigurations
             The output should include "Default title [Low Severity] [Contract]" # it should include the custom rule in its output
+            The output should not include 'WARNING: The command must point at a folder that contains the package for the rules'
             The stderr should not be present
 
             cd ../
