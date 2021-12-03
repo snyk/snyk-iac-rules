@@ -69,9 +69,9 @@ Describe './snyk-iac-rules parse ./fixtures/custom-rules/rules/CUSTOM-3/fixtures
    End
 End
 
-Describe './snyk-iac-rules parse ./fixtures/custom-rules/rules/CUSTOM-4/fixtures/test.tfplan.json --format tf-plan'
+Describe './snyk-iac-rules parse ./fixtures/custom-rules/rules/CUSTOM-4/fixtures/test.json.tfplan --format tf-plan'
    It 'returns passing test status'
-      When call ./snyk-iac-rules parse ./fixtures/custom-rules/rules/CUSTOM-4/fixtures/test.tfplan.json --format tf-plan
+      When call ./snyk-iac-rules parse ./fixtures/custom-rules/rules/CUSTOM-4/fixtures/test.json.tfplan --format tf-plan
       The status should be success
       The output should include '{
 	"data": {},
