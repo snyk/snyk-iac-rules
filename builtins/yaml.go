@@ -1,8 +1,9 @@
 package builtins
 
 import (
-	parsers "github.com/snyk/snyk-iac-parsers/pkg"
 	"io/ioutil"
+
+	parsers "github.com/snyk/snyk-iac-parsers"
 
 	"github.com/open-policy-agent/opa/ast"
 	"github.com/open-policy-agent/opa/rego"
