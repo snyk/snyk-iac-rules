@@ -41,6 +41,15 @@ or if you are using Yarn:
 ```bash
 yarn global add snyk-iac-rules
 ```
+
+## Install with Docker
+
+[snyk-iac-rules available as a docker image](https://hub.docker.com/r/snyk/snyk-iac-rules). If you have Docker installed locally, you can install it by running:
+
+```bash
+docker pull snyk/snyk-iac-rules:latest
+```
+
 ## More installation methods
 
 <details>

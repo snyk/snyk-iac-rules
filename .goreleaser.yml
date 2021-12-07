@@ -122,6 +122,15 @@ nfpms:
     homepage: https://github.com/snyk/snyk-iac-rules
     license: Apache-2.0
 
+dockers:
+  -
+    id: dockerimg
+    goos: linux
+    goarch: amd64
+    image_templates:
+    - "snyk/{{ .ProjectName }}:latest"
+    - "snyk/{{ .ProjectName }}:{{ .Version }}"
+
 announce:
   twitter:
     enabled: false
