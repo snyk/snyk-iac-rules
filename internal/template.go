@@ -3,6 +3,8 @@ package internal
 import (
 	"errors"
 	"fmt"
+	"os"
+	"path"
 	"strings"
 
 	"github.com/snyk/snyk-iac-rules/util"
@@ -100,6 +102,11 @@ func templateRule(workingDirectory string, templating util.Templating) error {
 	return nil
 }
 
+var tfPlanExists = func(tfPlan string) bool {
+	_, err := os.Stat(tfPlan)
+	return !errors.Is(err, os.ErrNotExist)
+}
+
 func templateLib(workingDirectory string, templating util.Templating) error {
 	var libDir string
 	var testingDir string
@@ -108,6 +115,14 @@ func templateLib(workingDirectory string, templating util.Templating) error {
 	libDir, err = createDirectory(workingDirectory, "lib", true)
 	if err != nil {
 		if strings.Contains(err.Error(), "Directory already exists at") {
+			// We have added a new testing helper so we should check for that first
+			testingDir := path.Join(path.Join(workingDirectory, "lib"), "testing")
+			if !tfPlanExists(path.Join(testingDir, "tfplan.rego")) {
+				err = templateFile(testingDir, "tfplan.rego", "templates/lib/testing/tfplan.tpl.rego", templating)
+				if err == nil {
+					fmt.Println("[/] Template lib/testing/tfplan.rego file")
+				}
+			}
 			return nil
 		}
 		return err
@@ -122,9 +137,6 @@ func templateLib(workingDirectory string, templating util.Templating) error {
 
 	testingDir, err = createDirectory(libDir, "testing", true)
 	if err != nil {
-		if strings.Contains(err.Error(), "Directory already exists at") {
-			return nil
-		}
 		return err
 	}
 	fmt.Println("[/] Template lib/testing directory")
@@ -134,5 +146,11 @@ func templateLib(workingDirectory string, templating util.Templating) error {
 		return err
 	}
 	fmt.Println("[/] Template lib/testing/main.rego file")
+
+	err = templateFile(testingDir, "tfplan.rego", "templates/lib/testing/tfplan.tpl.rego", templating)
+	if err != nil {
+		return err
+	}
+	fmt.Println("[/] Template lib/testing/tfplan.rego file")
 	return nil
 }

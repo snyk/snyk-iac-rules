@@ -21,7 +21,7 @@ Describe './snyk-iac-rules test ./fixtures/custom-rules'
    It 'returns passing test status'
       When call ./snyk-iac-rules test ./fixtures/custom-rules
       The status should be success
-      The output should include 'PASS: 3/3'
+      The output should include 'PASS: 4/4'
       The output should not include 'WARNING: The command must point at a folder that contains the package for the rules'
    End
 End
@@ -47,7 +47,7 @@ Describe './snyk-iac-rules test ./fixtures/custom-rules/rules ./fixtures/custom-
    It 'returns passing test status'
       When call ./snyk-iac-rules test ./fixtures/custom-rules/rules ./fixtures/custom-rules/lib
       The status should be success
-      The output should include 'PASS: 3/3'
+      The output should include 'PASS: 4/4'
       The output should not include 'WARNING: The command must point at a folder that contains the package for the rules'
    End
 End
