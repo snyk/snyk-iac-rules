@@ -11,6 +11,7 @@ import (
 func main() {
 	builtins.RegisterHCLBuiltin()
 	builtins.RegisterYAMLBuiltin()
+	builtins.RegisterTerraformPlanBuiltin()
 
 	if err := cmd.RootCommand.Execute(); err != nil {
 		fmt.Println(err)
