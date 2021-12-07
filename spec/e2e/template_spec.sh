@@ -30,6 +30,7 @@ Describe './snyk-iac-rules template ./fixtures/custom-rules --rule test'
       The output should include 'Template rules/test/fixtures/allowed.json file'
       The output should include 'Template rules/test/fixtures/denied1.yaml file'
       The output should include 'Template rules/test/fixtures/denied2.tf file'
+      The output should include 'Template rules/test/fixtures/denied.json.tfplan file'
       The output should include 'Generated template'
    End
 End
