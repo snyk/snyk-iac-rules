@@ -3,7 +3,6 @@ package rules
 import data.lib
 
 deny[msg] {
-    trace(sprintf("input.resource == %s", [input.resource]))
 	resource := input.resource.aws_vpc[name]
     not resource.tags.owner
 
