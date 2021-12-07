@@ -99,6 +99,13 @@ func templateRule(workingDirectory string, templating util.Templating) error {
 		return err
 	}
 	fmt.Printf("[/] Template rules/%s/fixtures/denied2.tf file\n", templating.RuleID)
+
+	err = templateFile(ruleFixtureDir, "denied.json.tfplan", "templates/fixtures/denied.json.tfplan", templating)
+	if err != nil {
+		return err
+	}
+	fmt.Printf("[/] Template rules/%s/fixtures/denied.json.tfplan file\n", templating.RuleID)
+
 	return nil
 }
 

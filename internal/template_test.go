@@ -74,6 +74,11 @@ var files = []struct {
 		template:         "templates/fixtures/denied2.tf",
 	},
 	{
+		workingDirectory: "test/rules/Test Rule ID/fixtures",
+		name:             "denied.json.tfplan",
+		template:         "templates/fixtures/denied.json.tfplan",
+	},
+	{
 		workingDirectory: "test/lib",
 		name:             "main.rego",
 		template:         "templates/lib/main.tpl.rego",
@@ -224,7 +229,7 @@ func TestTemplateInDirectoryWithLibWithoutTfPlan(t *testing.T) {
 
 		// if creating the tfplan testing file then change its order
 		var oldFilesIndex int
-		if strings.Contains(name, "tfplan") {
+		if strings.Contains(name, "tfplan.rego") {
 			oldFilesIndex = filesIndex
 			filesIndex = len(files) - 1
 		}
