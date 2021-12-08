@@ -13,13 +13,7 @@ test_{{ call .Replace .RuleID "-" "_" }} {
 	# array containing cases where the rule is denied
 	denied_test_cases := [{
 		"want_msgs": ["input.resource.test[denied].todo"], # verifies that the correct msg is returned by the denied rule
-		"fixture": "denied2.tf",
-	}, {
-		"want_msgs": ["input.resource.test[denied].todo"], # verifies that the correct msg is returned by the denied rule
-		"fixture": "denied1.yaml",
-	}, {
-		"want_msgs": ["input.resource.test[denied].todo"], # verifies that the correct msg is returned by the denied rule
-		"fixture": "denied.json.tfplan",
+		"fixture": "denied.json",
 	}]
 
 	test_cases := array.concat(allowed_test_cases, denied_test_cases)

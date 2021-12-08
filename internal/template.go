@@ -21,6 +21,7 @@ type TemplateCommandParams struct {
 	RuleID       string
 	RuleTitle    string
 	RuleSeverity util.EnumFlag
+	RuleFormat   util.EnumFlag
 }
 
 var createDirectory = util.CreateDirectory
@@ -35,7 +36,7 @@ func RunTemplate(args []string, params *TemplateCommandParams) error {
 		RuleSeverity: params.RuleSeverity.String(),
 		Replace:      strings.ReplaceAll,
 	}
-	err := templateRule(workingDirectory, templating)
+	err := templateRule(workingDirectory, templating, params.RuleFormat.String())
 	if err != nil {
 		return err
 	}
@@ -43,7 +44,23 @@ func RunTemplate(args []string, params *TemplateCommandParams) error {
 	return templateLib(workingDirectory, templating)
 }
 
-func templateRule(workingDirectory string, templating util.Templating) error {
+func getTemplateByFormat(format string) (string, string, error) {
+	switch format {
+	case JSON:
+		return "main_test_json", ".json", nil
+	case YAML:
+		return "main_test_yaml", ".yaml", nil
+	case HCL2:
+		return "main_test_hcl2", ".tf", nil
+	case TERRAFORM_PLAN:
+		return "main_test_tfplan", ".json.tfplan", nil
+	default:
+		// should never get to here
+		return "", "", fmt.Errorf("Provided format not supported: %s", format)
+	}
+}
+
+func templateRule(workingDirectory string, templating util.Templating, format string) error {
 	var rulesDir string
 	var ruleDir string
 	var ruleFixtureDir string
@@ -70,7 +87,12 @@ func templateRule(workingDirectory string, templating util.Templating) error {
 	}
 	fmt.Printf("[/] Template rules/%s/main.rego file\n", templating.RuleID)
 
-	err = templateFile(ruleDir, "main_test.rego", "templates/main_test.tpl.rego", templating)
+	testTemplate, fixtureFileExtension, err := getTemplateByFormat(format)
+	if err != nil {
+		return err
+	}
+
+	err = templateFile(ruleDir, "main_test.rego", "templates/"+testTemplate+".tpl.rego", templating)
 	if err != nil {
 		return err
 	}
@@ -82,29 +104,17 @@ func templateRule(workingDirectory string, templating util.Templating) error {
 	}
 	fmt.Printf("[/] Template rules/%s/fixtures directory\n", templating.RuleID)
 
-	err = templateFile(ruleFixtureDir, "allowed.json", "templates/fixtures/allowed.json", templating)
+	err = templateFile(ruleFixtureDir, "denied"+fixtureFileExtension, "templates/fixtures/denied"+fixtureFileExtension, templating)
 	if err != nil {
 		return err
 	}
-	fmt.Printf("[/] Template rules/%s/fixtures/allowed.json file\n", templating.RuleID)
+	fmt.Printf("[/] Template rules/%s/fixtures/denied%s file\n", templating.RuleID, fixtureFileExtension)
 
-	err = templateFile(ruleFixtureDir, "denied1.yaml", "templates/fixtures/denied1.yaml", templating)
+	err = templateFile(ruleFixtureDir, "allowed"+fixtureFileExtension, "templates/fixtures/allowed"+fixtureFileExtension, templating)
 	if err != nil {
 		return err
 	}
-	fmt.Printf("[/] Template rules/%s/fixtures/denied1.yaml file\n", templating.RuleID)
-
-	err = templateFile(ruleFixtureDir, "denied2.tf", "templates/fixtures/denied2.tf", templating)
-	if err != nil {
-		return err
-	}
-	fmt.Printf("[/] Template rules/%s/fixtures/denied2.tf file\n", templating.RuleID)
-
-	err = templateFile(ruleFixtureDir, "denied.json.tfplan", "templates/fixtures/denied.json.tfplan", templating)
-	if err != nil {
-		return err
-	}
-	fmt.Printf("[/] Template rules/%s/fixtures/denied.json.tfplan file\n", templating.RuleID)
+	fmt.Printf("[/] Template rules/%s/fixtures/allowed%s file\n", templating.RuleID, fixtureFileExtension)
 
 	return nil
 }
