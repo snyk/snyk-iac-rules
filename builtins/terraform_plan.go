@@ -3,7 +3,7 @@ package builtins
 import (
 	"io/ioutil"
 
-	parsers "github.com/snyk/snyk-iac-parsers/pkg"
+	parsers "github.com/snyk/snyk-iac-parsers"
 
 	"github.com/open-policy-agent/opa/ast"
 	"github.com/open-policy-agent/opa/rego"

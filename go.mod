@@ -6,7 +6,7 @@ require (
 	github.com/containerd/containerd v1.5.8
 	github.com/open-policy-agent/opa v0.32.0
 	github.com/opencontainers/image-spec v1.0.2
-	github.com/snyk/snyk-iac-parsers v0.0.5
+	github.com/snyk/snyk-iac-parsers v0.0.6
 	github.com/spf13/cobra v1.2.1
 	github.com/stretchr/testify v1.7.0
 	oras.land/oras-go v0.4.0

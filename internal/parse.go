@@ -4,8 +4,9 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	parsers "github.com/snyk/snyk-iac-parsers/pkg"
 	"io/ioutil"
+
+	parsers "github.com/snyk/snyk-iac-parsers"
 
 	"github.com/snyk/snyk-iac-rules/util"
 )
