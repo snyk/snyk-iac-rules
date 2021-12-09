@@ -101,8 +101,12 @@ workflows:
                 - develop
       - security-oss:
           name: Snyk oss
+          context:
+            - snyk-iac-seceng
       - security-code:
           name: Snyk code
+          context:
+            - snyk-iac-seceng
       - regression-test:
           name: Regression Test
           filters:
