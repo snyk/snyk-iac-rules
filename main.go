@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/snyk/snyk-iac-rules/builtins"
@@ -14,7 +13,6 @@ func main() {
 	builtins.RegisterTerraformPlanBuiltin()
 
 	if err := cmd.RootCommand.Execute(); err != nil {
-		fmt.Println(err)
 		os.Exit(1)
 	}
 }

@@ -51,13 +51,15 @@ $ snyk-iac-rules test --help
 		return nil
 	},
 	PreRunE: func(cmd *cobra.Command, args []string) error {
+		ruleId := strings.ToUpper(templateParams.RuleID)
+
 		// make sure rule name doesn't have any whitespace in it
-		if strings.Contains(templateParams.RuleID, " ") {
+		if strings.Contains(ruleId, " ") {
 			return fmt.Errorf("Rule name cannot contain whitespace")
 		}
 
 		// make sure rule name doesn't belong to Snyk namespace
-		if strings.HasPrefix(templateParams.RuleID, "SNYK-") {
+		if strings.HasPrefix(ruleId, "SNYK-") {
 			return fmt.Errorf("Rule name cannot start with \"SNYK-\"")
 		}
 

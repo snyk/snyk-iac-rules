@@ -38,9 +38,8 @@ End
 Describe './snyk-iac-rules template ./fixtures/custom-rules --rule test'
    It 'returns passing test status'
       When call ./snyk-iac-rules template ./fixtures/custom-rules --rule test
-      Dump
       The status should be failure
-      The output should include 'Rule with the provided name already exists'
-      The stderr should be present
+      The output should include 'Template rules directory'
+      The stderr should include 'Rule with the provided name already exists'
    End
 End
