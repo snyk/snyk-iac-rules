@@ -3,6 +3,10 @@ project_name: snyk-iac-rules
 before:
   hooks:
     - go mod tidy
+    - go get github.com/google/go-licenses
+    - go-licenses save . --save_path=./acknowledgements
+    - tar -cvf ./acknowledgements.tar.gz -C ./acknowledgements .
+    - rm -rf ./acknowledgements
 
 builds:
   - main: ./main.go
@@ -65,6 +69,9 @@ release:
     ## Thanks!
 
     Those were the changes on {{ .Tag }}!
+
+  extra_files:
+    - glob: ./acknowledgements.tar.gz
 
 brews:
   -
