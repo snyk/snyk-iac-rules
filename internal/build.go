@@ -3,8 +3,10 @@ package internal
 import (
 	"bytes"
 	"context"
+	"fmt"
 	"io"
 	"os"
+	"path"
 	"strings"
 
 	"github.com/open-policy-agent/opa/ast"
@@ -30,6 +32,19 @@ type BuildCommandParams struct {
 func RunBuild(args []string, params *BuildCommandParams) error {
 	buf := bytes.NewBuffer(nil)
 
+	var metadataFile = ""
+	rules, err := util.RetrieveRules(args)
+	if err == nil {
+		// choose either one of the locations for the metadata.json
+		// it will be included in the OPA generated data.json
+		metadataFile = path.Join(args[0], "metadata.json")
+		err = os.WriteFile(metadataFile, []byte(fmt.Sprintf("{\"numberOfRules\": %d}", len(rules))),
+			0644)
+		if err != nil {
+			return err
+		}
+	}
+
 	var capabilities *ast.Capabilities
 	// if capabilities are not provided as a cmd flag,
 	// then ast.CapabilitiesForThisVersion must be called
@@ -49,7 +64,7 @@ func RunBuild(args []string, params *BuildCommandParams) error {
 		WithPaths(args...).
 		WithFilter(buildCommandLoaderFilter(false, params.Ignore))
 
-	err := compiler.Build(context.Background())
+	err = compiler.Build(context.Background())
 	if err != nil {
 		return err
 	}
@@ -62,6 +77,10 @@ func RunBuild(args []string, params *BuildCommandParams) error {
 	_, err = io.Copy(out, buf)
 	if err != nil {
 		return err
+	}
+
+	if metadataFile != "" {
+		_ = os.Remove(metadataFile)
 	}
 
 	return out.Close()

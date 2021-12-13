@@ -2,6 +2,7 @@ package internal
 
 import (
 	"archive/tar"
+	"bytes"
 	"compress/gzip"
 	"io"
 	"os"
@@ -266,5 +267,59 @@ func TestBuildRespectsCapabilitiesFailure(t *testing.T) {
 		err := RunBuild([]string{root}, buildParams)
 		assert.NotNil(t, err)
 		assert.Contains(t, err.Error(), "undefined function is_foo")
+	})
+}
+
+func TestBuildProducesMetadata(t *testing.T) {
+	files := map[string]string{
+		"test.rego": `
+			package test
+			msg = {
+				"publicId":
+					"1"
+			}
+		`,
+	}
+
+	test.WithTempFS(files, func(root string) {
+		buildParams := mockBuildParams()
+		buildParams.OutputFile = path.Join(root, "bundle.tar.gz")
+		err := buildParams.Target.Set(TargetRego)
+		assert.Nil(t, err)
+
+		err = RunBuild([]string{root}, buildParams)
+		assert.Nil(t, err)
+
+		_, err = loader.NewFileLoader().AsBundle(buildParams.OutputFile)
+		assert.Nil(t, err)
+
+		// Check that manifest is not written given no input manifest and no other flags
+		f, err := os.Open(buildParams.OutputFile)
+		assert.Nil(t, err)
+		defer f.Close()
+
+		gr, err := gzip.NewReader(f)
+		assert.Nil(t, err)
+
+		tr := tar.NewReader(gr)
+
+		for {
+			f, err := tr.Next()
+			if err == io.EOF {
+				break
+			}
+			assert.Nil(t, err)
+
+			if f.Name == "/data.json" {
+				data := new(bytes.Buffer)
+				_, err := data.ReadFrom(tr)
+				assert.Nil(t, err)
+				assert.Contains(t, data.String(), "{\"numberOfRules\":1}")
+			}
+
+			if f.Name == "/metadata.json" {
+				t.Fatal("unexpected file:", f.Name)
+			}
+		}
 	})
 }
