@@ -12,6 +12,7 @@ import (
 )
 
 const (
+	JSON           = "json"
 	HCL2           = "hcl2"
 	YAML           = "yaml"
 	TERRAFORM_PLAN = "tf-plan"

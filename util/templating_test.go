@@ -49,7 +49,7 @@ deny[msg] {
 `,
 		},
 		{
-			template: "templates/main_test.tpl.rego",
+			template: "templates/main_test_json.tpl.rego",
 			fileName: "test.rego",
 			expectedResult: `package rules
 
@@ -66,11 +66,83 @@ test_Test Rule ID {
 	# array containing cases where the rule is denied
 	denied_test_cases := [{
 		"want_msgs": ["input.resource.test[denied].todo"], # verifies that the correct msg is returned by the denied rule
-		"fixture": "denied2.tf",
-	}, {
+		"fixture": "denied.json",
+	}]
+
+	test_cases := array.concat(allowed_test_cases, denied_test_cases)
+	testing.evaluate_test_cases("Test Rule ID", "./rules/Test Rule ID/fixtures", test_cases)
+}
+`,
+		},
+		{
+			template: "templates/main_test_hcl2.tpl.rego",
+			fileName: "test.rego",
+			expectedResult: `package rules
+
+import data.lib
+import data.lib.testing
+
+test_Test Rule ID {
+	# array containing test cases where the rule is allowed
+	allowed_test_cases := [{
+		"want_msgs": [],
+		"fixture": "allowed.tf",
+	}]
+
+	# array containing cases where the rule is denied
+	denied_test_cases := [{
 		"want_msgs": ["input.resource.test[denied].todo"], # verifies that the correct msg is returned by the denied rule
-		"fixture": "denied1.yaml",
-	}, {
+		"fixture": "denied.tf",
+	}]
+
+	test_cases := array.concat(allowed_test_cases, denied_test_cases)
+	testing.evaluate_test_cases("Test Rule ID", "./rules/Test Rule ID/fixtures", test_cases)
+}
+`,
+		},
+		{
+			template: "templates/main_test_yaml.tpl.rego",
+			fileName: "test.rego",
+			expectedResult: `package rules
+
+import data.lib
+import data.lib.testing
+
+test_Test Rule ID {
+	# array containing test cases where the rule is allowed
+	allowed_test_cases := [{
+		"want_msgs": [],
+		"fixture": "allowed.yaml",
+	}]
+
+	# array containing cases where the rule is denied
+	denied_test_cases := [{
+		"want_msgs": ["input.resource.test[denied].todo"], # verifies that the correct msg is returned by the denied rule
+		"fixture": "denied.yaml",
+	}]
+
+	test_cases := array.concat(allowed_test_cases, denied_test_cases)
+	testing.evaluate_test_cases("Test Rule ID", "./rules/Test Rule ID/fixtures", test_cases)
+}
+`,
+		},
+		{
+			template: "templates/main_test_tfplan.tpl.rego",
+			fileName: "test.rego",
+			expectedResult: `package rules
+
+import data.lib
+import data.lib.testing
+
+test_Test Rule ID {
+	# array containing test cases where the rule is allowed
+	allowed_test_cases := [{
+		"want_msgs": [],
+		"fixture": "allowed.json.tfplan",
+	}]
+
+	# array containing cases where the rule is denied
+	denied_test_cases := [{
 		"want_msgs": ["input.resource.test[denied].todo"], # verifies that the correct msg is returned by the denied rule
 		"fixture": "denied.json.tfplan",
 	}]

@@ -18,8 +18,8 @@ var templateCommand = &cobra.Command{
 
 The 'template' command generates the scaffolding for writing new rules.
 
-To start, run the following command, replacing <rule> with the name of a rule.
-$ snyk-iac-rules template --rule <rule>
+To start, run the following command, replacing <rule> with the name of a rule and <format> with one of the formats.
+$ snyk-iac-rules template --rule <rule> --format <format>
 
 A rules/ folder is created, which will contain a folder named after the provided
 rule name. In this folder the rule definition can be found in the 'main.rego' file,
@@ -83,6 +83,7 @@ $ snyk-iac-rules test --help
 func newTemplateCommandParams() *internal.TemplateCommandParams {
 	return &internal.TemplateCommandParams{
 		RuleSeverity: util.NewEnumFlag(internal.LOW, []string{internal.LOW, internal.MEDIUM, internal.HIGH, internal.CRITICAL}),
+		RuleFormat:   util.NewEnumFlag("", []string{internal.HCL2, internal.JSON, internal.YAML, internal.TERRAFORM_PLAN}),
 	}
 }
 
@@ -90,8 +91,10 @@ var templateParams = newTemplateCommandParams()
 
 func init() {
 	templateCommand.Flags().StringVarP(&templateParams.RuleID, "rule", "r", "", "provide rule id")
+	templateCommand.Flags().VarP(&templateParams.RuleFormat, "format", "f", "provide rule format")
 	templateCommand.Flags().StringVarP(&templateParams.RuleTitle, "title", "t", "Default title", "provide rule title")
 	templateCommand.Flags().VarP(&templateParams.RuleSeverity, "severity", "s", "provide rule severity")
-	templateCommand.MarkFlagRequired("rule") //nolint
+	templateCommand.MarkFlagRequired("rule")   //nolint
+	templateCommand.MarkFlagRequired("format") //nolint
 	RootCommand.AddCommand(templateCommand)
 }

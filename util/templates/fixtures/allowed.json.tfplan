@@ -1,0 +1,64 @@
+{
+  "format_version": "0.2",
+  "terraform_version": "1.0.11",
+  "planned_values": {
+    "root_module": {
+      "resources": [
+        {
+          "address": "test.allowed",
+          "mode": "managed",
+          "type": "test",
+          "name": "allowed",
+          "provider_name": "registry.terraform.io/hashicorp/aws",
+          "schema_version": 1,
+          "values": {
+            "todo": false
+          }
+        }
+      ]
+    }
+  },
+  "resource_changes": [
+    {
+      "address": "test.allowed",
+      "mode": "managed",
+      "type": "test",
+      "name": "allowed",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "todo": false
+        }
+      }
+    }
+  ],
+  "configuration": {
+    "provider_config": {
+      "aws": {
+        "name": "aws",
+        "expressions": {
+          "region": {
+            "constant_value": "us-east-1"
+          }
+        }
+      }
+    },
+    "root_module": {
+      "resources": [
+        {
+          "address": "test.allowed",
+          "mode": "managed",
+          "type": "test",
+          "name": "allowed",
+          "provider_config_key": "aws",
+          "expressions": {},
+          "schema_version": 1
+        }
+      ]
+    }
+  }
+}
