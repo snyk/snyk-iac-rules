@@ -310,15 +310,11 @@ func TestBuildProducesMetadata(t *testing.T) {
 			}
 			assert.Nil(t, err)
 
-			if f.Name == "/data.json" {
+			if f.Name == "/.manifest" {
 				data := new(bytes.Buffer)
 				_, err := data.ReadFrom(tr)
 				assert.Nil(t, err)
 				assert.Contains(t, data.String(), "{\"numberOfRules\":1}")
-			}
-
-			if f.Name == "/metadata.json" {
-				t.Fatal("unexpected file:", f.Name)
 			}
 		}
 	})
