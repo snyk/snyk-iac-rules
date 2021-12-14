@@ -3,7 +3,12 @@
 
 [![CircleCI](https://circleci.com/gh/snyk/snyk-iac-rules/tree/develop.svg?style=svg&circle-token=5597b9f0189554f754f38400cbe9d8f8b334c72a)](https://circleci.com/gh/snyk/snyk-iac-rules/tree/develop) 
 [![Shellspec Tests](https://github.com/snyk/snyk-iac-rules/actions/workflows/main.yml/badge.svg)](https://github.com/snyk/snyk-iac-rules/actions/workflows/main.yml)
+[![Contract Tests](https://github.com/snyk/snyk-iac-rules/actions/workflows/contract.yml/badge.svg)](https://github.com/snyk/snyk-iac-rules/actions/workflows/contract.yml)
+[![Registries Tests](https://github.com/snyk/snyk-iac-rules/actions/workflows/registries.yml/badge.svg)](https://github.com/snyk/snyk-iac-rules/actions/workflows/registries.yml)
 [![Golang Version](https://img.shields.io/github/go-mod/go-version/snyk/snyk-iac-rules)](https://github.com/snyk/snyk-iac-rules)
+
+[![Latest release version](https://img.shields.io/github/v/release/snyk/snyk-iac-rules)](https://github.com/snyk/snyk-iac-rules)
+[![Latest release date](https://img.shields.io/github/release-date/snyk/snyk-iac-rules)](https://github.com/snyk/snyk-iac-rules)
 
 `snyk-iac-rules` is a Golang SDK that provides flags for writing, debugging, testing, and bundling custom rules for the [Snyk IaC CLI](https://github.com/snyk/snyk/).
 
