@@ -120,3 +120,28 @@ jobs:
           
           # verifies that the installation works
           snyk-iac-rules
+
+  docker_build_and_run_test:
+    # The type of runner that the job will run on
+    runs-on: ${{ matrix.os }}-latest
+    strategy:
+      fail-fast: false # we care about other platforms and channels building
+      matrix:
+        os: [ubuntu]
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-go@v2
+        with:
+          go-version: 1.17
+
+      - name: Build binaries
+        uses: goreleaser/goreleaser-action@v2
+        with:
+          args: --snapshot --rm-dist
+
+      - name: Test Dockerfile
+        run: |
+          docker run snyk/snyk-iac-rules:latest
