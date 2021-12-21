@@ -50,6 +50,11 @@ yarn global add snyk-iac-rules
 docker pull snyk/snyk-iac-rules:latest
 ```
 
+You can then run the container like so:
+```bash
+docker run --rm -v $(pwd):/app snyk/snyk-iac-rules --help
+```
+
 ## More installation methods
 
 <details>
