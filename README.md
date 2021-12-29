@@ -47,7 +47,7 @@ yarn global add snyk-iac-rules
 [snyk-iac-rules available as a docker image](https://hub.docker.com/r/snyk/snyk-iac-rules). If you have Docker installed locally, you can install it by running:
 
 ```bash
-docker pull snyk/snyk-iac-rules:latest
+docker pull snyk/snyk-iac-rules:<version>
 ```
 
 You can then run the container like so:
