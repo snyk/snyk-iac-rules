@@ -3,6 +3,7 @@ package internal
 import (
 	"bytes"
 	"context"
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -29,7 +30,7 @@ type BuildCommandParams struct {
 }
 
 func RunBuild(args []string, params *BuildCommandParams) error {
-	err := assertUniqueRuleIds(args)
+	err := assertValidRuleIds(args)
 	if err != nil {
 		return err
 	}
@@ -83,12 +84,7 @@ func buildCommandLoaderFilter(bundleMode bool, ignore []string) func(string, os.
 	}
 }
 
-func assertUniqueRuleIds(paths []string) error {
-	rules, err := util.RetrieveRules(paths)
-	if err != nil {
-		return err
-	}
-
+func assertUniqueRuleIds(rules []util.Rule) error {
 	visitedRulePaths := make(map[string]string)
 
 	for _, rule := range rules {
@@ -106,6 +102,48 @@ func assertUniqueRuleIds(paths []string) error {
 		}
 
 		visitedRulePaths[rule.PublicId] = rule.Path
+	}
+
+	return nil
+}
+
+func assertRuleIdsWithoutSnykPrefix(rules []util.Rule) error {
+	invalidRulesPaths := []string{}
+
+	for _, rule := range rules {
+		if strings.HasPrefix(rule.PublicId, "SNYK-") {
+			invalidRulesPaths = append(invalidRulesPaths, rule.Path)
+		}
+	}
+
+	if len(invalidRulesPaths) > 0 {
+		errMessage := "We cannot create a bundle for your custom rules." +
+			"\nCustom rules cannot have a name that starts with \"SNYK-\"." +
+			"\nPlease ensure your public ID does not start with \"SNYK-\"." +
+			"\n\nRules that start with \"SNYK-\" are:"
+		for _, invalidRulePath := range invalidRulesPaths {
+			errMessage += fmt.Sprintf("\n- %s", invalidRulePath)
+		}
+		return errors.New(errMessage)
+	}
+
+	return nil
+}
+
+func assertValidRuleIds(paths []string) error {
+	rules, err := util.RetrieveRules(paths)
+	if err != nil {
+		return err
+	}
+
+	err = assertUniqueRuleIds(rules)
+	if err != nil {
+		return err
+	}
+
+	err = assertRuleIdsWithoutSnykPrefix(rules)
+	if err != nil {
+		return err
 	}
 
 	return nil
