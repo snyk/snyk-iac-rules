@@ -128,6 +128,7 @@ dockers:
     goos: linux
     goarch: amd64
     image_templates:
+    - "snyk/{{ .ProjectName }}:latest"
     - "snyk/{{ .ProjectName }}:{{ .Version }}"
 
 announce:
