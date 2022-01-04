@@ -1,9 +1,11 @@
 package util
 
 import (
+	"fmt"
+	"testing"
+
 	"github.com/open-policy-agent/opa/util/test"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 func TestRetrieveRulesWitInvalidPath(t *testing.T) {
@@ -82,8 +84,16 @@ func TestRetrieveRulesWithRulesWithDistinctPublicIds(t *testing.T) {
 		rules, err := RetrieveRules([]string{root})
 		assert.Nil(t, err)
 		assert.Equal(t, 2, len(rules))
-		assert.Equal(t, "1", rules[0])
-		assert.Equal(t, "2", rules[1])
+		assert.Subset(t, rules, []Rule{
+			{
+				PublicId: "1",
+				Path:     fmt.Sprintf("%s/test1.rego", root),
+			},
+			{
+				PublicId: "2",
+				Path:     fmt.Sprintf("%s/test2.rego", root),
+			},
+		})
 	})
 }
 
@@ -116,7 +126,15 @@ func TestRetrieveRulesWithRulesWithSamePublicIds(t *testing.T) {
 		rules, err := RetrieveRules([]string{root})
 		assert.Nil(t, err)
 		assert.Equal(t, 2, len(rules))
-		assert.Equal(t, "1", rules[0])
-		assert.Equal(t, "1", rules[1])
+		assert.Subset(t, rules, []Rule{
+			{
+				PublicId: "1",
+				Path:     fmt.Sprintf("%s/test1.rego", root),
+			},
+			{
+				PublicId: "1",
+				Path:     fmt.Sprintf("%s/test2.rego", root),
+			},
+		})
 	})
 }

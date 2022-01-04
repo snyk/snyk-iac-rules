@@ -1,30 +1,39 @@
 package util
 
 import (
-	"github.com/open-policy-agent/opa/loader"
 	"os"
 	"path/filepath"
 	"regexp"
 	"strings"
+
+	"github.com/open-policy-agent/opa/loader"
 )
 
-func RetrieveRules(paths []string) ([]string, error) {
+type Rule struct {
+	PublicId string
+	Path     string
+}
+
+func RetrieveRules(paths []string) ([]Rule, error) {
 	fileNames, err := findRegoFiles(paths)
 	if err != nil {
-		return []string{}, err
+		return []Rule{}, err
 	}
 
-	var publicIds = []string{}
+	rules := []Rule{}
 	for _, fileName := range fileNames {
 		publicId, err := getPublicIdFromFile(fileName)
 		if err != nil {
-			return []string{}, err
+			return []Rule{}, err
 		}
 		if publicId != "" {
-			publicIds = append(publicIds, publicId)
+			rules = append(rules, Rule{
+				PublicId: publicId,
+				Path:     fileName,
+			})
 		}
 	}
-	return publicIds, nil
+	return rules, nil
 }
 
 func findRegoFiles(paths []string) ([]string, error) {

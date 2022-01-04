@@ -3,6 +3,7 @@ package internal
 import (
 	"bytes"
 	"context"
+	"fmt"
 	"io"
 	"os"
 	"strings"
@@ -28,6 +29,11 @@ type BuildCommandParams struct {
 }
 
 func RunBuild(args []string, params *BuildCommandParams) error {
+	err := assertUniqueRuleIds(args)
+	if err != nil {
+		return err
+	}
+
 	buf := bytes.NewBuffer(nil)
 
 	var capabilities *ast.Capabilities
@@ -39,6 +45,7 @@ func RunBuild(args []string, params *BuildCommandParams) error {
 	} else {
 		capabilities = ast.CapabilitiesForThisVersion()
 	}
+
 	compiler := compile.New().
 		WithCapabilities(capabilities).
 		WithTarget(params.Target.String()).
@@ -49,7 +56,7 @@ func RunBuild(args []string, params *BuildCommandParams) error {
 		WithPaths(args...).
 		WithFilter(buildCommandLoaderFilter(false, params.Ignore))
 
-	err := compiler.Build(context.Background())
+	err = compiler.Build(context.Background())
 	if err != nil {
 		return err
 	}
@@ -74,4 +81,32 @@ func buildCommandLoaderFilter(bundleMode bool, ignore []string) func(string, os.
 		}
 		return util.LoaderFilter{Ignore: ignore}.Apply(abspath, info, depth)
 	}
+}
+
+func assertUniqueRuleIds(paths []string) error {
+	rules, err := util.RetrieveRules(paths)
+	if err != nil {
+		return err
+	}
+
+	visitedRulePaths := make(map[string]string)
+
+	for _, rule := range rules {
+		if _, ok := visitedRulePaths[rule.PublicId]; ok {
+			return fmt.Errorf(
+				"We cannot create a bundle for your custom rules."+
+					"\nThe bundle contains duplicate rules."+
+					"\nPlease ensure all rules have unique public IDs."+
+					"\n\nDuplicate rules are:"+
+					"\n- %s"+
+					"\n- %s",
+				rule.Path,
+				visitedRulePaths[rule.PublicId],
+			)
+		}
+
+		visitedRulePaths[rule.PublicId] = rule.Path
+	}
+
+	return nil
 }
