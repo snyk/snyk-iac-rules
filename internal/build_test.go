@@ -3,6 +3,7 @@ package internal
 import (
 	"archive/tar"
 	"compress/gzip"
+	"fmt"
 	"io"
 	"os"
 	"path"
@@ -266,5 +267,58 @@ func TestBuildRespectsCapabilitiesFailure(t *testing.T) {
 		err := RunBuild([]string{root}, buildParams)
 		assert.NotNil(t, err)
 		assert.Contains(t, err.Error(), "undefined function is_foo")
+	})
+}
+
+func TestBuildWithDuplicateRuleIds(t *testing.T) {
+	baseTestFiles := map[string]string{
+		"test1.rego": `
+			package test
+			msg = {
+				"publicId": "TEST-1"
+			}
+		`,
+		"test2.rego": `
+			package test
+			msg = {
+				"publicId": "TEST-1"
+			}
+		`,
+	}
+
+	test.WithTempFS(baseTestFiles, func(root string) {
+		buildParams := mockBuildParams()
+		buildParams.OutputFile = path.Join(root, "bundle.tar.gz")
+		err := buildParams.Target.Set(TargetRego)
+		assert.Nil(t, err)
+
+		err = RunBuild([]string{root}, buildParams)
+		assert.NotNil(t, err)
+		assert.Contains(t, err.Error(), "The bundle contains duplicate rules")
+		assert.Contains(t, err.Error(), fmt.Sprintf("%s/test1.rego", root))
+		assert.Contains(t, err.Error(), fmt.Sprintf("%s/test2.rego", root))
+	})
+}
+
+func TestBuildWithRuleIdsWithSnykPrefix(t *testing.T) {
+	baseTestFiles := map[string]string{
+		"test1.rego": `
+			package test
+			msg = {
+				"publicId": "SNYK-TEST-1"
+			}
+		`,
+	}
+
+	test.WithTempFS(baseTestFiles, func(root string) {
+		buildParams := mockBuildParams()
+		buildParams.OutputFile = path.Join(root, "bundle.tar.gz")
+		err := buildParams.Target.Set(TargetRego)
+		assert.Nil(t, err)
+
+		err = RunBuild([]string{root}, buildParams)
+		assert.NotNil(t, err)
+		assert.Contains(t, err.Error(), "Custom rules cannot have a name that starts with \"SNYK-\"")
+		assert.Contains(t, err.Error(), fmt.Sprintf("%s/test1.rego", root))
 	})
 }
