@@ -18,11 +18,11 @@ Describe 'Verifies custom rules for all formats'
             cd tmp
 
             # create a basic rule
-            ../snyk-iac-rules template --rule Contract --format "$1"
+            ../snyk-iac-rules template --rule CONTRACT --format "$1"
 
             if [ "$1" != "json" ]; then
-                ../snyk-iac-rules parse ./rules/Contract/fixtures/denied"$2" --format "$1"
-                ../snyk-iac-rules parse ./rules/Contract/fixtures/allowed"$2" --format "$1"
+                ../snyk-iac-rules parse ./rules/CONTRACT/fixtures/denied"$2" --format "$1"
+                ../snyk-iac-rules parse ./rules/CONTRACT/fixtures/allowed"$2" --format "$1"
             fi
 
             # run tests and make sure they pass
