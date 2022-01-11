@@ -1,0 +1,20 @@
+# Documentation: https://www.notion.so/snyk/Entity-Metadata-1e313ca03f954a6680b2b6b7b3d95297
+# Validation Tool: https://github.com/snyk/prodsec-github-bot
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: snyk-iac-rules
+  description: <
+    A Golang SDK that provides commands for writing, debugging, testing, and
+    bundling custom rules for the Snyk CLI
+  labels:
+    snyk.io/businessCriticality: low
+    snyk.io/visibility: public
+    snyk.io/metadata-version: "2021-14-10"
+spec:
+  # Currently type only accepts one of, website, service, library and we've aligned
+  # internally on "service" for CLI tools.
+  # See: https://backstage.io/docs/features/software-catalog/descriptor-format#spectype-required
+  type: service
+  lifecycle: production
+  owner: "@snyk/group-infrastructure-as-code"

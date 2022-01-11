@@ -4,7 +4,7 @@ version: v1.22.1
 ignore:
   'snyk:lic:golang:github.com:hashicorp:hcl:v2:MPL-2.0':
     - '*':
-        reason: Project is distributed with unmodified hashicorp/hcl dependency
-        expires: 2022-03-29T09:21:54.881Z
-        created: 2022-01-10T09:21:54.881Z
+      reason: >-
+        This license is addressed by including acknowledgments in each release
+      created: 2022-01-10T09:21:54.881Z
 patch: {}
