@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+	"unicode"
 
 	"github.com/spf13/cobra"
 
@@ -51,15 +52,20 @@ $ snyk-iac-rules test --help
 		return nil
 	},
 	PreRunE: func(cmd *cobra.Command, args []string) error {
-		ruleId := strings.ToUpper(templateParams.RuleID)
+		// make sure rule name is in uppercase
+		for _, r := range templateParams.RuleID {
+			if !unicode.IsUpper(r) && unicode.IsLetter(r) {
+				return fmt.Errorf("Rule name must be in uppercase")
+			}
+		}
 
 		// make sure rule name doesn't have any whitespace in it
-		if strings.Contains(ruleId, " ") {
+		if strings.Contains(templateParams.RuleID, " ") {
 			return fmt.Errorf("Rule name cannot contain whitespace")
 		}
 
 		// make sure rule name doesn't belong to Snyk namespace
-		if strings.HasPrefix(ruleId, "SNYK-") {
+		if strings.HasPrefix(templateParams.RuleID, "SNYK-") {
 			return fmt.Errorf("Rule name cannot start with \"SNYK-\"")
 		}
 

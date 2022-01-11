@@ -8,6 +8,7 @@ import (
 	"io"
 	"os"
 	"strings"
+	"unicode"
 
 	"github.com/open-policy-agent/opa/ast"
 	"github.com/open-policy-agent/opa/compile"
@@ -84,6 +85,34 @@ func buildCommandLoaderFilter(bundleMode bool, ignore []string) func(string, os.
 	}
 }
 
+func assertUppercasedRuleIds(rules []util.Rule) error {
+	invalidRulesPaths := []string{}
+
+	for _, rule := range rules {
+		for _, r := range rule.PublicId {
+			if !unicode.IsUpper(r) && unicode.IsLetter(r) {
+				invalidRulesPaths = append(invalidRulesPaths, rule.Path)
+				break
+			}
+		}
+	}
+
+	if len(invalidRulesPaths) > 0 {
+		errMessage := "We cannot create a bundle for your custom rules." +
+			"\nCustom rules must have an uppercased public ID." +
+			"\nPlease ensure all rules have an uppercased public ID." +
+			"\n\nRules that do not have an uppercased public ID are:"
+
+		for _, invalidRulePath := range invalidRulesPaths {
+			errMessage += fmt.Sprintf("\n- %s", invalidRulePath)
+		}
+
+		return errors.New(errMessage)
+	}
+
+	return nil
+}
+
 func assertUniqueRuleIds(rules []util.Rule) error {
 	visitedRulePaths := make(map[string]string)
 
@@ -132,6 +161,11 @@ func assertRuleIdsWithoutSnykPrefix(rules []util.Rule) error {
 
 func assertValidRuleIds(paths []string) error {
 	rules, err := util.RetrieveRules(paths)
+	if err != nil {
+		return err
+	}
+
+	err = assertUppercasedRuleIds(rules)
 	if err != nil {
 		return err
 	}

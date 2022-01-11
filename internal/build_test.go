@@ -322,3 +322,47 @@ func TestBuildWithRuleIdsWithSnykPrefix(t *testing.T) {
 		assert.Contains(t, err.Error(), fmt.Sprintf("%s/test1.rego", root))
 	})
 }
+
+func TestBuildWithUnuppercasedRuleIds(t *testing.T) {
+	baseTestFiles := map[string]string{
+		"test1.rego": `
+			package test
+			msg = {
+				"publicId": "snyk-test-1"
+			}
+		`,
+		"test2.rego": `
+			package test
+			msg = {
+				"publicId": "SnYk-TeSt-2"
+			}
+		`,
+		"test3.rego": `
+			package test
+			msg = {
+				"publicId": "SNYK-test-3"
+			}
+		`,
+		"test4.rego": `
+			package test
+			msg = {
+				"publicId": "SNYK-TEST-4"
+			}
+		`,
+	}
+
+	test.WithTempFS(baseTestFiles, func(root string) {
+		buildParams := mockBuildParams()
+		buildParams.OutputFile = path.Join(root, "bundle.tar.gz")
+		err := buildParams.Target.Set(TargetRego)
+		assert.Nil(t, err)
+
+		err = RunBuild([]string{root}, buildParams)
+		assert.NotNil(t, err)
+		assert.Contains(t, err.Error(), "Custom rules must have an uppercased public ID.")
+		assert.Contains(t, err.Error(), fmt.Sprintf("%s/test1.rego", root))
+		assert.Contains(t, err.Error(), fmt.Sprintf("%s/test2.rego", root))
+		assert.Contains(t, err.Error(), fmt.Sprintf("%s/test3.rego", root))
+		assert.NotContains(t, err.Error(), fmt.Sprintf("%s/test4.rego", root))
+	})
+}

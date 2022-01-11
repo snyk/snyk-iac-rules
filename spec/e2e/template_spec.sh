@@ -24,99 +24,99 @@ Describe './snyk-iac-rules template ./fixtures/custom-rules --format hcl2'
    End
 End
 
-Describe './snyk-iac-rules template ./fixtures/custom-rules --rule test'
+Describe './snyk-iac-rules template ./fixtures/custom-rules --rule TEST'
    It 'returns  an error'
-      When call ./snyk-iac-rules template ./fixtures/custom-rules --rule test
+      When call ./snyk-iac-rules template ./fixtures/custom-rules --rule TEST
       The status should be failure
       The stderr should include 'required flag(s) "format" not set'
    End
 End
 
-Describe './snyk-iac-rules template ./fixtures/custom-rules --rule test --format fake'
+Describe './snyk-iac-rules template ./fixtures/custom-rules --rule TEST --format fake'
    It 'returns  an error'
-      When call ./snyk-iac-rules template ./fixtures/custom-rules --rule test --format fake
+      When call ./snyk-iac-rules template ./fixtures/custom-rules --rule TEST --format fake
       The status should be failure
       The stderr should include 'invalid argument "fake" for "-f, --format" flag'
    End
 End
 
-Describe './snyk-iac-rules template ./fixtures/custom-rules --rule test1 --format hcl2'
+Describe './snyk-iac-rules template ./fixtures/custom-rules --rule TEST1 --format hcl2'
    It 'generates the template'
-      When call ./snyk-iac-rules template ./fixtures/custom-rules --rule test1 --format hcl2
+      When call ./snyk-iac-rules template ./fixtures/custom-rules --rule TEST1 --format hcl2
       The status should be success
       The output should include 'Template rules directory'
-      The output should include 'Template rules/test1 directory'
-      The output should include 'Template rules/test1/main.rego file'
-      The output should include 'Template rules/test1/main_test.rego file'
-      The output should include 'Template rules/test1/fixtures directory'
-      The output should include 'Template rules/test1/fixtures/denied.tf file'
-      The output should include 'Template rules/test1/fixtures/allowed.tf file'
+      The output should include 'Template rules/TEST1 directory'
+      The output should include 'Template rules/TEST1/main.rego file'
+      The output should include 'Template rules/TEST1/main_test.rego file'
+      The output should include 'Template rules/TEST1/fixtures directory'
+      The output should include 'Template rules/TEST1/fixtures/denied.tf file'
+      The output should include 'Template rules/TEST1/fixtures/allowed.tf file'
       The output should include 'Generated template'
 
-      rm -rf ./fixtures/custom-rules/rules/test1
+      rm -rf ./fixtures/custom-rules/rules/TEST1
    End
 End
 
-Describe './snyk-iac-rules template ./fixtures/custom-rules --rule test2 --format json'
+Describe './snyk-iac-rules template ./fixtures/custom-rules --rule TEST2 --format json'
    It 'generates the template'
-      When call ./snyk-iac-rules template ./fixtures/custom-rules --rule test2 --format json
+      When call ./snyk-iac-rules template ./fixtures/custom-rules --rule TEST2 --format json
       The status should be success
       The output should include 'Template rules directory'
-      The output should include 'Template rules/test2 directory'
-      The output should include 'Template rules/test2/main.rego file'
-      The output should include 'Template rules/test2/main_test.rego file'
-      The output should include 'Template rules/test2/fixtures directory'
-      The output should include 'Template rules/test2/fixtures/denied.json file'
-      The output should include 'Template rules/test2/fixtures/allowed.json file'
+      The output should include 'Template rules/TEST2 directory'
+      The output should include 'Template rules/TEST2/main.rego file'
+      The output should include 'Template rules/TEST2/main_test.rego file'
+      The output should include 'Template rules/TEST2/fixtures directory'
+      The output should include 'Template rules/TEST2/fixtures/denied.json file'
+      The output should include 'Template rules/TEST2/fixtures/allowed.json file'
       The output should include 'Generated template'
 
-      rm -rf ./fixtures/custom-rules/rules/test2
+      rm -rf ./fixtures/custom-rules/rules/TEST2
    End
 End
 
-Describe './snyk-iac-rules template ./fixtures/custom-rules --rule test3 --format yaml'
+Describe './snyk-iac-rules template ./fixtures/custom-rules --rule TEST3 --format yaml'
    It 'returns passing test status'
-      When call ./snyk-iac-rules template ./fixtures/custom-rules --rule test3 --format yaml
+      When call ./snyk-iac-rules template ./fixtures/custom-rules --rule TEST3 --format yaml
       The status should be success
       The output should include 'Template rules directory'
-      The output should include 'Template rules/test3 directory'
-      The output should include 'Template rules/test3/main.rego file'
-      The output should include 'Template rules/test3/main_test.rego file'
-      The output should include 'Template rules/test3/fixtures directory'
-      The output should include 'Template rules/test3/fixtures/denied.yaml file'
-      The output should include 'Template rules/test3/fixtures/allowed.yaml file'
+      The output should include 'Template rules/TEST3 directory'
+      The output should include 'Template rules/TEST3/main.rego file'
+      The output should include 'Template rules/TEST3/main_test.rego file'
+      The output should include 'Template rules/TEST3/fixtures directory'
+      The output should include 'Template rules/TEST3/fixtures/denied.yaml file'
+      The output should include 'Template rules/TEST3/fixtures/allowed.yaml file'
       The output should include 'Generated template'
 
-      rm -rf ./fixtures/custom-rules/rules/test3
+      rm -rf ./fixtures/custom-rules/rules/TEST3
    End
 End
 
-Describe './snyk-iac-rules template ./fixtures/custom-rules --rule test4 --format tf-plan'
+Describe './snyk-iac-rules template ./fixtures/custom-rules --rule TEST4 --format tf-plan'
    It 'returns passing test status'
-      When call ./snyk-iac-rules template ./fixtures/custom-rules --rule test4 --format tf-plan
+      When call ./snyk-iac-rules template ./fixtures/custom-rules --rule TEST4 --format tf-plan
       The status should be success
       The output should include 'Template rules directory'
-      The output should include 'Template rules/test4 directory'
-      The output should include 'Template rules/test4/main.rego file'
-      The output should include 'Template rules/test4/main_test.rego file'
-      The output should include 'Template rules/test4/fixtures directory'
-      The output should include 'Template rules/test4/fixtures/denied.json.tfplan file'
-      The output should include 'Template rules/test4/fixtures/allowed.json.tfplan file'
+      The output should include 'Template rules/TEST4 directory'
+      The output should include 'Template rules/TEST4/main.rego file'
+      The output should include 'Template rules/TEST4/main_test.rego file'
+      The output should include 'Template rules/TEST4/fixtures directory'
+      The output should include 'Template rules/TEST4/fixtures/denied.json.tfplan file'
+      The output should include 'Template rules/TEST4/fixtures/allowed.json.tfplan file'
       The output should include 'Generated template'
 
-      rm -rf ./fixtures/custom-rules/rules/test4
+      rm -rf ./fixtures/custom-rules/rules/TEST4
    End
 End
 
-Describe './snyk-iac-rules template ./fixtures/custom-rules --rule test4'
+Describe './snyk-iac-rules template ./fixtures/custom-rules --rule TEST4'
    It 'returns passing test status'
-      ./snyk-iac-rules template ./fixtures/custom-rules --rule test4 --format tf-plan
+      ./snyk-iac-rules template ./fixtures/custom-rules --rule TEST4 --format tf-plan
 
-      When call ./snyk-iac-rules template ./fixtures/custom-rules --rule test4 --format tf-plan
+      When call ./snyk-iac-rules template ./fixtures/custom-rules --rule TEST4 --format tf-plan
       The status should be failure
       The output should include 'Template rules directory'
       The stderr should include 'Rule with the provided name already exists'
 
-      rm -rf ./fixtures/custom-rules/rules/test4
+      rm -rf ./fixtures/custom-rules/rules/TEST4
    End
 End
