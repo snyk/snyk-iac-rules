@@ -62,7 +62,6 @@ func RunTest(args []string, params *TestCommandParams) error {
 		SetCompiler(compiler).
 		SetStore(store).
 		EnableTracing(params.Verbose).
-		EnableFailureLine(false).
 		SetRuntime(info).
 		SetModules(modules).
 		SetTimeout(params.Timeout).
