@@ -50,7 +50,7 @@ jobs:
   regression-test:
     <<: *defaults
     docker:
-      - image: circleci/golang:1.17
+      - image: cimg/go:1.17
     steps:
       - checkout
       - install_shellspec
@@ -90,7 +90,7 @@ jobs:
           organization: snyk-iac-group-seceng
   lint_commit_message:
     docker:
-      - image: circleci/node:14
+      - image: cimg/node:14.19
     steps:
       - checkout
       - attach_workspace:
