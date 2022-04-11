@@ -15,7 +15,8 @@ Available Commands:
   test        Execute Rego test cases
 
 Flags:
-  -h, --help   help for snyk-iac-rules
+  -h, --help      help for snyk-iac-rules
+  -v, --version   version for snyk-iac-rules
 
 Use "snyk-iac-rules [command] --help" for more information about a command.'
   End
