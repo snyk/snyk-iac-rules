@@ -19,6 +19,8 @@ builds:
     goarch:
     - amd64
     - arm64
+    ldflags:
+    - '-s -w -X github.com/snyk/snyk-iac-rules/cmd.version={{.Version}}'
 
 archives:
   - id: default

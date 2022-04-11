@@ -4,6 +4,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var version string = "dev"
+
 // RootCommand is the base CLI command that all subcommands are added to.
 var RootCommand = NewRootCmd()
 
@@ -39,6 +41,7 @@ $ snyk --help
 See our documentation to learn more:
 https://docs.snyk.io/products/snyk-infrastructure-as-code/custom-rules
 `,
+		Version: version,
 	}
 	rootCommand.CompletionOptions.DisableDefaultCmd = true
 	return rootCommand
