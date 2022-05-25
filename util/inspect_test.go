@@ -37,6 +37,26 @@ func TestRetrieveRulesWithNoRules(t *testing.T) {
 	})
 }
 
+func TestRetrieveRulesWithRulesWithPublicIdAndSeverityLevel(t *testing.T) {
+	files := map[string]string{
+		"test.rego": `
+			package test
+			msg = {
+				"publicId": "1",
+				"severity": "low"
+			}
+		`,
+	}
+
+	test.WithTempFS(files, func(root string) {
+		rules, err := RetrieveRules([]string{root})
+		assert.Nil(t, err)
+		assert.Equal(t, 1, len(rules))
+		assert.Equal(t, "1", rules[0].PublicId)
+		assert.Equal(t, "low", rules[0].SeverityLevel)
+	})
+}
+
 func TestRetrieveRulesWithRulesWithoutPublicId(t *testing.T) {
 	files := map[string]string{
 		"test.rego": `

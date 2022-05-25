@@ -11,13 +11,6 @@ import (
 	"github.com/snyk/snyk-iac-rules/util"
 )
 
-const (
-	JSON           = "json"
-	HCL2           = "hcl2"
-	YAML           = "yaml"
-	TERRAFORM_PLAN = "tf-plan"
-)
-
 var readFile = ioutil.ReadFile
 var parseYAML = parsers.ParseYAML
 var parseHCL2 = parsers.ParseHCL2
@@ -37,11 +30,11 @@ func RunParse(args []string, params *ParseCommandParams) error {
 
 	var parsedInput interface{}
 	switch params.Format.String() {
-	case YAML:
+	case util.YAML:
 		if err := parseYAML(content, &parsedInput); err != nil {
 			return err
 		}
-	case TERRAFORM_PLAN:
+	case util.TERRAFORM_PLAN:
 		if err := parseTerraformPlan(content, &parsedInput); err != nil {
 			return err
 		}

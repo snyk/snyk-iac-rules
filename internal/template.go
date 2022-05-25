@@ -10,13 +10,6 @@ import (
 	"github.com/snyk/snyk-iac-rules/util"
 )
 
-const (
-	LOW      = "low"
-	MEDIUM   = "medium"
-	HIGH     = "high"
-	CRITICAL = "critical"
-)
-
 type TemplateCommandParams struct {
 	RuleID       string
 	RuleTitle    string
@@ -46,13 +39,13 @@ func RunTemplate(args []string, params *TemplateCommandParams) error {
 
 func getTemplateByFormat(format string) (string, string, error) {
 	switch format {
-	case JSON:
+	case util.JSON:
 		return "main_test_json", ".json", nil
-	case YAML:
+	case util.YAML:
 		return "main_test_yaml", ".yaml", nil
-	case HCL2:
+	case util.HCL2:
 		return "main_test_hcl2", ".tf", nil
-	case TERRAFORM_PLAN:
+	case util.TERRAFORM_PLAN:
 		return "main_test_tfplan", ".json.tfplan", nil
 	default:
 		// should never get to here

@@ -25,7 +25,7 @@ func mockBuildParams() *BuildCommandParams {
 		Entrypoint: util.NewRepeatedStringFlag("test"),
 		OutputFile: "",
 		Ignore:     []string{},
-		Target:     util.NewEnumFlag(TargetWasm, []string{TargetRego, TargetWasm}),
+		Target:     util.NewEnumFlag(util.TargetWasm, []string{util.TargetRego, util.TargetWasm}),
 	}
 }
 
@@ -40,7 +40,7 @@ func TestBuildProducesRegoBundle(t *testing.T) {
 	test.WithTempFS(files, func(root string) {
 		buildParams := mockBuildParams()
 		buildParams.OutputFile = path.Join(root, "bundle.tar.gz")
-		err := buildParams.Target.Set(TargetRego)
+		err := buildParams.Target.Set(util.TargetRego)
 		assert.Nil(t, err)
 
 		err = RunBuild([]string{root}, buildParams)
@@ -275,13 +275,15 @@ func TestBuildWithDuplicateRuleIds(t *testing.T) {
 		"test1.rego": `
 			package test
 			msg = {
-				"publicId": "TEST-1"
+				"publicId": "TEST-1",
+				"severity": "low"
 			}
 		`,
 		"test2.rego": `
 			package test
 			msg = {
-				"publicId": "TEST-1"
+				"publicId": "TEST-1",
+				"severity": "low"
 			}
 		`,
 	}
@@ -289,7 +291,7 @@ func TestBuildWithDuplicateRuleIds(t *testing.T) {
 	test.WithTempFS(baseTestFiles, func(root string) {
 		buildParams := mockBuildParams()
 		buildParams.OutputFile = path.Join(root, "bundle.tar.gz")
-		err := buildParams.Target.Set(TargetRego)
+		err := buildParams.Target.Set(util.TargetRego)
 		assert.Nil(t, err)
 
 		err = RunBuild([]string{root}, buildParams)
@@ -305,7 +307,8 @@ func TestBuildWithRuleIdsWithSnykPrefix(t *testing.T) {
 		"test1.rego": `
 			package test
 			msg = {
-				"publicId": "SNYK-TEST-1"
+				"publicId": "SNYK-TEST-1",
+				"severity": "low"
 			}
 		`,
 	}
@@ -313,7 +316,7 @@ func TestBuildWithRuleIdsWithSnykPrefix(t *testing.T) {
 	test.WithTempFS(baseTestFiles, func(root string) {
 		buildParams := mockBuildParams()
 		buildParams.OutputFile = path.Join(root, "bundle.tar.gz")
-		err := buildParams.Target.Set(TargetRego)
+		err := buildParams.Target.Set(util.TargetRego)
 		assert.Nil(t, err)
 
 		err = RunBuild([]string{root}, buildParams)
@@ -328,25 +331,29 @@ func TestBuildWithUnuppercasedRuleIds(t *testing.T) {
 		"test1.rego": `
 			package test
 			msg = {
-				"publicId": "snyk-test-1"
+				"publicId": "snyk-test-1",
+				"severity": "low"
 			}
 		`,
 		"test2.rego": `
 			package test
 			msg = {
-				"publicId": "SnYk-TeSt-2"
+				"publicId": "SnYk-TeSt-2",
+				"severity": "low"
 			}
 		`,
 		"test3.rego": `
 			package test
 			msg = {
-				"publicId": "SNYK-test-3"
+				"publicId": "SNYK-test-3",
+				"severity": "low"
 			}
 		`,
 		"test4.rego": `
 			package test
 			msg = {
-				"publicId": "SNYK-TEST-4"
+				"publicId": "SNYK-TEST-4",
+				"severity": "low"
 			}
 		`,
 	}
@@ -354,7 +361,7 @@ func TestBuildWithUnuppercasedRuleIds(t *testing.T) {
 	test.WithTempFS(baseTestFiles, func(root string) {
 		buildParams := mockBuildParams()
 		buildParams.OutputFile = path.Join(root, "bundle.tar.gz")
-		err := buildParams.Target.Set(TargetRego)
+		err := buildParams.Target.Set(util.TargetRego)
 		assert.Nil(t, err)
 
 		err = RunBuild([]string{root}, buildParams)
@@ -364,5 +371,29 @@ func TestBuildWithUnuppercasedRuleIds(t *testing.T) {
 		assert.Contains(t, err.Error(), fmt.Sprintf("%s/test2.rego", root))
 		assert.Contains(t, err.Error(), fmt.Sprintf("%s/test3.rego", root))
 		assert.NotContains(t, err.Error(), fmt.Sprintf("%s/test4.rego", root))
+	})
+}
+
+func TestBuildWithInvalidSeverityLevel(t *testing.T) {
+	baseTestFiles := map[string]string{
+		"test1.rego": `
+			package test
+			msg = {
+				"publicId": "CUSTOM-RULE-1",
+				"severity": "invalid"
+			}
+		`,
+	}
+
+	test.WithTempFS(baseTestFiles, func(root string) {
+		buildParams := mockBuildParams()
+		buildParams.OutputFile = path.Join(root, "bundle.tar.gz")
+		err := buildParams.Target.Set(util.TargetRego)
+		assert.Nil(t, err)
+
+		err = RunBuild([]string{root}, buildParams)
+		assert.NotNil(t, err)
+		assert.Contains(t, err.Error(), "Custom rules must have a valid severity level")
+		assert.Contains(t, err.Error(), fmt.Sprintf("%s/test1.rego", root))
 	})
 }

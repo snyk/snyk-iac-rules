@@ -70,7 +70,7 @@ https://docs.snyk.io/products/snyk-infrastructure-as-code/custom-rules/getting-s
 
 func newTestCommandParams() *internal.TestCommandParams {
 	return &internal.TestCommandParams{
-		Explain: util.NewEnumFlag(internal.ExplainModeFails, []string{internal.ExplainModeFails, internal.ExplainModeFull, internal.ExplainModeNotes}),
+		Explain: util.NewEnumFlag(util.ExplainModeFails, []string{util.ExplainModeFails, util.ExplainModeFull, util.ExplainModeNotes}),
 	}
 }
 
