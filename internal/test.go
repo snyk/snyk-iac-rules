@@ -17,12 +17,6 @@ import (
 
 // Most of the logic was taken from https://github.com/open-policy-agent/opa/blob/v0.31.0/cmd/test.go
 
-const (
-	ExplainModeFull  = "full"
-	ExplainModeNotes = "notes"
-	ExplainModeFails = "fails"
-)
-
 type TestCommandParams struct {
 	Verbose  bool
 	Explain  util.EnumFlag
@@ -112,7 +106,7 @@ func filterTrace(trace []*topdown.Event, params *TestCommandParams) []*topdown.E
 	ops := map[topdown.Op]struct{}{}
 	mode := params.Explain.String()
 
-	if mode == ExplainModeFull {
+	if mode == util.ExplainModeFull {
 		// Don't bother filtering anything
 		return trace
 	}
@@ -122,10 +116,10 @@ func filterTrace(trace []*topdown.Event, params *TestCommandParams) []*topdown.E
 	// default to show both notes and fail events
 	showDefault := !params.Explain.IsSet() && params.Verbose
 
-	if mode == ExplainModeNotes || showDefault {
+	if mode == util.ExplainModeNotes || showDefault {
 		ops[topdown.NoteOp] = struct{}{}
 	}
-	if mode == ExplainModeFails || showDefault {
+	if mode == util.ExplainModeFails || showDefault {
 		ops[topdown.FailOp] = struct{}{}
 	}
 

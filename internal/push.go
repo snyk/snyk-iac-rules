@@ -14,6 +14,8 @@ import (
 
 	"oras.land/oras-go/pkg/content"
 	"oras.land/oras-go/pkg/oras"
+
+	util "github.com/snyk/snyk-iac-rules/util"
 )
 
 var push = oras.Push
@@ -21,11 +23,6 @@ var push = oras.Push
 type PushCommandParams struct {
 	BundleRegistry string
 }
-
-const (
-	customConfigMediaType       = "application/vnd.oci.image.config.v1+json"
-	customTarballLayerMediaType = "application/vnd.oci.image.layer.v1.tar+gzip"
-)
 
 const configContents = `{
 	"mediaType": "application/vnd.oci.image.config.v1+json"
@@ -88,11 +85,11 @@ var loadBundle = func(ctx context.Context, memoryStore *content.Memorystore, pat
 		return ocispec.Descriptor{}, fmt.Errorf("Failed to read bundle contents: " + err.Error())
 	}
 
-	return memoryStore.Add(path, customTarballLayerMediaType, bundleContents), nil
+	return memoryStore.Add(path, util.CustomTarballLayerMediaType, bundleContents), nil
 }
 
 var loadConfig = func(memoryStore *content.Memorystore) ocispec.Descriptor {
-	descriptor := memoryStore.Add("config.json", customConfigMediaType, []byte(configContents))
+	descriptor := memoryStore.Add("config.json", util.CustomConfigMediaType, []byte(configContents))
 	descriptor.Annotations = nil
 	return descriptor
 }

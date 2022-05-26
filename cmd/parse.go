@@ -56,7 +56,7 @@ https://docs.snyk.io/products/snyk-infrastructure-as-code/custom-rules/getting-s
 
 func newParseCommandParams() *internal.ParseCommandParams {
 	return &internal.ParseCommandParams{
-		Format: util.NewEnumFlag(internal.HCL2, []string{internal.HCL2, internal.YAML, internal.TERRAFORM_PLAN}),
+		Format: util.NewEnumFlag(util.HCL2, []string{util.HCL2, util.YAML, util.TERRAFORM_PLAN}),
 	}
 }
 

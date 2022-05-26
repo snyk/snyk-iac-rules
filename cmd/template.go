@@ -88,8 +88,8 @@ $ snyk-iac-rules test --help
 
 func newTemplateCommandParams() *internal.TemplateCommandParams {
 	return &internal.TemplateCommandParams{
-		RuleSeverity: util.NewEnumFlag(internal.LOW, []string{internal.LOW, internal.MEDIUM, internal.HIGH, internal.CRITICAL}),
-		RuleFormat:   util.NewEnumFlag("", []string{internal.HCL2, internal.JSON, internal.YAML, internal.TERRAFORM_PLAN}),
+		RuleSeverity: util.NewEnumFlag(util.LOW, util.ValidSeverityLevels),
+		RuleFormat:   util.NewEnumFlag("", []string{util.HCL2, util.JSON, util.YAML, util.TERRAFORM_PLAN}),
 	}
 }
 
