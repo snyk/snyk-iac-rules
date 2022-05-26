@@ -18,7 +18,7 @@ import (
 func mockTestParams() *TestCommandParams {
 	return &TestCommandParams{
 		Verbose:  false,
-		Explain:  util.NewEnumFlag(ExplainModeFails, []string{ExplainModeFails, ExplainModeFull, ExplainModeNotes}),
+		Explain:  util.NewEnumFlag(util.ExplainModeFails, []string{util.ExplainModeFails, util.ExplainModeFull, util.ExplainModeNotes}),
 		Timeout:  5 * time.Second,
 		Ignore:   []string{},
 		RunRegex: "",
@@ -64,7 +64,7 @@ func TestFilterTraceVerbose(t *testing.T) {
 
 func TestFilterTraceExplainFails(t *testing.T) {
 	testParams := mockTestParams()
-	err := testParams.Explain.Set(ExplainModeFails)
+	err := testParams.Explain.Set(util.ExplainModeFails)
 	assert.Nil(t, err)
 
 	expected := `Enter data.testing.test_p = _
@@ -83,7 +83,7 @@ func TestFilterTraceExplainFails(t *testing.T) {
 
 func TestFilterTraceExplainNotes(t *testing.T) {
 	testParams := mockTestParams()
-	err := testParams.Explain.Set(ExplainModeNotes)
+	err := testParams.Explain.Set(util.ExplainModeNotes)
 	assert.Nil(t, err)
 
 	expected := `Enter data.testing.test_p = _
@@ -100,7 +100,7 @@ func TestFilterTraceExplainNotes(t *testing.T) {
 
 func TestFilterTraceExplainFull(t *testing.T) {
 	testParams := mockTestParams()
-	err := testParams.Explain.Set(ExplainModeFull)
+	err := testParams.Explain.Set(util.ExplainModeFull)
 	assert.Nil(t, err)
 
 	expected := `Enter data.testing.test_p = _

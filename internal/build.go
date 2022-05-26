@@ -17,11 +17,6 @@ import (
 
 // Most of the logic was taken from https://github.com/open-policy-agent/opa/blob/v0.31.0/cmd/build.go
 
-const (
-	TargetRego = "rego"
-	TargetWasm = "wasm"
-)
-
 type BuildCommandParams struct {
 	Entrypoint   util.RepeatedStringFlag
 	OutputFile   string
@@ -31,7 +26,7 @@ type BuildCommandParams struct {
 }
 
 func RunBuild(args []string, params *BuildCommandParams) error {
-	err := assertValidRuleIds(args)
+	err := assertValidRules(args)
 	if err != nil {
 		return err
 	}
@@ -159,7 +154,39 @@ func assertRuleIdsWithoutSnykPrefix(rules []util.Rule) error {
 	return nil
 }
 
-func assertValidRuleIds(paths []string) error {
+func assertValidSeverityLevels(rules []util.Rule) error {
+	invalidRulesPaths := []string{}
+
+	for _, rule := range rules {
+		var isValidSeverityLevel = func(severityLevel string) bool {
+			for _, validSeverityLevel := range util.ValidSeverityLevels {
+				if validSeverityLevel == severityLevel {
+					return true
+				}
+			}
+			return false
+		}
+
+		if !isValidSeverityLevel(rule.SeverityLevel) {
+			invalidRulesPaths = append(invalidRulesPaths, rule.Path)
+		}
+	}
+
+	if len(invalidRulesPaths) > 0 {
+		errMessage := "We cannot create a bundle for your custom rules." +
+			"\nCustom rules must have a valid severity level." +
+			"\nPlease ensure your severity level is one of: low, medium, high, or critical." +
+			"\n\nRules that have invalid severity levels are:"
+		for _, invalidRulePath := range invalidRulesPaths {
+			errMessage += fmt.Sprintf("\n- %s", invalidRulePath)
+		}
+		return errors.New(errMessage)
+	}
+
+	return nil
+}
+
+func assertValidRules(paths []string) error {
 	rules, err := util.RetrieveRules(paths)
 	if err != nil {
 		return err
@@ -176,6 +203,11 @@ func assertValidRuleIds(paths []string) error {
 	}
 
 	err = assertRuleIdsWithoutSnykPrefix(rules)
+	if err != nil {
+		return err
+	}
+
+	err = assertValidSeverityLevels(rules)
 	if err != nil {
 		return err
 	}

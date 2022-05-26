@@ -14,7 +14,7 @@ func mockTemplateParams(format string) *TemplateCommandParams {
 	return &TemplateCommandParams{
 		RuleID:       "Test Rule ID",
 		RuleTitle:    "Test Rule Title",
-		RuleSeverity: util.NewEnumFlag(LOW, []string{LOW, MEDIUM, HIGH, CRITICAL}),
+		RuleSeverity: util.NewEnumFlag(util.LOW, []string{util.LOW, util.MEDIUM, util.HIGH, util.CRITICAL}),
 		RuleFormat:   util.NewEnumFlag(format, []string{format}),
 	}
 }
@@ -54,16 +54,16 @@ type file struct {
 func createTestFiles(format string) []file {
 	var test, extension string
 	switch format {
-	case HCL2:
+	case util.HCL2:
 		test = "main_test_hcl2"
 		extension = ".tf"
-	case JSON:
+	case util.JSON:
 		test = "main_test_json"
 		extension = ".json"
-	case YAML:
+	case util.YAML:
 		test = "main_test_yaml"
 		extension = ".yaml"
-	case TERRAFORM_PLAN:
+	case util.TERRAFORM_PLAN:
 		test = "main_test_tfplan"
 		extension = ".json.tfplan"
 	default:
@@ -113,10 +113,10 @@ type formatTest struct {
 }
 
 var tests = []formatTest{
-	{format: HCL2},
-	{format: JSON},
-	{format: YAML},
-	{format: TERRAFORM_PLAN},
+	{format: util.HCL2},
+	{format: util.JSON},
+	{format: util.YAML},
+	{format: util.TERRAFORM_PLAN},
 }
 
 func TestTemplateInEmptyDirectory(t *testing.T) {
@@ -154,7 +154,7 @@ func TestTemplateInEmptyDirectory(t *testing.T) {
 			assert.Equal(t, files[filesIndex].template, template)
 			assert.Equal(t, "Test Rule ID", templating.RuleID)
 			assert.Equal(t, "Test Rule Title", templating.RuleTitle)
-			assert.Equal(t, LOW, templating.RuleSeverity)
+			assert.Equal(t, util.LOW, templating.RuleSeverity)
 
 			filesIndex++
 			return nil
@@ -214,7 +214,7 @@ func TestTemplateInDirectoryWithLibWithTfPlan(t *testing.T) {
 			assert.Equal(t, files[filesIndex].template, template)
 			assert.Equal(t, "Test Rule ID", templating.RuleID)
 			assert.Equal(t, "Test Rule Title", templating.RuleTitle)
-			assert.Equal(t, LOW, templating.RuleSeverity)
+			assert.Equal(t, util.LOW, templating.RuleSeverity)
 
 			filesIndex++
 			return nil
@@ -281,7 +281,7 @@ func TestTemplateInDirectoryWithLibWithoutTfPlan(t *testing.T) {
 			assert.Equal(t, files[filesIndex].template, template)
 			assert.Equal(t, "Test Rule ID", templating.RuleID)
 			assert.Equal(t, "Test Rule Title", templating.RuleTitle)
-			assert.Equal(t, LOW, templating.RuleSeverity)
+			assert.Equal(t, util.LOW, templating.RuleSeverity)
 
 			// if creating the tfplan testing file then change its order
 			if strings.Contains(workingDirectory, "/lib/testing") {

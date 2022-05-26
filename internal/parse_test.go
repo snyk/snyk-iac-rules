@@ -13,7 +13,7 @@ import (
 
 func mockParseParams() *ParseCommandParams {
 	return &ParseCommandParams{
-		Format: util.NewEnumFlag(HCL2, []string{HCL2, YAML, TERRAFORM_PLAN}),
+		Format: util.NewEnumFlag(util.HCL2, []string{util.HCL2, util.YAML, util.TERRAFORM_PLAN}),
 	}
 }
 
@@ -48,7 +48,7 @@ func TestParse(t *testing.T) {
 		}
 
 		parseParams := mockParseParams()
-		err = parseParams.Format.Set(YAML)
+		err = parseParams.Format.Set(util.YAML)
 		assert.Nil(t, err)
 
 		err = RunParse([]string{"test"}, parseParams)
@@ -86,7 +86,7 @@ func TestParse(t *testing.T) {
 		}
 
 		parseParams := mockParseParams()
-		err = parseParams.Format.Set(HCL2)
+		err = parseParams.Format.Set(util.HCL2)
 		assert.Nil(t, err)
 
 		err = RunParse([]string{"test"}, parseParams)
@@ -124,7 +124,7 @@ func TestParse(t *testing.T) {
 		}
 
 		parseParams := mockParseParams()
-		err = parseParams.Format.Set(TERRAFORM_PLAN)
+		err = parseParams.Format.Set(util.TERRAFORM_PLAN)
 		assert.Nil(t, err)
 
 		err = RunParse([]string{"test"}, parseParams)

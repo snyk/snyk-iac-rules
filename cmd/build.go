@@ -67,7 +67,7 @@ https://docs.snyk.io/products/snyk-infrastructure-as-code/custom-rules/getting-s
 func newBuildCommandParams() *internal.BuildCommandParams {
 	return &internal.BuildCommandParams{
 		Entrypoint:   util.NewRepeatedStringFlag("rules/deny"),
-		Target:       util.NewEnumFlag(internal.TargetWasm, []string{internal.TargetRego, internal.TargetWasm}),
+		Target:       util.NewEnumFlag(util.TargetWasm, []string{util.TargetRego, util.TargetWasm}),
 		Capabilities: util.NewCapabilitiesFlag(),
 	}
 }
