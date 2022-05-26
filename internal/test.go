@@ -3,6 +3,7 @@ package internal
 import (
 	"context"
 	"errors"
+	"fmt"
 	"os"
 	"time"
 
@@ -35,26 +36,31 @@ func RunTest(args []string, params *TestCommandParams) error {
 
 	modules, store, err := tester.Load(args, filter.Apply)
 	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
 		return err
 	}
 
 	txn, err := store.NewTransaction(ctx, storage.WriteParams)
 	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
 		return err
 	}
 	defer store.Abort(ctx, txn)
 
 	compiler := ast.NewCompiler().
-		WithPathConflictsCheck(storage.NonEmpty(ctx, store, txn))
+		WithPathConflictsCheck(storage.NonEmpty(ctx, store, txn)).
+		WithEnablePrintStatements(false)
 
 	info, err := util.Term()
 	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
 		return err
 	}
 
 	runner := tester.NewRunner().
 		SetCompiler(compiler).
 		SetStore(store).
+		CapturePrintOutput(true).
 		EnableTracing(params.Verbose).
 		SetRuntime(info).
 		SetModules(modules).
@@ -92,6 +98,7 @@ func runTests(ctx context.Context, txn storage.Transaction, runner *tester.Runne
 	}()
 
 	if err := reporter.Report(dup); err != nil {
+		fmt.Fprintln(os.Stderr, err)
 		return err
 	}
 
