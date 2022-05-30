@@ -3,11 +3,15 @@ package internal
 import (
 	"bytes"
 	"context"
+	"io/ioutil"
+	"os"
 	"testing"
 	"time"
 
 	"github.com/open-policy-agent/opa/rego"
 	"github.com/open-policy-agent/opa/topdown"
+	"github.com/open-policy-agent/opa/util/test"
+
 	"github.com/snyk/snyk-iac-rules/util"
 
 	"github.com/stretchr/testify/assert"
@@ -205,4 +209,31 @@ func failTrace(t *testing.T) []*topdown.Event {
 	assert.Nil(t, err)
 
 	return *tracer
+}
+
+func TestInvalidRego(t *testing.T) {
+	baseTestFiles := map[string]string{
+		"test1.rego": `
+			package test
+			*
+		`,
+	}
+
+	test.WithTempFS(baseTestFiles, func(root string) {
+		testParams := mockTestParams()
+		testParams.Verbose = false
+
+		rescueStderr := os.Stderr
+		r, w, _ := os.Pipe()
+		os.Stderr = w
+
+		err := RunTest([]string{root}, testParams)
+		assert.NotNil(t, err)
+
+		w.Close()
+		out, _ := ioutil.ReadAll(r)
+		os.Stderr = rescueStderr
+
+		assert.Contains(t, string(out), "unexpected mul token")
+	})
 }
