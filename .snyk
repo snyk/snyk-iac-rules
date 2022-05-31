@@ -7,4 +7,8 @@ ignore:
       reason: >-
         This license is addressed by including acknowledgments in each release
       created: 2022-01-10T09:21:54.881Z
+  'SNYK-GOLANG-GITHUBCOMOPENPOLICYAGENTOPAAST-2840626':
+    - '*':
+      reason: 'The fix available is a breaking change and team is busy working on other tasks'
+      expires '2022-06-30T00:00:00.000Z':
 patch: {}
