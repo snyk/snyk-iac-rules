@@ -3,100 +3,69 @@ package internal
 import (
 	"context"
 	"fmt"
-	"io/ioutil"
-	"net/http"
 	"os"
 
-	"github.com/containerd/containerd/remotes"
-	ocispec "github.com/opencontainers/image-spec/specs-go/v1"
-	auth "oras.land/oras-go/pkg/auth/docker"
 	orascontext "oras.land/oras-go/pkg/context"
+	"oras.land/oras-go/pkg/target"
 
 	"oras.land/oras-go/pkg/content"
 	"oras.land/oras-go/pkg/oras"
 
-	util "github.com/snyk/snyk-iac-rules/util"
+	v1 "github.com/opencontainers/image-spec/specs-go/v1"
+	"github.com/snyk/snyk-iac-rules/util"
 )
-
-var push = oras.Push
 
 type PushCommandParams struct {
 	BundleRegistry string
+}
+
+func RunPush(args []string, params *PushCommandParams) error {
+	return pushBundle(orascontext.Background(), oras.Copy, params.BundleRegistry, args[0])
 }
 
 const configContents = `{
 	"mediaType": "application/vnd.oci.image.config.v1+json"
 }`
 
-func RunPush(args []string, params *PushCommandParams) error {
-	ctx := orascontext.Background()
-	memoryStore := content.NewMemoryStore()
+type copy func(ctx context.Context, from target.Target, fromRef string, to target.Target, toRef string, opts ...oras.CopyOpt) (v1.Descriptor, error)
 
-	return pushBundle(ctx, memoryStore, params.BundleRegistry, args[0])
-}
-
-func pushBundle(ctx context.Context, memoryStore *content.Memorystore, repository string, path string) error {
-	resolver, err := login(ctx)
+func pushBundle(ctx context.Context, copy copy, repository string, bundlePath string) error {
+	bundleData, err := os.ReadFile(bundlePath)
 	if err != nil {
-		return err
+		return fmt.Errorf("read bundle: %v", err)
 	}
 
-	// load the generated bundle and in-memory config.json into OCI descriptors
-	bundle, err := loadBundle(ctx, memoryStore, path)
+	registry, err := content.NewRegistry(content.RegistryOptions{})
 	if err != nil {
-		return err
+		return fmt.Errorf("create registry: %v", err)
 	}
-	config := loadConfig(memoryStore)
 
-	descriptors := []ocispec.Descriptor{
-		bundle,
-	}
-	pushOpts := configurePushOpts(config)
-	_, err = push(ctx, resolver, repository, memoryStore, descriptors, pushOpts...)
+	store := content.NewMemory()
+
+	bundleDesc, err := store.Add("bundle.tar.gz", util.CustomTarballLayerMediaType, bundleData)
 	if err != nil {
-		return fmt.Errorf("Failed to push bundle to container registry: " + err.Error())
+		return fmt.Errorf("add bundle: %v", err)
+	}
+
+	configDesc, err := store.Add("config.json", util.CustomConfigMediaType, []byte(configContents))
+	if err != nil {
+		return fmt.Errorf("add config: %v", err)
+	}
+
+	manifestData, manifestDesc, err := content.GenerateManifest(&configDesc, nil, bundleDesc)
+	if err != nil {
+		return fmt.Errorf("generate manifest: %v", err)
+	}
+
+	if err := store.StoreManifest(repository, manifestDesc, manifestData); err != nil {
+		return fmt.Errorf("store manifest: %v", err)
+	}
+
+	fmt.Printf("Uploading %s %s\n", bundleDesc.Digest.Encoded()[:12], bundlePath)
+
+	if _, err := copy(ctx, store, repository, registry, repository); err != nil {
+		return fmt.Errorf("Failed to push bundle to container registry: %v", err)
 	}
 
 	return nil
-}
-
-var login = func(ctx context.Context) (remotes.Resolver, error) {
-	cli, err := auth.NewClient()
-	if err != nil {
-		return nil, fmt.Errorf("Failed to create authentication client: " + err.Error())
-	}
-
-	resolver, err := cli.Resolver(ctx, http.DefaultClient, false)
-	if err != nil {
-		return nil, fmt.Errorf("Failed to login: " + err.Error())
-	}
-	return resolver, nil
-}
-
-var loadBundle = func(ctx context.Context, memoryStore *content.Memorystore, path string) (ocispec.Descriptor, error) {
-	bundle, err := os.Open(path)
-	if err != nil {
-		return ocispec.Descriptor{}, fmt.Errorf("Failed to find bundle: " + err.Error())
-	}
-	defer bundle.Close()
-
-	bundleContents, err := ioutil.ReadAll(bundle)
-	if err != nil {
-		return ocispec.Descriptor{}, fmt.Errorf("Failed to read bundle contents: " + err.Error())
-	}
-
-	return memoryStore.Add(path, util.CustomTarballLayerMediaType, bundleContents), nil
-}
-
-var loadConfig = func(memoryStore *content.Memorystore) ocispec.Descriptor {
-	descriptor := memoryStore.Add("config.json", util.CustomConfigMediaType, []byte(configContents))
-	descriptor.Annotations = nil
-	return descriptor
-}
-
-var configurePushOpts = func(config ocispec.Descriptor) []oras.PushOpt {
-	return []oras.PushOpt{
-		oras.WithPushStatusTrack(os.Stdout),
-		oras.WithConfig(config),
-	}
 }

@@ -2,65 +2,76 @@ package internal
 
 import (
 	"context"
+	"os"
+	"path/filepath"
 	"testing"
 
-	"github.com/containerd/containerd/content"
-	"github.com/containerd/containerd/remotes"
-	"github.com/open-policy-agent/opa/util/test"
 	ocispec "github.com/opencontainers/image-spec/specs-go/v1"
-	"github.com/stretchr/testify/assert"
+	"oras.land/oras-go/pkg/content"
 	"oras.land/oras-go/pkg/oras"
+	"oras.land/oras-go/pkg/target"
 )
 
-func mockPushParams() *PushCommandParams {
-	return &PushCommandParams{
-		BundleRegistry: "docker.io/test/test:latest",
-	}
-}
-
 func TestPush(t *testing.T) {
-	files := map[string]string{
-		"bundle.tar.gz": `test`,
-	}
+	copy := func(ctx context.Context, from target.Target, fromRef string, to target.Target, toRef string, opts ...oras.CopyOpt) (ocispec.Descriptor, error) {
 
-	oldLogin := login
-	defer func() {
-		login = oldLogin
-	}()
-	login = func(context.Context) (remotes.Resolver, error) {
-		return nil, nil
-	}
+		// Check that the from and to references are consistent
 
-	oldConfigurePushOpts := configurePushOpts
-	defer func() {
-		configurePushOpts = oldConfigurePushOpts
-	}()
-	configurePushOpts = func(configDescriptor ocispec.Descriptor) []oras.PushOpt {
-		// verifies the config manifest
-		assert.Equal(t, "application/vnd.oci.image.config.v1+json", configDescriptor.MediaType)
-		assert.Equal(t, "sha256:0f1289b1eadb7bd9c8b634b9b677f5e881d1d91a1bebad042d0171daff0e7288", configDescriptor.Digest.String())
+		if fromRef != "example.com/repository/bundle:v0.0.1" {
+			t.Fatalf("unexpected from reference: %v", fromRef)
+		}
 
-		return []oras.PushOpt{}
-	}
+		if toRef != "example.com/repository/bundle:v0.0.1" {
+			t.Fatalf("unexpected to reference: %v", toRef)
+		}
 
-	oldPush := push
-	defer func() {
-		push = oldPush
-	}()
-	push = func(ctx context.Context, resolver remotes.Resolver, ref string, provider content.Provider, descriptors []ocispec.Descriptor, opts ...oras.PushOpt) (ocispec.Descriptor, error) {
-		// verifies the image name and tag and the bundle
-		assert.Equal(t, "docker.io/test/test:latest", ref)
-		assert.Equal(t, 1, len(descriptors))
-		assert.Equal(t, "application/vnd.oci.image.layer.v1.tar+gzip", descriptors[0].MediaType)
-		assert.Equal(t, "sha256:9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08", descriptors[0].Digest.String())
+		// Dump everything from the "from" target into an in-memory registry
+		// using the "from" and "to" references.
+
+		store := content.NewMemory()
+
+		if _, err := oras.Copy(context.Background(), from, fromRef, store, toRef); err != nil {
+			t.Fatalf("copy: %v", err)
+		}
+
+		// Check that the manifest can be found and has the right media type.
+
+		if _, desc, err := store.Resolve(context.Background(), toRef); err != nil {
+			t.Fatalf("resolve manifest: %v", err)
+		} else if desc.MediaType != "application/vnd.oci.image.manifest.v1+json" {
+			t.Fatalf("invalid manifest media type: %v", desc.MediaType)
+		}
+
+		// Check that the configuration can be found and has the right media
+		// type.
+
+		if desc, _, found := store.GetByName("config.json"); !found {
+			t.Fatalf("config not found")
+		} else if desc.MediaType != "application/vnd.oci.image.config.v1+json" {
+			t.Fatalf("invalid config media type: %v", desc.MediaType)
+		}
+
+		// Check that the manifest can be found, has the right media type, and
+		// has the right content.
+
+		if desc, data, found := store.GetByName("bundle.tar.gz"); !found {
+			t.Fatalf("bundle not found")
+		} else if desc.MediaType != "application/vnd.oci.image.layer.v1.tar+gzip" {
+			t.Fatalf("invalid bundle media type: %v", desc.MediaType)
+		} else if string(data) != "bundle content" {
+			t.Fatalf("invalid bundle content: %v", string(data))
+		}
 
 		return ocispec.Descriptor{}, nil
 	}
 
-	test.WithTempFS(files, func(root string) {
-		pushParams := mockPushParams()
+	bundle := filepath.Join(t.TempDir(), "bundle.tar.gz")
 
-		err := RunPush([]string{root + "/" + "bundle.tar.gz"}, pushParams)
-		assert.Nil(t, err)
-	})
+	if err := os.WriteFile(bundle, []byte("bundle content"), 0644); err != nil {
+		t.Fatalf("write bundle content: %v", err)
+	}
+
+	if err := pushBundle(context.Background(), copy, "example.com/repository/bundle:v0.0.1", bundle); err != nil {
+		t.Fatalf("error: %v", err)
+	}
 }
