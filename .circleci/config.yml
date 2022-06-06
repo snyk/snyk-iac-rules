@@ -99,7 +99,7 @@ jobs:
           name: Define environment variable with lastest commit's message
           command: |
             npm install --save-dev @commitlint/config-conventional @commitlint/cli
-            echo "module.exports = {extends: ['@commitlint/config-conventional']};" > commitlint.config.js
+            echo "module.exports = {extends: ['@commitlint/config-conventional'], rules: {'subject-case': [0, 'always']}};" > commitlint.config.js
             echo 'export COMMIT_MESSAGE=$(git log -1 --pretty=format:"%s")' >> $BASH_ENV
             source $BASH_ENV
       - run:
