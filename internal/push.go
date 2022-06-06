@@ -48,11 +48,11 @@ func pushBundle(ctx context.Context, memoryStore *content.Memorystore, repositor
 	}
 	config := loadConfig(memoryStore)
 
-	desriptors := []ocispec.Descriptor{
+	descriptors := []ocispec.Descriptor{
 		bundle,
 	}
 	pushOpts := configurePushOpts(config)
-	_, err = push(ctx, resolver, repository, memoryStore, desriptors, pushOpts...)
+	_, err = push(ctx, resolver, repository, memoryStore, descriptors, pushOpts...)
 	if err != nil {
 		return fmt.Errorf("Failed to push bundle to container registry: " + err.Error())
 	}
