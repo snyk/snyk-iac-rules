@@ -2,18 +2,19 @@ package internal
 
 import (
 	"context"
+	"encoding/json"
 	"os"
 	"path/filepath"
 	"testing"
 
-	ocispec "github.com/opencontainers/image-spec/specs-go/v1"
+	v1 "github.com/opencontainers/image-spec/specs-go/v1"
 	"oras.land/oras-go/pkg/content"
 	"oras.land/oras-go/pkg/oras"
 	"oras.land/oras-go/pkg/target"
 )
 
 func TestPush(t *testing.T) {
-	copy := func(ctx context.Context, from target.Target, fromRef string, to target.Target, toRef string, opts ...oras.CopyOpt) (ocispec.Descriptor, error) {
+	copy := func(ctx context.Context, from target.Target, fromRef string, to target.Target, toRef string, opts ...oras.CopyOpt) (v1.Descriptor, error) {
 
 		// Check that the from and to references are consistent
 
@@ -34,35 +35,49 @@ func TestPush(t *testing.T) {
 			t.Fatalf("copy: %v", err)
 		}
 
-		// Check that the manifest can be found and has the right media type.
+		// Read the manifest corresponding to the target reference.
 
-		if _, desc, err := store.Resolve(context.Background(), toRef); err != nil {
+		_, manifestDesc, err := store.Resolve(context.Background(), toRef)
+		if err != nil {
 			t.Fatalf("resolve manifest: %v", err)
-		} else if desc.MediaType != "application/vnd.oci.image.manifest.v1+json" {
-			t.Fatalf("invalid manifest media type: %v", desc.MediaType)
+		} else if manifestDesc.MediaType != v1.MediaTypeImageManifest {
+			t.Fatalf("invalid manifest media type: %v", manifestDesc.MediaType)
 		}
 
-		// Check that the configuration can be found and has the right media
-		// type.
-
-		if desc, _, found := store.GetByName("config.json"); !found {
-			t.Fatalf("config not found")
-		} else if desc.MediaType != "application/vnd.oci.image.config.v1+json" {
-			t.Fatalf("invalid config media type: %v", desc.MediaType)
+		_, manifestData, found := store.Get(manifestDesc)
+		if !found {
+			t.Fatalf("manifest not found: %v", err)
 		}
 
-		// Check that the manifest can be found, has the right media type, and
-		// has the right content.
+		var manifest v1.Manifest
 
-		if desc, data, found := store.GetByName("bundle.tar.gz"); !found {
+		if err := json.Unmarshal(manifestData, &manifest); err != nil {
+			t.Fatalf("manifest data is invalid: %v", err)
+		}
+
+		// Check that the configuration has the right media type.
+
+		if manifest.Config.MediaType != v1.MediaTypeImageConfig {
+			t.Fatalf("invalid config media type: %v", manifest.Config.MediaType)
+		}
+
+		// Check that the manifest has only one layer
+
+		if len(manifest.Layers) != 1 {
+			t.Fatalf("invalid layers: %v", manifest.Layers)
+		}
+
+		// Check that the only layer has the right media type and content.
+
+		if desc, data, found := store.Get(manifest.Layers[0]); !found {
 			t.Fatalf("bundle not found")
-		} else if desc.MediaType != "application/vnd.oci.image.layer.v1.tar+gzip" {
+		} else if desc.MediaType != v1.MediaTypeImageLayerGzip {
 			t.Fatalf("invalid bundle media type: %v", desc.MediaType)
 		} else if string(data) != "bundle content" {
 			t.Fatalf("invalid bundle content: %v", string(data))
 		}
 
-		return ocispec.Descriptor{}, nil
+		return v1.Descriptor{}, nil
 	}
 
 	bundle := filepath.Join(t.TempDir(), "bundle.tar.gz")
@@ -74,4 +89,5 @@ func TestPush(t *testing.T) {
 	if err := pushBundle(context.Background(), copy, "example.com/repository/bundle:v0.0.1", bundle); err != nil {
 		t.Fatalf("error: %v", err)
 	}
+
 }
