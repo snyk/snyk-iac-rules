@@ -22,11 +22,6 @@ const (
 var ValidSeverityLevels = []string{LOW, MEDIUM, HIGH, CRITICAL}
 
 const (
-	CustomConfigMediaType       = "application/vnd.oci.image.config.v1+json"
-	CustomTarballLayerMediaType = "application/vnd.oci.image.layer.v1.tar+gzip"
-)
-
-const (
 	ExplainModeFull  = "full"
 	ExplainModeNotes = "notes"
 	ExplainModeFails = "fails"

@@ -12,7 +12,6 @@ import (
 	"oras.land/oras-go/pkg/oras"
 
 	v1 "github.com/opencontainers/image-spec/specs-go/v1"
-	"github.com/snyk/snyk-iac-rules/util"
 )
 
 type PushCommandParams struct {
@@ -22,10 +21,6 @@ type PushCommandParams struct {
 func RunPush(args []string, params *PushCommandParams) error {
 	return pushBundle(orascontext.Background(), oras.Copy, params.BundleRegistry, args[0])
 }
-
-const configContents = `{
-	"mediaType": "application/vnd.oci.image.config.v1+json"
-}`
 
 type copy func(ctx context.Context, from target.Target, fromRef string, to target.Target, toRef string, opts ...oras.CopyOpt) (v1.Descriptor, error)
 
@@ -42,14 +37,14 @@ func pushBundle(ctx context.Context, copy copy, repository string, bundlePath st
 
 	store := content.NewMemory()
 
-	bundleDesc, err := store.Add("bundle.tar.gz", util.CustomTarballLayerMediaType, bundleData)
+	bundleDesc, err := store.Add("", v1.MediaTypeImageLayerGzip, bundleData)
 	if err != nil {
 		return fmt.Errorf("add bundle: %v", err)
 	}
 
-	configDesc, err := store.Add("config.json", util.CustomConfigMediaType, []byte(configContents))
+	configDesc, err := store.Add("", v1.MediaTypeImageConfig, []byte("{}"))
 	if err != nil {
-		return fmt.Errorf("add config: %v", err)
+		return fmt.Errorf("generate config: %v", err)
 	}
 
 	manifestData, manifestDesc, err := content.GenerateManifest(&configDesc, nil, bundleDesc)
