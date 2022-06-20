@@ -3,7 +3,7 @@ name: Registries Tests
 on:
   push:
     branches:
-      - 'develop'
+      - 'develop' # TODO: to change develop to main once we delete it
 
 jobs:
   dockerhub:
