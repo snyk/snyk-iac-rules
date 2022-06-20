@@ -1,13 +1,5 @@
 project_name: snyk-iac-rules
 
-before:
-  hooks:
-    - go mod tidy
-    - go get github.com/google/go-licenses
-    - go-licenses save . --save_path=./acknowledgements
-    - tar -cvf ./acknowledgements.tar.gz -C ./acknowledgements .
-    - rm -rf ./acknowledgements
-
 builds:
   - main: ./main.go
     env:
@@ -123,6 +115,7 @@ nfpms:
       - rpm
     homepage: https://github.com/snyk/snyk-iac-rules
     license: Apache-2.0
+    maintainer: 'Snyk'
 
 dockers:
   -

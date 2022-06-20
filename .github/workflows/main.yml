@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - '**'        # matches every branch
-      - '!main'     # excludes main
+      - '!develop'     # excludes main # TODO: to change develop to main once we delete it
 
 jobs:
   shellspec_test:

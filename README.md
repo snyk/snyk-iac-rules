@@ -10,7 +10,7 @@
 [![Latest release version](https://img.shields.io/github/v/release/snyk/snyk-iac-rules)](https://github.com/snyk/snyk-iac-rules)
 [![Latest release date](https://img.shields.io/github/release-date/snyk/snyk-iac-rules)](https://github.com/snyk/snyk-iac-rules)
 
-`snyk-iac-rules` is a Golang SDK that provides flags for writing, debugging, testing, and bundling custom rules for the [Snyk IaC CLI](https://github.com/snyk/snyk/).
+`snyk-iac-rules` is a Golang SDK that provides flags for writing, debugging, testing, bundling, and distributing custom rules for the [Snyk IaC CLI](https://github.com/snyk/snyk/).
 
 ---
 

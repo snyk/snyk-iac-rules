@@ -3,8 +3,19 @@ version: 2.1
 orbs:
   snyk: snyk/snyk@1.1.1
 
+# TODO: to change develop to main once we delete it
 defaults: &defaults
   working_directory: ~/snyk-iac-rules
+only_feature_branch: &only_feature_branch
+  filters:
+    branches:
+      ignore:
+        - develop
+only_release_branch: &only_release_branch
+  filters:
+    branches:
+      only:
+        - develop
 
 commands:
   install_shellspec:
@@ -23,7 +34,12 @@ commands:
           root: ./ # relative to the working directory
           paths:
             - snyk-iac-rules # the file we want to store
-
+  add_ssh_key:
+    description: Add SSH key to job
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "37:e8:29:0c:0e:08:b7:6e:84:32:f1:1d:f2:be:5b:6b"
 jobs:
   lint_and_format:
     <<: *defaults
@@ -105,36 +121,75 @@ jobs:
       - run:
           name: Lint commit message
           command: echo "$COMMIT_MESSAGE" | npx commitlint
+  release:
+    <<: *defaults
+    docker:
+      - image: cimg/go:1.18.2
+    steps:
+      - checkout
+      - add_ssh_key
+      - setup_remote_docker:
+          version: 19.03.13
+          docker_layer_caching: true
+      - run:
+          name: Login to Snyk's Docker Hub
+          command: echo $DOCKER_PASSWORD  | docker login -u $DOCKER_USERNAME --password-stdin
+      - run:
+          name: Push new tag to GitHub
+          command: ./scripts/tag.sh
+      - run:
+          name: Release binaries to GitHub
+          command: ./scripts/release-github.sh
+      - run:
+          name: Release binaries to NPM
+          command: |
+            # Install for envsubst
+            sudo apt install gettext-base
+            ./scripts/release-npm.sh --tag=$TAG
+            
+            cd dist/
+            npm publish
+          environment:
+            NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 workflows:
   version: 2
   test:
     jobs:
       - lint_commit_message:
           name: Lint commit message
-          filters:
-            branches:
-              ignore:
-                - main
-                - develop
+          <<: *only_feature_branch
       - lint_and_format:
           name: Lint & formatting
-          filters:
-            branches:
-              ignore:
-                - main
-                - develop
+          requires:
+            -  Lint commit message
+          <<: *only_feature_branch
       - security-oss:
           name: Snyk oss
           context:
             - snyk-iac-seceng
+          requires:
+            - Lint & formatting
+          <<: *only_feature_branch
       - security-code:
           name: Snyk code
           context:
             - snyk-iac-seceng
+          requires:
+            - Lint & formatting
+          <<: *only_feature_branch
       - regression-test:
           name: Regression Test
-          filters:
-            branches:
-              ignore:
-                - main
-                - develop
+          requires:
+            - Lint & formatting
+      - approve-release:
+          name: Approve Release
+          type: approval
+          requires:
+            - Regression Test
+          <<: *only_release_branch
+      - release:
+          name: Release
+          context: snyk-iac-test
+          requires:
+            - Approve Release
+          <<: *only_release_branch
