@@ -5,3 +5,6 @@ dist/
 cover.out
 tmp/
 .idea/
+
+# For sharing environment variables between jobs in CircleCI
+env-vars
