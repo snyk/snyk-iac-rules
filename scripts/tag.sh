@@ -14,6 +14,12 @@ fi
 
 TAG=$(svu)
 
+# TODO: remove this when we rename develop branch to main
+# temporarily set the tag to a new one so we trigger release from develop
+if [ $TAG == "v1.0.0" ]; then
+  TAG="v1.5.3"
+fi
+
 if [ $(git tag -l "TAG") ]; then
     echo "Tag already exists!"
     exit 0

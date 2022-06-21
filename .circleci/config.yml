@@ -121,6 +121,16 @@ jobs:
       - run:
           name: Lint commit message
           command: echo "$COMMIT_MESSAGE" | npx commitlint
+  tag:
+    <<: *defaults
+    docker:
+      - image: cimg/go:1.18.2
+    steps:
+      - checkout
+      - add_ssh_key
+      - run:
+          name: Push new tag to GitHub
+          command: ./scripts/tag.sh
   release:
     <<: *defaults
     docker:
@@ -134,9 +144,6 @@ jobs:
       - run:
           name: Login to Snyk's Docker Hub
           command: echo $DOCKER_PASSWORD  | docker login -u $DOCKER_USERNAME --password-stdin
-      - run:
-          name: Push new tag to GitHub
-          command: ./scripts/tag.sh
       - run:
           name: Release binaries to GitHub
           command: ./scripts/release-github.sh
@@ -182,9 +189,14 @@ workflows:
           requires:
             - Lint & formatting
           <<: *only_feature_branch
+      - tag:
+          name: Tag
+          <<: *only_release_branch
       - approve-release:
           name: Approve Release
           type: approval
+          requires:
+            - Tag
           <<: *only_release_branch
       - release:
           name: Release
