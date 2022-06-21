@@ -151,7 +151,7 @@ jobs:
           name: Release binaries to NPM
           command: |
             # Install for envsubst
-            sudo apt install gettext-base
+            sudo apt-get update && sudo apt-get install gettext-base
             ./scripts/release-npm.sh --tag=$TAG
             
             cd dist/
