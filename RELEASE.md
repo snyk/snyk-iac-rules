@@ -39,5 +39,5 @@ $ snyk-iac-rules help
 ## CI/CD
 As part of every PR from a feature branch to the release branch, we run both CircleCI as well as the `E2E Tests` and `Contract Tests` GitHub Actions, which run our shellspec tests in Windows, Linux, and MacOS. The CircleCI pipeline runs the `golangci-lint` linter, `gofmt`, and `go mod tidy`, and then it runs `shellspec` end-to-end tests and the Golang unit tests on a Linux distribution.
 
-Once the PR is merged into `develop`, the CircleCI release process described in this document runs.
+Once the PR is merged into `main`, the CircleCI release process described in this document runs.
 

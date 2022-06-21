@@ -182,7 +182,7 @@ Make sure to have the aws CLI installed locally if you're running the Elastic te
 
 Finally, run `shellspec "spec/registries"` to verify if the generated bundle from the SDK is valid for the Snyk CLI.
 
-These tests run as part of the CI/CD for the `develop` branch on Linux only.
+These tests run as part of the CI/CD for the `main` branch on Linux only.
 
 #### Unit tests
 

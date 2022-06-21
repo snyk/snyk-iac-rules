@@ -1,7 +1,7 @@
 # `snyk-iac-rules` SDK
 ---
 
-[![CircleCI](https://circleci.com/gh/snyk/snyk-iac-rules/tree/develop.svg?style=svg&circle-token=5597b9f0189554f754f38400cbe9d8f8b334c72a)](https://circleci.com/gh/snyk/snyk-iac-rules/tree/develop) 
+[![CircleCI](https://circleci.com/gh/snyk/snyk-iac-rules/tree/main.svg?style=svg&circle-token=5597b9f0189554f754f38400cbe9d8f8b334c72a)](https://circleci.com/gh/snyk/snyk-iac-rules/tree/main) 
 [![Shellspec Tests](https://github.com/snyk/snyk-iac-rules/actions/workflows/main.yml/badge.svg)](https://github.com/snyk/snyk-iac-rules/actions/workflows/main.yml)
 [![Contract Tests](https://github.com/snyk/snyk-iac-rules/actions/workflows/contract.yml/badge.svg)](https://github.com/snyk/snyk-iac-rules/actions/workflows/contract.yml)
 [![Registries Tests](https://github.com/snyk/snyk-iac-rules/actions/workflows/registries.yml/badge.svg)](https://github.com/snyk/snyk-iac-rules/actions/workflows/registries.yml)
@@ -18,7 +18,7 @@
 The SDK is a tool for writing, debugging, testing, and bundling custom rules for [Snyk Infrastructure as Code](https://snyk.io/product/infrastructure-as-code-security/). See our [Custom Rules documentation](https://docs.snyk.io/products/snyk-infrastructure-as-code/custom-rules) to learn more.
 
 <!---
-This should be generated automatically from the UML code. We need to specify the branch name though, and this can not happen while we are in develop/main. We need to get the branch name first if we continue using two branches. For now, we can use the rendered image instead.
+This should be generated automatically from the UML code. We need to specify the branch name though, and this can not happen while we are in main. We need to get the branch name first if we continue using two branches. For now, we can use the rendered image instead.
 
 ![system overview](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.github.com/snyk/snyk-iac-rules/main/assets/overview-activity-swimlanes.puml)
 -->
