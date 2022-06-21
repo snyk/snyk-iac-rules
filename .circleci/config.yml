@@ -4,19 +4,18 @@ orbs:
   snyk: snyk/snyk@1.1.1
   node: circleci/node@5.0.2
 
-# TODO: to change develop to main once we delete it
 defaults: &defaults
   working_directory: ~/snyk-iac-rules
 only_feature_branch: &only_feature_branch
   filters:
     branches:
       ignore:
-        - develop
+        - main
 only_release_branch: &only_release_branch
   filters:
     branches:
       only:
-        - develop
+        - main
 
 commands:
   install_shellspec:
@@ -166,8 +165,6 @@ jobs:
           command: |
             # Install for envsubst
             sudo apt-get update && sudo apt-get install gettext-base
-
-            cat env-vars
 
             cat env-vars >> $BASH_ENV
             ./scripts/release-npm.sh
