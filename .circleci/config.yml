@@ -181,11 +181,10 @@ workflows:
           name: Regression Test
           requires:
             - Lint & formatting
+          <<: *only_feature_branch
       - approve-release:
           name: Approve Release
           type: approval
-          requires:
-            - Regression Test
           <<: *only_release_branch
       - release:
           name: Release
