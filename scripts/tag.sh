@@ -32,6 +32,6 @@ else
     git tag -a "${TAG}" -m "Release ${TAG}"
     git push origin "${TAG}"
 
+    # Set environment variable
     echo "export TAG=${TAG}" >> $BASH_ENV
-    source $BASH_ENV
 fi

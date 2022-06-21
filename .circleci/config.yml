@@ -2,6 +2,7 @@ version: 2.1
 
 orbs:
   snyk: snyk/snyk@1.1.1
+  node: circleci/node@5.0.2
 
 # TODO: to change develop to main once we delete it
 defaults: &defaults
@@ -48,8 +49,6 @@ jobs:
       - image: golangci/golangci-lint:v1.42
     steps:
       - checkout
-      - attach_workspace:
-          at: ~/snyk-iac-rules
       # Logs the version in our build logs, for posterity
       - run: go version
       - run:
@@ -130,20 +129,35 @@ jobs:
       - add_ssh_key
       - run:
           name: Push new tag to GitHub
-          command: ./scripts/tag.sh
+          command: |
+            ./scripts/tag.sh
+            
+            # Persist TAG environment variable to workspace so we can use it between jobs
+            source $BASH_ENV
+            echo "export TAG=$TAG" >> env-vars
+      - persist_to_workspace:
+          root: ./ # relative to the working directory
+          paths:
+            - env-vars
   release:
     <<: *defaults
     docker:
       - image: cimg/go:1.18.2
+    executor: node/default
     steps:
       - checkout
       - add_ssh_key
+      - attach_workspace:
+          at: .
       - setup_remote_docker:
           version: 19.03.13
           docker_layer_caching: true
       - run:
           name: Login to Snyk's Docker Hub
           command: echo $DOCKER_PASSWORD  | docker login -u $DOCKER_USERNAME --password-stdin
+      - node/install:
+          install-yarn: false
+          node-version: '12'
       - run:
           name: Release binaries to GitHub
           command: ./scripts/release-github.sh
@@ -152,12 +166,15 @@ jobs:
           command: |
             # Install for envsubst
             sudo apt-get update && sudo apt-get install gettext-base
-            ./scripts/release-npm.sh --tag=$TAG
+
+            cat env-vars
+
+            cat env-vars >> $BASH_ENV
+            ./scripts/release-npm.sh
             
             cd dist/
+            echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
             npm publish
-          environment:
-            NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 workflows:
   version: 2
   test:
