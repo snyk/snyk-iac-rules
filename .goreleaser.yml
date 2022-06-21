@@ -1,5 +1,14 @@
 project_name: snyk-iac-rules
 
+before:
+  # run this here to avoid "git is currently in a dirty state" error
+  hooks:
+    - go mod tidy
+    - go install github.com/google/go-licenses@latest
+    - go-licenses save . --save_path=./acknowledgements
+    - tar -cvf ./acknowledgements.tar.gz -C ./acknowledgements .
+    - rm -rf ./acknowledgements
+
 builds:
   - main: ./main.go
     env:

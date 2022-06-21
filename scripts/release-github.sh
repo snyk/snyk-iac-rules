@@ -6,15 +6,6 @@ if ! which goreleaser >/dev/null ; then
     go install github.com/goreleaser/goreleaser@v1.9.2
 fi
 
-if ! which go-licenses >/dev/null ; then
-    go install github.com/google/go-licenses@latest
-fi
-
-# Generate acknowledgements
-go-licenses save . --save_path=./acknowledgements
-tar -cvf ./acknowledgements.tar.gz -C ./acknowledgements .
-rm -rf ./acknowledgements
-
 # Check configuration
 goreleaser check
 
