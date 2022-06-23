@@ -45,7 +45,7 @@ jobs:
     <<: *defaults
     description: Lint & formatting
     docker:
-      - image: golangci/golangci-lint:v1.42
+      - image: golangci/golangci-lint:v1.46
     steps:
       - checkout
       # Logs the version in our build logs, for posterity
@@ -64,7 +64,7 @@ jobs:
   regression-test:
     <<: *defaults
     docker:
-      - image: cimg/go:1.17
+      - image: cimg/go:1.18.2
     steps:
       - checkout
       - install_shellspec
@@ -83,7 +83,7 @@ jobs:
           command: go test ./...
   security-oss:
     docker:
-      - image: cimg/go:1.17.2 
+      - image: cimg/go:1.18.2
     steps:
       - checkout
       - snyk/scan:
@@ -93,7 +93,7 @@ jobs:
           organization: snyk-iac-group-seceng
   security-code:
     docker:
-      - image: cimg/go:1.17.2 
+      - image: cimg/go:1.18.2
     steps:
       - checkout
       - snyk/scan:
