@@ -53,7 +53,7 @@ changelog:
     - '^Merge pull request'
 
 snapshot:
-  name_template: "{{ incpatch .Version }}-next"
+  name_template: "{{ .Version }}"
 
 release:
   # If set to true, will not auto-publish the release.
