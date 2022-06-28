@@ -17,4 +17,4 @@ spec:
   # See: https://backstage.io/docs/features/software-catalog/descriptor-format#spectype-required
   type: service
   lifecycle: production
-  owner: "@snyk/group-infrastructure-as-code"
+  owner: "group-infrastructure-as-code"
