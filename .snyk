@@ -9,6 +9,6 @@ ignore:
   SNYK-GOLANG-GITHUBCOMOPENPOLICYAGENTOPAAST-2938528:
     - '*':
         reason: There is no fixed version.
-        expires: 2022-08-03T08:14:03.074Z
+        expires: 2022-09-03T08:14:03.074Z
         created: 2022-07-04T08:14:03.080Z
 patch: {}
