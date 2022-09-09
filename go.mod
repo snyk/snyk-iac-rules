@@ -3,7 +3,7 @@ module github.com/snyk/snyk-iac-rules
 go 1.18
 
 require (
-	github.com/open-policy-agent/opa v0.43.0
+	github.com/open-policy-agent/opa v0.43.1
 	github.com/opencontainers/image-spec v1.0.3-0.20211202183452-c5a74bcca799
 	github.com/snyk/snyk-iac-parsers v0.5.0
 	github.com/spf13/cobra v1.5.0
