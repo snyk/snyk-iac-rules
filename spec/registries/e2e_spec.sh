@@ -33,8 +33,8 @@ Describe 'Supported Registry'
             When call registry_test "$OCI_DOCKERHUB_REGISTRY_NAME" "$OCI_DOCKERHUB_REGISTRY_URL" "$OCI_DOCKERHUB_REGISTRY_USERNAME" "$OCI_DOCKERHUB_REGISTRY_PASSWORD"
             The status should eq 1
             The output should include '[Low] Missing tags' # it should include the custom rule in its output
-            The output should include 'Info: Missing tags. Depends' # it should include the custom rule in its output
-            The output should include 'Rule: custom rule CUSTOM-1' # it should include the custom rule in its output
+            The output should include 'Missing tags. Depends' # it should include the custom rule in its output
+            The output should include 'custom rule CUSTOM-1' # it should include the custom rule in its output
         End
     End
 
@@ -44,8 +44,8 @@ Describe 'Supported Registry'
             When call registry_test "$OCI_AZURE_REGISTRY_NAME" "$OCI_AZURE_REGISTRY_URL" "$OCI_AZURE_REGISTRY_USERNAME" "$OCI_AZURE_REGISTRY_PASSWORD"
             The status should eq 1
             The output should include '[Low] Missing tags' # it should include the custom rule in its output
-            The output should include 'Info: Missing tags. Depends' # it should include the custom rule in its output
-            The output should include 'Rule: custom rule CUSTOM-1' # it should include the custom rule in its output
+            The output should include 'Missing tags. Depends' # it should include the custom rule in its output
+            The output should include 'custom rule CUSTOM-1' # it should include the custom rule in its output
         End
     End
 
@@ -55,8 +55,8 @@ Describe 'Supported Registry'
             When call registry_test "$OCI_HARBOR_REGISTRY_NAME" "$OCI_HARBOR_REGISTRY_URL" "$OCI_HARBOR_REGISTRY_USERNAME" "$OCI_HARBOR_REGISTRY_PASSWORD"
             The status should eq 1
             The output should include '[Low] Missing tags' # it should include the custom rule in its output
-            The output should include 'Info: Missing tags. Depends' # it should include the custom rule in its output
-            The output should include 'Rule: custom rule CUSTOM-1' # it should include the custom rule in its output
+            The output should include 'Missing tags. Depends' # it should include the custom rule in its output
+            The output should include 'custom rule CUSTOM-1' # it should include the custom rule in its output
         End
     End
 
@@ -66,8 +66,8 @@ Describe 'Supported Registry'
             When call registry_test "$OCI_GITHUB_REGISTRY_NAME" "$OCI_GITHUB_REGISTRY_URL" "$OCI_GITHUB_REGISTRY_USERNAME" "$OCI_GITHUB_REGISTRY_PASSWORD"
             The status should eq 1
             The output should include '[Low] Missing tags' # it should include the custom rule in its output
-            The output should include 'Info: Missing tags. Depends' # it should include the custom rule in its output
-            The output should include 'Rule: custom rule CUSTOM-1' # it should include the custom rule in its output
+            The output should include 'Missing tags. Depends' # it should include the custom rule in its output
+            The output should include 'custom rule CUSTOM-1' # it should include the custom rule in its output
         End
     End
     
@@ -77,8 +77,8 @@ Describe 'Supported Registry'
             When call registry_test "$OCI_ELASTIC_REGISTRY_NAME" "$OCI_ELASTIC_REGISTRY_URL" "$OCI_ELASTIC_REGISTRY_USERNAME"
             The status should eq 1
             The output should include '[Low] Missing tags' # it should include the custom rule in its output
-            The output should include 'Info: Missing tags. Depends' # it should include the custom rule in its output
-            The output should include 'Rule: custom rule CUSTOM-1' # it should include the custom rule in its output
+            The output should include 'Missing tags. Depends' # it should include the custom rule in its output
+            The output should include 'custom rule CUSTOM-1' # it should include the custom rule in its output
         End
     End
 End
