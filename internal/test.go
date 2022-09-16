@@ -80,6 +80,7 @@ func RunTest(args []string, params *TestCommandParams) error {
 func runTests(ctx context.Context, txn storage.Transaction, runner *tester.Runner, reporter tester.Reporter, params *TestCommandParams) error {
 	ch, err := runner.RunTests(ctx, txn)
 	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
 		return err
 	}
 

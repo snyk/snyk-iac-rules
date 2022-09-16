@@ -237,3 +237,32 @@ func TestInvalidRego(t *testing.T) {
 		assert.Contains(t, string(out), "unexpected mul token")
 	})
 }
+
+func TestRegoUnsafeVariable(t *testing.T) {
+	baseTestFiles := map[string]string{
+		"test1.rego": `package rules
+
+deny[msg] {
+	unsafe
+}
+`,
+	}
+
+	test.WithTempFS(baseTestFiles, func(root string) {
+		testParams := mockTestParams()
+		testParams.Verbose = false
+
+		rescueStderr := os.Stderr
+		r, w, _ := os.Pipe()
+		os.Stderr = w
+
+		err := RunTest([]string{root}, testParams)
+		assert.NotNil(t, err)
+
+		w.Close()
+		out, _ := ioutil.ReadAll(r)
+		os.Stderr = rescueStderr
+
+		assert.Contains(t, string(out), "rego_unsafe_var_error")
+	})
+}
