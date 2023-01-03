@@ -1,7 +1,7 @@
 # `snyk-iac-rules` SDK
 ---
 
-[![CircleCI](https://circleci.com/gh/snyk/snyk-iac-rules/tree/main.svg?style=svg&circle-token=5597b9f0189554f754f38400cbe9d8f8b334c72a)](https://circleci.com/gh/snyk/snyk-iac-rules/tree/main) 
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/snyk/snyk-iac-rules/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/snyk/snyk-iac-rules/tree/main)
 [![Shellspec Tests](https://github.com/snyk/snyk-iac-rules/actions/workflows/main.yml/badge.svg)](https://github.com/snyk/snyk-iac-rules/actions/workflows/main.yml)
 [![Contract Tests](https://github.com/snyk/snyk-iac-rules/actions/workflows/contract.yml/badge.svg)](https://github.com/snyk/snyk-iac-rules/actions/workflows/contract.yml)
 [![Registries Tests](https://github.com/snyk/snyk-iac-rules/actions/workflows/registries.yml/badge.svg)](https://github.com/snyk/snyk-iac-rules/actions/workflows/registries.yml)
