@@ -12,6 +12,7 @@
 
 `snyk-iac-rules` is a Golang SDK that provides flags for writing, debugging, testing, bundling, and distributing custom rules for the [Snyk IaC CLI](https://github.com/snyk/snyk/).
 
+
 ---
 
 # About
