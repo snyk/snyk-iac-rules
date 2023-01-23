@@ -71,7 +71,7 @@ jobs:
 
           shellspec "spec/contract"
         env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+          SNYK_TOKEN: ${{ secrets.SNYK_ACCESS_TOKEN }}
           OCI_REGISTRY_NAME: ${{ secrets.OCI_REGISTRY_NAME }}
           OCI_REGISTRY_USERNAME: ${{ secrets.OCI_REGISTRY_USERNAME }}
           OCI_REGISTRY_PASSWORD: ${{ secrets.OCI_REGISTRY_PASSWORD }}
@@ -87,7 +87,7 @@ jobs:
           shellspec "spec/contract"
         env:
           SKIP_PUSH_TEST: true # Docker is not supported in MacOS: https://github.com/docker/login-action/issues/14
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+          SNYK_TOKEN: ${{ secrets.SNYK_ACCESS_TOKEN }}
           OCI_REGISTRY_NAME: ${{ secrets.OCI_REGISTRY_NAME }}
           OCI_REGISTRY_USERNAME: ${{ secrets.OCI_REGISTRY_USERNAME }}
           OCI_REGISTRY_PASSWORD: ${{ secrets.OCI_REGISTRY_PASSWORD }}
@@ -99,7 +99,7 @@ jobs:
         run: |
           sh ./scripts/run-contract-win.sh
         env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+          SNYK_TOKEN: ${{ secrets.SNYK_ACCESS_TOKEN }}
           OCI_REGISTRY_NAME: ${{ secrets.OCI_REGISTRY_NAME }}
           OCI_REGISTRY_USERNAME: ${{ secrets.OCI_REGISTRY_USERNAME }}
           OCI_REGISTRY_PASSWORD: ${{ secrets.OCI_REGISTRY_PASSWORD }}
