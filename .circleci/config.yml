@@ -90,7 +90,7 @@ jobs:
           severity-threshold: medium 
           monitor-on-build: true
           project: ${CIRCLE_PROJECT_REPONAME}
-          organization: snyk-iac-group-seceng
+          organization: cloud-cloud
   security-code:
     docker:
       - image: cimg/go:1.18.2
@@ -101,7 +101,7 @@ jobs:
           severity-threshold: medium 
           monitor-on-build: false
           project: ${CIRCLE_PROJECT_REPONAME}
-          organization: snyk-iac-group-seceng
+          organization: cloud-cloud
   lint_commit_message:
     docker:
       - image: cimg/node:14.19
