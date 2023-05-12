@@ -91,7 +91,7 @@ brews:
     folder: Formula
     commit_author:
       name: snyk
-      email: snyksec@users.noreply.github.com
+      email: cloud-dev-ex@users.noreply.github.com
     homepage: "https://snyk.io/"
     license: Apache-2.0
     description: "Write, debug, test, and bundle custom rules for Snyk Infrastructure as Code."
@@ -110,7 +110,7 @@ scoop:
 
   commit_author:
     name: snyk
-    email: snyksec@users.noreply.github.com
+    email: cloud-dev-ex@users.noreply.github.com
   homepage: "https://snyk.io/"
   license: Apache-2.0
   description: "Write, debug, test, and bundle custom rules for Snyk Infrastructure as Code."

@@ -19,7 +19,7 @@ if [ $(git tag -l "TAG") ]; then
     exit 0
 else
     # Hard-code user config
-    git config user.email "snyksec@users.noreply.github.com"
+    git config user.email "cloud-dev-ex@users.noreply.github.com"
     git config user.name "Snyk"
 
     # Push new tag
