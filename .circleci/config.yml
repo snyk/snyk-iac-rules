@@ -187,14 +187,14 @@ workflows:
       - security-oss:
           name: Snyk oss
           context:
-            - snyk-iac-seceng
+            - snyk-cloud-dev-ex
           requires:
             - Lint & formatting
           <<: *only_feature_branch
       - security-code:
           name: Snyk code
           context:
-            - snyk-iac-seceng
+            - snyk-cloud-dev-ex
           requires:
             - Lint & formatting
           <<: *only_feature_branch
