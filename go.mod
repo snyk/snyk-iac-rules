@@ -5,7 +5,7 @@ go 1.18
 require (
 	github.com/open-policy-agent/opa v0.44.0
 	github.com/opencontainers/image-spec v1.0.3-0.20211202183452-c5a74bcca799
-	github.com/snyk/snyk-iac-parsers v1.2.0
+	github.com/snyk/snyk-iac-parsers v1.2.3
 	github.com/spf13/cobra v1.5.0
 	github.com/stretchr/testify v1.8.0
 	oras.land/oras-go v1.2.0
