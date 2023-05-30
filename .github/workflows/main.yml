@@ -19,7 +19,7 @@ jobs:
 
       - uses: actions/setup-go@v2
         with:
-          go-version: '1.18'
+          go-version: '1.19'
 
       - name: Build Golang CLI
         run: go build -o snyk-iac-rules .
@@ -95,7 +95,7 @@ jobs:
 
       - uses: actions/setup-go@v2
         with:
-          go-version: '1.18'
+          go-version: '1.19'
 
       - name: Install NPM package - non-Windows
         if: ${{ matrix.os != 'windows' }}
@@ -136,7 +136,7 @@ jobs:
 
       - uses: actions/setup-go@v2
         with:
-          go-version: 1.18
+          go-version: 1.19
 
       - name: Build binaries
         uses: goreleaser/goreleaser-action@v2

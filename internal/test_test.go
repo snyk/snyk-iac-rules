@@ -3,7 +3,8 @@ package internal
 import (
 	"bytes"
 	"context"
-	"io/ioutil"
+	"fmt"
+	"io"
 	"os"
 	"testing"
 	"time"
@@ -109,33 +110,46 @@ func TestFilterTraceExplainFull(t *testing.T) {
 
 	expected := `Enter data.testing.test_p = _
 | Eval data.testing.test_p = _
+| Unify data.testing.test_p = _
 | Index data.testing.test_p (matched 1 rule, early exit)
 | Enter data.testing.test_p
 | | Eval data.testing.p with data.x as "bar"
+| | Unify data.testing.p = _
 | | Index data.testing.p (matched 1 rule, early exit)
 | | Enter data.testing.p
 | | | Eval data.testing.x
+| | | Unify data.testing.x = _
 | | | Index data.testing.x (matched 1 rule, early exit)
 | | | Enter data.testing.x
 | | | | Eval data.testing.y
+| | | | Unify data.testing.y = _
 | | | | Index data.testing.y (matched 1 rule, early exit)
 | | | | Enter data.testing.y
 | | | | | Eval true
+| | | | | Unify true = _
 | | | | | Exit data.testing.y early
+| | | | Unify true = _
 | | | | Exit data.testing.x early
+| | | Unify true = _
 | | | Eval trace("test test")
 | | | Note "test test"
 | | | Eval data.testing.q.foo
+| | | Unify data.testing.q.foo = _
 | | | Index data.testing.q (matched 1 rule)
 | | | Enter data.testing.q
+| | | | Unify x = "foo"
 | | | | Eval trace("got this far")
 | | | | Note "got this far"
 | | | | Eval data.testing.r[x]
+| | | | Unify data.testing.r[x] = _
 | | | | Index data.testing.r (matched 1 rule)
 | | | | Enter data.testing.r
+| | | | | Unify x = "foo"
 | | | | | Eval trace("got this far2")
 | | | | | Note "got this far2"
 | | | | | Eval x = data.x
+| | | | | Unify "foo" = data.x
+| | | | | Unify "foo" = "bar"
 | | | | | Fail x = data.x
 | | | | | Redo trace("got this far2")
 | | | | Fail data.testing.r[x]
@@ -158,6 +172,7 @@ func verifyFilteredTrace(t *testing.T, params *TestCommandParams, expected strin
 	var buff bytes.Buffer
 	topdown.PrettyTrace(&buff, filtered)
 	actual := buff.String()
+	fmt.Println(actual)
 
 	assert.Equal(t, expected, actual)
 }
@@ -231,7 +246,7 @@ func TestInvalidRego(t *testing.T) {
 		assert.NotNil(t, err)
 
 		w.Close()
-		out, _ := ioutil.ReadAll(r)
+		out, _ := io.ReadAll(r)
 		os.Stderr = rescueStderr
 
 		assert.Contains(t, string(out), "unexpected mul token")
@@ -260,7 +275,7 @@ deny[msg] {
 		assert.NotNil(t, err)
 
 		w.Close()
-		out, _ := ioutil.ReadAll(r)
+		out, _ := io.ReadAll(r)
 		os.Stderr = rescueStderr
 
 		assert.Contains(t, string(out), "rego_unsafe_var_error")

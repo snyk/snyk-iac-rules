@@ -155,7 +155,7 @@ func TestBuildErrorDoesNotWriteFile(t *testing.T) {
 
 		err := RunBuild([]string{root}, buildParams)
 		if err != nil {
-			assert.Contains(t, err.Error(), "rule p is recursive")
+			assert.Contains(t, err.Error(), "rule data.test.p is recursive")
 		}
 
 		_, err = os.Stat(buildParams.OutputFile)

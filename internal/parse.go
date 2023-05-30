@@ -4,14 +4,14 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"os"
 
 	parsers "github.com/snyk/snyk-iac-parsers"
 
 	"github.com/snyk/snyk-iac-rules/util"
 )
 
-var readFile = ioutil.ReadFile
+var readFile = os.ReadFile
 var parseYAML = parsers.ParseYAML
 var parseHCL2 = parsers.ParseHCL2
 var parseTerraformPlan = parsers.ParseTerraformPlan

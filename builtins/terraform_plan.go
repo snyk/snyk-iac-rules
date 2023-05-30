@@ -1,7 +1,7 @@
 package builtins
 
 import (
-	"io/ioutil"
+	"os"
 
 	parsers "github.com/snyk/snyk-iac-parsers"
 
@@ -25,7 +25,7 @@ func RegisterTerraformPlanBuiltin() {
 				return nil, err
 			}
 
-			content, err := ioutil.ReadFile(filePath)
+			content, err := os.ReadFile(filePath)
 			if err != nil {
 				return nil, err
 			}

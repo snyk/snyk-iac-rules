@@ -6,6 +6,9 @@ orbs:
 
 defaults: &defaults
   working_directory: ~/snyk-iac-rules
+docker_go_image: &docker_go_image
+  docker:
+    - image: cimg/go:1.19.0
 only_feature_branch: &only_feature_branch
   filters:
     branches:
@@ -43,11 +46,14 @@ commands:
 jobs:
   lint_and_format:
     <<: *defaults
+    <<: *docker_go_image
     description: Lint & formatting
-    docker:
-      - image: golangci/golangci-lint:v1.46
     steps:
       - checkout
+      - run:
+          name: install golangci-lint
+          command: |
+            curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sudo sh -s -- -b $(go env GOPATH)/bin v1.53.1
       # Logs the version in our build logs, for posterity
       - run: go version
       - run:
@@ -56,6 +62,9 @@ jobs:
             go mod tidy
             git diff --exit-code go.mod go.sum
       - run:
+          name: "Run go build to ensure for errors before golancgi-lint"
+          command: go build
+      - run:
           name: "Run golangci-lint"
           command: golangci-lint run -v --timeout 10m
       - run:
@@ -63,8 +72,7 @@ jobs:
           command: "! gofmt -d -e . | read"
   regression-test:
     <<: *defaults
-    docker:
-      - image: cimg/go:1.18.2
+    <<: *docker_go_image
     steps:
       - checkout
       - install_shellspec
@@ -82,8 +90,7 @@ jobs:
           name: Run Golang tests
           command: go test ./...
   security-oss:
-    docker:
-      - image: cimg/go:1.18.2
+    <<: *docker_go_image
     steps:
       - checkout
       - snyk/scan:
@@ -92,8 +99,7 @@ jobs:
           project: ${CIRCLE_PROJECT_REPONAME}
           organization: cloud-cloud
   security-code:
-    docker:
-      - image: cimg/go:1.18.2
+    <<: *docker_go_image
     steps:
       - checkout
       - snyk/scan:
@@ -121,8 +127,7 @@ jobs:
           command: echo "$COMMIT_MESSAGE" | npx commitlint
   tag:
     <<: *defaults
-    docker:
-      - image: cimg/go:1.18.2
+    <<: *docker_go_image
     steps:
       - checkout
       - add_ssh_key
@@ -140,8 +145,7 @@ jobs:
             - env-vars
   release:
     <<: *defaults
-    docker:
-      - image: cimg/go:1.18.2
+    <<: *docker_go_image
     executor: node/default
     steps:
       - checkout
