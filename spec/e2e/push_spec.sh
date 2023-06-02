@@ -60,7 +60,7 @@ Describe './snyk-iac-rules push -r docker.io/test/test bundle.tar.gz'
       When call ./snyk-iac-rules push -r docker.io/test/test bundle.tar.gz
       The status should be failure
       The output should include 'bundle.tar.gz'
-      The stderr should include 'Failed to push bundle to container registry: server message: insufficient_scope: authorization failed'
+      The stderr should include 'insufficient_scope: authorization failed'
    End
 End
 
