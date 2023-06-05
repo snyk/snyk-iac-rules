@@ -49,7 +49,7 @@ func RunTest(args []string, params *TestCommandParams) error {
 
 	compiler := ast.NewCompiler().
 		WithPathConflictsCheck(storage.NonEmpty(ctx, store, txn)).
-		WithEnablePrintStatements(false)
+		WithEnablePrintStatements(params.Verbose)
 
 	info, err := util.Term()
 	if err != nil {
