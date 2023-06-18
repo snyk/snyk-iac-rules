@@ -3,6 +3,7 @@ version: 2.1
 orbs:
   snyk: snyk/snyk@1.1.1
   node: circleci/node@5.0.2
+  prodsec: snyk/prodsec-orb@1.0.2
 
 defaults: &defaults
   working_directory: ~/snyk-iac-rules
@@ -180,6 +181,11 @@ workflows:
   version: 2
   test:
     jobs:
+      - prodsec/secrets-scan:
+          name: Scan Repository for Secrets
+          context:
+            - snyk-bot-slack
+          channel: group-infrastructure-as-code-alerts
       - lint_commit_message:
           name: Lint commit message
           <<: *only_feature_branch
@@ -214,6 +220,7 @@ workflows:
           name: Approve Release
           type: approval
           requires:
+            - Scan Repository for Secrets
             - Tag
           <<: *only_release_branch
       - release:
