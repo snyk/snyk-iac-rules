@@ -20,7 +20,7 @@ for i in "$@"; do
 done
 
 if ! which goreleaser >/dev/null ; then
-    go install github.com/goreleaser/goreleaser@v1.9.2
+    go install github.com/goreleaser/goreleaser/v2@latest
 fi
 
 # Check configuration
@@ -29,7 +29,7 @@ goreleaser check
 # Override tag for GoReleaser so it uses the one provided in the flag
 export GORELEASER_CURRENT_TAG="${TAG}"
 
-CMD="goreleaser build --snapshot --rm-dist"
+CMD="goreleaser build --snapshot --clean"
 
 echo "+ Using goreleaser"
 echo "+ CMD=${CMD}"

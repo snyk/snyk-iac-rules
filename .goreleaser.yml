@@ -1,3 +1,7 @@
+# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
+# vim: set ts=2 sw=2 tw=0 fo=jcroql
+version: 2
+
 project_name: snyk-iac-rules
 
 before:
@@ -27,13 +31,16 @@ archives:
   - id: default
     files:
       - none*
-    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
-    replacements:
-      darwin: Darwin
-      linux: Linux
-      windows: Windows
-      386: i386
-      amd64: x86_64
+    name_template: >-
+      {{- .ProjectName }}_
+      {{- .Version }}_
+      {{- if eq .Os "darwin" }}Darwin_
+      {{- else if eq .Os "linux" }}Linux_
+      {{- else if eq .Os "windows" }}Windows_
+      {{- else }}{{ .Os }}_{{ end }}
+      {{- if eq .Arch "386" }}i386
+      {{- else if eq .Arch "amd64" }}x86_64
+      {{- else }}{{ .Arch }}{{ end }}
     format: tar.gz
     format_overrides:
     - goos: windows
@@ -83,12 +90,12 @@ brews:
     # Default is false.
     skip_upload: false
     # GitHub repository to push the formula to
-    tap:
+    repository:
       owner: snyk
       name: homebrew-tap
       token: "{{ .Env.SNYK_ACCESS_TOKEN }}"
 
-    folder: Formula
+    directory: Formula
     commit_author:
       name: snyk
       email: cloud-dev-ex@users.noreply.github.com
@@ -96,24 +103,25 @@ brews:
     license: Apache-2.0
     description: "Write, debug, test, and bundle custom rules for Snyk Infrastructure as Code."
 
-scoop:
-  # If set to auto, the release will not be uploaded to the scoop bucket
-  # in case there is an indicator for prerelease in the tag e.g. v1.0.0-rc1
-  # Default is false.
-  skip_upload: false
+scoops:
+  -
+    # If set to auto, the release will not be uploaded to the scoop bucket
+    # in case there is an indicator for prerelease in the tag e.g. v1.0.0-rc1
+    # Default is false.
+    skip_upload: false
 
-  # Repository to push the app manifest to.
-  bucket:
-    owner: snyk
-    name: scoop-snyk
-    token: "{{ .Env.SNYK_ACCESS_TOKEN }}"
+    # Repository to push the app manifest to.
+    repository:
+      owner: snyk
+      name: scoop-snyk
+      token: "{{ .Env.SNYK_ACCESS_TOKEN }}"
 
-  commit_author:
-    name: snyk
-    email: cloud-dev-ex@users.noreply.github.com
-  homepage: "https://snyk.io/"
-  license: Apache-2.0
-  description: "Write, debug, test, and bundle custom rules for Snyk Infrastructure as Code."
+    commit_author:
+      name: snyk
+      email: cloud-dev-ex@users.noreply.github.com
+    homepage: "https://snyk.io/"
+    license: Apache-2.0
+    description: "Write, debug, test, and bundle custom rules for Snyk Infrastructure as Code."
 
 # Publishes the deb and rpm files to the GitHub releases page.
 nfpms:

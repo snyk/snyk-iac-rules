@@ -100,7 +100,7 @@ jobs:
           iac-scan: disabled
   lint_commit_message:
     docker:
-      - image: cimg/node:14.19
+      - image: cimg/node:18.19.1
     steps:
       - checkout
       - attach_workspace:
@@ -150,7 +150,7 @@ jobs:
           command: echo $DOCKER_PASSWORD  | docker login -u $DOCKER_USERNAME --password-stdin
       - node/install:
           install-yarn: false
-          node-version: '12'
+          node-version: '18'
       - run:
           name: Release binaries to GitHub
           command: ./scripts/release-github.sh
