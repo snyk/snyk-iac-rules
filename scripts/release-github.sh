@@ -3,14 +3,14 @@
 set -eo pipefail
 
 if ! which goreleaser >/dev/null ; then
-    go install github.com/goreleaser/goreleaser@v1.9.2
+    go install github.com/goreleaser/goreleaser/v2@latest
 fi
 
 # Check configuration
 goreleaser check
 
 FLAGS=""
-FLAGS+="--rm-dist "
+FLAGS+="--clean "
 
 # Only CI system should publish artifacts
 if [ "$CI" != true ]; then

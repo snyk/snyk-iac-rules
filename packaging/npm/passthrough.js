@@ -18,6 +18,7 @@ switch (process.platform) {
 var arch = ''
 switch (process.arch) {
   case 'arm' :
+  case 'arm64':
     arch = 'arm64';
     break;
   case 'x64':

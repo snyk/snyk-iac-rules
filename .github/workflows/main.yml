@@ -19,7 +19,7 @@ jobs:
 
       - uses: actions/setup-go@v2
         with:
-          go-version: '1.19'
+          go-version: '1.22'
 
       - name: Build Golang CLI
         run: go build -o snyk-iac-rules .
@@ -95,7 +95,7 @@ jobs:
 
       - uses: actions/setup-go@v2
         with:
-          go-version: '1.19'
+          go-version: '1.22'
 
       - name: Install NPM package - non-Windows
         if: ${{ matrix.os != 'windows' }}
@@ -141,7 +141,7 @@ jobs:
       - name: Build binaries
         uses: goreleaser/goreleaser-action@v2
         with:
-          args: --snapshot --rm-dist
+          args: --snapshot --clean
 
       - name: Test Dockerfile
         run: |

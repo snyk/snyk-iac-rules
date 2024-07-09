@@ -3,7 +3,7 @@ version: 2.1
 orbs:
   snyk: snyk/snyk@1.1.1
   node: circleci/node@5.0.2
-  prodsec: snyk/prodsec-orb@1.0.2
+  prodsec: snyk/prodsec-orb@1
 
 defaults: &defaults
   working_directory: ~/snyk-iac-rules
@@ -90,28 +90,17 @@ jobs:
       - run:
           name: Run Golang tests
           command: go test ./...
-  security-oss:
+  security-scans:
     <<: *docker_go_image
+    resource_class: small
     steps:
       - checkout
-      - snyk/scan:
-          severity-threshold: medium 
-          monitor-on-build: false
-          project: ${CIRCLE_PROJECT_REPONAME}
-          organization: cloud-cloud
-  security-code:
-    <<: *docker_go_image
-    steps:
-      - checkout
-      - snyk/scan:
-          command: code test
-          severity-threshold: medium 
-          monitor-on-build: false
-          project: ${CIRCLE_PROJECT_REPONAME}
-          organization: cloud-cloud
+      - prodsec/security_scans:
+          mode: auto
+          iac-scan: disabled
   lint_commit_message:
     docker:
-      - image: cimg/node:14.19
+      - image: cimg/node:18.19.1
     steps:
       - checkout
       - attach_workspace:
@@ -161,7 +150,7 @@ jobs:
           command: echo $DOCKER_PASSWORD  | docker login -u $DOCKER_USERNAME --password-stdin
       - node/install:
           install-yarn: false
-          node-version: '12'
+          node-version: '18'
       - run:
           name: Release binaries to GitHub
           command: ./scripts/release-github.sh
@@ -186,6 +175,10 @@ workflows:
           context:
             - snyk-bot-slack
           channel: group-infrastructure-as-code-alerts
+      - security-scans:
+          name: Security Scans
+          context:
+            - analysis-iac
       - lint_commit_message:
           name: Lint commit message
           <<: *only_feature_branch
@@ -193,20 +186,6 @@ workflows:
           name: Lint & formatting
           requires:
             -  Lint commit message
-          <<: *only_feature_branch
-      - security-oss:
-          name: Snyk oss
-          context:
-            - snyk-cloud-dev-ex
-          requires:
-            - Lint & formatting
-          <<: *only_feature_branch
-      - security-code:
-          name: Snyk code
-          context:
-            - snyk-cloud-dev-ex
-          requires:
-            - Lint & formatting
           <<: *only_feature_branch
       - regression-test:
           name: Regression Test
