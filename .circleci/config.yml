@@ -174,7 +174,7 @@ workflows:
           name: Scan Repository for Secrets
           context:
             - snyk-bot-slack
-          channel: group-infrastructure-as-code-alerts
+          channel: snyk-vuln-alerts-iac
       - security-scans:
           name: Security Scans
           context:
