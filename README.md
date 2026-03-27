@@ -1,4 +1,4 @@
-# `snyk-iac-rules` SDK
+# `snyk-iac-rules` SDK 
 ---
 
 [![CircleCI](https://dl.circleci.com/status-badge/img/gh/snyk/snyk-iac-rules/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/snyk/snyk-iac-rules/tree/main)

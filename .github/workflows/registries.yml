@@ -16,7 +16,7 @@ jobs:
         uses: ./.github/actions/setup_shellspec # use local action
         
       - name: Login to registry via Docker
-        uses: docker/login-action@v1
+        uses: docker/login-action@v3
         if: ${{ matrix.os != 'macos' }}
         with:
           username: ${{ secrets.OCI_DOCKERHUB_REGISTRY_USERNAME }}
@@ -46,7 +46,7 @@ jobs:
         uses: ./.github/actions/setup_shellspec # use local action
 
       - name: Login to registry via Docker
-        uses: docker/login-action@v1
+        uses: docker/login-action@v3
         with:
           registry: ${{ secrets.OCI_AZURE_REGISTRY }}
           username: ${{ secrets.OCI_AZURE_REGISTRY_USERNAME }}
@@ -76,7 +76,7 @@ jobs:
         uses: ./.github/actions/setup_shellspec # use local action
 
       - name: Login to registry via Docker
-        uses: docker/login-action@v1
+        uses: docker/login-action@v3
         with:
           registry: ${{ secrets.OCI_HARBOR_REGISTRY }}
           username: ${{ secrets.OCI_HARBOR_REGISTRY_USERNAME }}
@@ -106,7 +106,7 @@ jobs:
         uses: ./.github/actions/setup_shellspec # use local action
 
       - name: Login to registry via Docker
-        uses: docker/login-action@v1
+        uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ secrets.OCI_GITHUB_REGISTRY_USERNAME }}
@@ -137,7 +137,7 @@ jobs:
               
       -
         name: Login to registry via Docker
-        uses: docker/login-action@v1
+        uses: docker/login-action@v3
         with:
           registry: ${{ secrets.OCI_ELASTIC_REGISTRY }}
           username: ${{ secrets.OCI_ELASTIC_REGISTRY_ACCESS_KEY }}

@@ -79,7 +79,6 @@ jobs:
       - install_shellspec
       - build
       - setup_remote_docker:
-          version: 19.03.13
           docker_layer_caching: true
       - run:
           name: Login to Docker Hub
@@ -143,7 +142,6 @@ jobs:
       - attach_workspace:
           at: .
       - setup_remote_docker:
-          version: 19.03.13
           docker_layer_caching: true
       - run:
           name: Login to Snyk's Docker Hub
