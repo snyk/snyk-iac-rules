@@ -14,7 +14,7 @@ fi
 
 TAG=$(svu)
 
-if [ $(git tag -l "TAG") ]; then
+if [ $(git tag -l "$TAG") ]; then
     echo "Tag already exists!"
     exit 0
 else
