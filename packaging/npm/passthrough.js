@@ -19,7 +19,7 @@ var arch = ''
 switch (process.arch) {
   case 'arm' :
   case 'arm64':
-    arch = 'arm64';
+    arch = 'arm64_v8.0';
     break;
   case 'x64':
     arch = 'amd64_v1';

@@ -60,7 +60,7 @@ changelog:
     - '^Merge pull request'
 
 snapshot:
-  name_template: "{{ .Version }}"
+  version_template: "{{ .Version }}"
 
 release:
   # If set to true, will not auto-publish the release.

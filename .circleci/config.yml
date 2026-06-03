@@ -79,11 +79,10 @@ jobs:
       - install_shellspec
       - build
       - setup_remote_docker:
-          version: 19.03.13
           docker_layer_caching: true
       - run:
           name: Login to Docker Hub
-          command: echo $OCI_REGISTRY_PASSWORD | docker login -u $OCI_REGISTRY_USERNAME --password-stdin
+          command: echo $DOCKER_PASSWORD  | docker login -u $DOCKER_USERNAME --password-stdin
       - run:
           name: Run shellspec
           command: shellspec "spec/e2e"
@@ -100,7 +99,7 @@ jobs:
           iac-scan: disabled
   lint_commit_message:
     docker:
-      - image: cimg/node:18.19.1
+      - image: cimg/node:20.19.0
     steps:
       - checkout
       - attach_workspace:
@@ -143,14 +142,13 @@ jobs:
       - attach_workspace:
           at: .
       - setup_remote_docker:
-          version: 19.03.13
           docker_layer_caching: true
       - run:
           name: Login to Snyk's Docker Hub
           command: echo $DOCKER_PASSWORD  | docker login -u $DOCKER_USERNAME --password-stdin
       - node/install:
           install-yarn: false
-          node-version: '18'
+          node-version: '20'
       - run:
           name: Release binaries to GitHub
           command: ./scripts/release-github.sh
@@ -164,8 +162,10 @@ jobs:
             ./scripts/release-npm.sh
             
             cd dist/
-            echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
-            npm publish
+            # Trusted publishing (OIDC) requires npm 11.5.1+
+            npm install -g npm@latest
+            export NPM_ID_TOKEN=$(circleci run oidc get --claims '{"aud": "npm:registry.npmjs.org"}')
+            npm publish --provenance
 workflows:
   version: 2
   test:
@@ -189,6 +189,7 @@ workflows:
           <<: *only_feature_branch
       - regression-test:
           name: Regression Test
+          context: snyk-iac-test
           requires:
             - Lint & formatting
           <<: *only_feature_branch
