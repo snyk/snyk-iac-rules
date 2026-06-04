@@ -206,7 +206,9 @@ workflows:
           <<: *only_release_branch
       - release:
           name: Release
-          context: snyk-iac-test
+          context: 
+            - github-release
+            - snyk-iac-test
           requires:
             - Approve Release
           <<: *only_release_branch
