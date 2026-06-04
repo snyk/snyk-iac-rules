@@ -1,6 +1,6 @@
 module github.com/snyk/snyk-iac-rules
 
-go 1.19
+go 1.26
 
 require (
 	github.com/open-policy-agent/opa v0.53.0

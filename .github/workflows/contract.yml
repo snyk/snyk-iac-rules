@@ -28,9 +28,9 @@ jobs:
           echo "install snyk with npm"
           npm install -g snyk
 
-      - uses: actions/setup-go@v2
+      - uses: actions/setup-go@v5
         with:
-          go-version: '1.22'
+          go-version-file: 'go.mod'
 
       - name: Build Golang CLI
         run: go build -o snyk-iac-rules .

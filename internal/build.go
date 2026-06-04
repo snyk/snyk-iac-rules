@@ -93,7 +93,7 @@ func assertUppercasedRuleIds(rules []util.Rule) error {
 	}
 
 	if len(invalidRulesPaths) > 0 {
-		errMessage := "We cannot create a bundle for your custom rules." +
+		errMessage := "we cannot create a bundle for your custom rules." +
 			"\nCustom rules must have an uppercased public ID." +
 			"\nPlease ensure all rules have an uppercased public ID." +
 			"\n\nRules that do not have an uppercased public ID are:"
@@ -114,7 +114,7 @@ func assertUniqueRuleIds(rules []util.Rule) error {
 	for _, rule := range rules {
 		if _, ok := visitedRulePaths[rule.PublicId]; ok {
 			return fmt.Errorf(
-				"We cannot create a bundle for your custom rules."+
+				"we cannot create a bundle for your custom rules."+
 					"\nThe bundle contains duplicate rules."+
 					"\nPlease ensure all rules have unique public IDs."+
 					"\n\nDuplicate rules are:"+
@@ -141,7 +141,7 @@ func assertRuleIdsWithoutSnykPrefix(rules []util.Rule) error {
 	}
 
 	if len(invalidRulesPaths) > 0 {
-		errMessage := "We cannot create a bundle for your custom rules." +
+		errMessage := "we cannot create a bundle for your custom rules." +
 			"\nCustom rules cannot have a name that starts with \"SNYK-\"." +
 			"\nPlease ensure your public ID does not start with \"SNYK-\"." +
 			"\n\nRules that start with \"SNYK-\" are:"
@@ -173,7 +173,7 @@ func assertValidSeverityLevels(rules []util.Rule) error {
 	}
 
 	if len(invalidRulesPaths) > 0 {
-		errMessage := "We cannot create a bundle for your custom rules." +
+		errMessage := "we cannot create a bundle for your custom rules." +
 			"\nCustom rules must have a valid severity level." +
 			"\nPlease ensure your severity level is one of: low, medium, high, or critical." +
 			"\n\nRules that have invalid severity levels are:"

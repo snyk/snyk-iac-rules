@@ -115,7 +115,7 @@ Describe './snyk-iac-rules template ./fixtures/custom-rules --rule TEST4'
       When call ./snyk-iac-rules template ./fixtures/custom-rules --rule TEST4 --format tf-plan
       The status should be failure
       The output should include 'Template rules directory'
-      The stderr should include 'Rule with the provided name already exists'
+      The stderr should include 'rule with the provided name already exists'
 
       rm -rf ./fixtures/custom-rules/rules/TEST4
    End

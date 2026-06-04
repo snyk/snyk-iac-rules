@@ -191,7 +191,7 @@ func TestTemplateInDirectoryWithLibWithTfPlan(t *testing.T) {
 				return "", errors.New("Tried to create more directories than expected")
 			}
 			if name == "lib" || strings.Contains(workingDirectory, "lib") {
-				return "", errors.New("Directory already exists at location")
+				return "", errors.New("directory already exists at location")
 			}
 			assert.Equal(t, directories[directoriesIndex].workingDirectory, workingDirectory)
 			assert.Equal(t, directories[directoriesIndex].name, name)
@@ -251,7 +251,7 @@ func TestTemplateInDirectoryWithLibWithoutTfPlan(t *testing.T) {
 				return "", errors.New("Tried to create more directories than expected")
 			}
 			if name == "lib" || strings.Contains(workingDirectory, "lib") {
-				return "", errors.New("Directory already exists at location")
+				return "", errors.New("directory already exists at location")
 			}
 			assert.Equal(t, directories[directoriesIndex].workingDirectory, workingDirectory)
 			assert.Equal(t, directories[directoriesIndex].name, name)
@@ -322,7 +322,7 @@ func TestTemplateWithExistingRule(t *testing.T) {
 				return "", errors.New("Tried to create more directories than expected")
 			}
 			if name == "Test Rule ID" {
-				return "", errors.New("Directory already exists at location")
+				return "", errors.New("directory already exists at location")
 			}
 			assert.Equal(t, directories[directoriesIndex].workingDirectory, workingDirectory)
 			assert.Equal(t, directories[directoriesIndex].name, name)
@@ -337,7 +337,7 @@ func TestTemplateWithExistingRule(t *testing.T) {
 		templateParams := mockTemplateParams(format)
 		err := RunTemplate([]string{"test"}, templateParams)
 		assert.NotNil(t, err)
-		assert.Equal(t, err.Error(), "Rule with the provided name already exists")
+		assert.Equal(t, err.Error(), "rule with the provided name already exists")
 		assert.Equal(t, 1, directoriesIndex)
 	}
 }

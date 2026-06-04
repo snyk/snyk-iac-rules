@@ -33,10 +33,10 @@ https://docs.snyk.io/products/snyk-infrastructure-as-code/custom-rules/getting-s
 	SilenceUsage: true,
 	Args: func(cmd *cobra.Command, args []string) error {
 		if len(args) < 1 {
-			return errors.New("Expected a path to be provided via the command")
+			return errors.New("expected a path to be provided via the command")
 		}
 		if len(args) > 1 {
-			return errors.New("Too many paths provided")
+			return errors.New("too many paths provided")
 		}
 
 		fileInfo, err := util.ValidateFilePath(args[0])
@@ -45,7 +45,7 @@ https://docs.snyk.io/products/snyk-infrastructure-as-code/custom-rules/getting-s
 		}
 
 		if fileInfo.IsDir() {
-			return errors.New("A path to a directory cannot be provided")
+			return errors.New("a path to a directory cannot be provided")
 		}
 		return nil
 	},
