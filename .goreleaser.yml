@@ -152,6 +152,16 @@ dockers_v2:
     tags:
     - "latest"
     - "{{ .Version }}"
+    # Build a single-platform image with no attestations. Multi-platform
+    # builds and SBOM/provenance attestation both require buildx's
+    # docker-container driver, which CircleCI's setup_remote_docker does not
+    # provide (only the default docker driver). This matches the previous
+    # dockers (v1) behaviour.
+    platforms:
+    - linux/amd64
+    sbom: false
+    flags:
+    - "--provenance=false"
 
 announce:
   twitter:
