@@ -142,7 +142,7 @@ jobs:
       - name: Build binaries
         uses: goreleaser/goreleaser-action@v2
         with:
-          version: v2.5.1
+          version: 2.16.0
           args: --snapshot --clean
 
       - name: Test Dockerfile

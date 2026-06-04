@@ -86,6 +86,8 @@ jobs:
       - run:
           name: Run shellspec
           command: shellspec "spec/e2e"
+          environment:
+            SKIP_PUSH_TEST: true # Oras push to Docker Hub is intermittently failing with "unexpected EOF" (already skipped in GitHub Actions)
       - run:
           name: Run Golang tests
           command: go test ./...
@@ -134,7 +136,12 @@ jobs:
             - env-vars
   release:
     <<: *defaults
-    <<: *docker_go_image
+    docker:
+      # Override the shared Go 1.19 image: goreleaser's go.mod uses the
+      # three-component `go` directive (e.g. `go 1.24.0`) that only Go >= 1.21
+      # can parse. golangci-lint in the other jobs can't run on this newer Go,
+      # so we only bump the image here.
+      - image: cimg/go:1.24
     executor: node/default
     steps:
       - checkout
