@@ -27,7 +27,7 @@ var createDirectoryIfNotExists = func(dirPath string, strict bool) error {
 			return err
 		}
 	} else if strict {
-		return fmt.Errorf("Directory already exists at path %s", dirPath)
+		return fmt.Errorf("directory already exists at path %s", dirPath)
 	}
 	return nil
 }
@@ -61,7 +61,7 @@ func CreateFile(workingDirectory string, name string) (string, error) {
 }
 
 func ValidateFilePath(path string) (fs.FileInfo, error) {
-	invalidFilePath := errors.New("Failed to read from the provided path")
+	invalidFilePath := errors.New("failed to read from the provided path")
 
 	file, err := os.Open(path)
 	if err != nil {
@@ -89,5 +89,5 @@ func IsPointingAtTemplatedRules(paths []string) error {
 			return nil
 		}
 	}
-	return fmt.Errorf("WARNING: The command must point at a folder that contains the package for the rules.\n	 If the rules were generated using the template command, make sure you have the\n	 /rules and /lib folder in your current running directory or provide an optional path argument pointing to that location.")
+	return fmt.Errorf("WARNING: The command must point at a folder that contains the package for the rules.\n	 If the rules were generated using the template command, make sure you have the\n	 /rules and /lib folder in your current running directory or provide an optional path argument pointing to that location")
 }

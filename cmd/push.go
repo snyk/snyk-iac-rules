@@ -34,13 +34,13 @@ https://docs.snyk.io/products/snyk-infrastructure-as-code/custom-rules/getting-s
 	SilenceUsage: true,
 	Args: func(cmd *cobra.Command, args []string) error {
 		if len(args) < 1 {
-			return errors.New("Expected a path to be provided via the command")
+			return errors.New("expected a path to be provided via the command")
 		}
 		if len(args) > 1 {
-			return errors.New("Too many paths provided")
+			return errors.New("too many paths provided")
 		}
 		if !strings.HasSuffix(args[0], ".tar.gz") {
-			return errors.New("The path must be to a generated .tar.gz bundle")
+			return errors.New("the path must be to a generated .tar.gz bundle")
 		}
 
 		_, err := util.ValidateFilePath(args[0])
@@ -51,11 +51,11 @@ https://docs.snyk.io/products/snyk-infrastructure-as-code/custom-rules/getting-s
 	},
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		if !strings.Contains(pushParams.BundleRegistry, "/") {
-			return fmt.Errorf("The provided container registry is invalid")
+			return fmt.Errorf("the provided container registry is invalid")
 		}
 
 		if strings.Contains(pushParams.BundleRegistry, "://") {
-			return fmt.Errorf("The provided container registry includes a protocol. Please remove it and try again")
+			return fmt.Errorf("the provided container registry includes a protocol. Please remove it and try again")
 		}
 
 		repository := strings.Split(pushParams.BundleRegistry, "/")

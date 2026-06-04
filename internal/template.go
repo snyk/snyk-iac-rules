@@ -49,7 +49,7 @@ func getTemplateByFormat(format string) (string, string, error) {
 		return "main_test_tfplan", ".json.tfplan", nil
 	default:
 		// should never get to here
-		return "", "", fmt.Errorf("Provided format not supported: %s", format)
+		return "", "", fmt.Errorf("provided format not supported: %s", format)
 	}
 }
 
@@ -67,8 +67,8 @@ func templateRule(workingDirectory string, templating util.Templating, format st
 
 	ruleDir, err = createDirectory(rulesDir, templating.RuleID, true)
 	if err != nil {
-		if strings.Contains(err.Error(), "Directory already exists") {
-			return errors.New("Rule with the provided name already exists")
+		if strings.Contains(err.Error(), "directory already exists") {
+			return errors.New("rule with the provided name already exists")
 		}
 		return err
 	}
@@ -124,7 +124,7 @@ func templateLib(workingDirectory string, templating util.Templating) error {
 
 	libDir, err = createDirectory(workingDirectory, "lib", true)
 	if err != nil {
-		if strings.Contains(err.Error(), "Directory already exists at") {
+		if strings.Contains(err.Error(), "directory already exists at") {
 			// We have added a new testing helper so we should check for that first
 			testingDir := path.Join(path.Join(workingDirectory, "lib"), "testing")
 			if !tfPlanExists(path.Join(testingDir, "tfplan.rego")) {

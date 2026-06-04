@@ -100,7 +100,7 @@ func TestCreateDirectoryIfNotExists(t *testing.T) {
 	t.Run("Returns an error if folder already exists and it's a strict call", func(t *testing.T) {
 		err := createDirectoryIfNotExists(dir, true)
 		assert.NotNil(t, err)
-		assert.Contains(t, err.Error(), "Directory already exists at path")
+		assert.Contains(t, err.Error(), "directory already exists at path")
 	})
 
 	t.Run("Returns nothing error if folder already exists and it's not a strict call", func(t *testing.T) {

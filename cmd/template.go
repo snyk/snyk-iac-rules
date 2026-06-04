@@ -47,7 +47,7 @@ $ snyk-iac-rules test --help
 	SilenceUsage: true,
 	Args: func(cmd *cobra.Command, args []string) error {
 		if len(args) > 1 {
-			return errors.New("Too many paths provided")
+			return errors.New("too many paths provided")
 		}
 		return nil
 	},
@@ -55,18 +55,18 @@ $ snyk-iac-rules test --help
 		// make sure rule name is in uppercase
 		for _, r := range templateParams.RuleID {
 			if !unicode.IsUpper(r) && unicode.IsLetter(r) {
-				return fmt.Errorf("Rule name must be in uppercase")
+				return fmt.Errorf("rule name must be in uppercase")
 			}
 		}
 
 		// make sure rule name doesn't have any whitespace in it
 		if strings.Contains(templateParams.RuleID, " ") {
-			return fmt.Errorf("Rule name cannot contain whitespace")
+			return fmt.Errorf("rule name cannot contain whitespace")
 		}
 
 		// make sure rule name doesn't belong to Snyk namespace
 		if strings.HasPrefix(templateParams.RuleID, "SNYK-") {
-			return fmt.Errorf("Rule name cannot start with \"SNYK-\"")
+			return fmt.Errorf("rule name cannot start with \"SNYK-\"")
 		}
 
 		return nil

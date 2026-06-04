@@ -9,7 +9,7 @@ defaults: &defaults
   working_directory: ~/snyk-iac-rules
 docker_go_image: &docker_go_image
   docker:
-    - image: cimg/go:1.19.0
+    - image: cimg/go:1.26
 only_feature_branch: &only_feature_branch
   filters:
     branches:
@@ -53,8 +53,7 @@ jobs:
       - checkout
       - run:
           name: install golangci-lint
-          command: |
-            curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sudo sh -s -- -b $(go env GOPATH)/bin v1.53.1
+          command: go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.12.2
       # Logs the version in our build logs, for posterity
       - run: go version
       - run:
@@ -136,12 +135,7 @@ jobs:
             - env-vars
   release:
     <<: *defaults
-    docker:
-      # Override the shared Go 1.19 image: goreleaser's go.mod uses the
-      # three-component `go` directive (e.g. `go 1.24.0`) that only Go >= 1.21
-      # can parse. golangci-lint in the other jobs can't run on this newer Go,
-      # so we only bump the image here.
-      - image: cimg/go:1.24
+    <<: *docker_go_image
     executor: node/default
     steps:
       - checkout

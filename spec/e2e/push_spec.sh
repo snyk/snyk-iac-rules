@@ -25,7 +25,7 @@ Describe './snyk-iac-rules push -r docker.io/test/test test.jpg'
    It 'returns failing test status'
       When call ./snyk-iac-rules push -r docker.io/test/test test.jpg
       The status should be failure
-      The stderr should include 'The path must be to a generated .tar.gz bundle'
+      The stderr should include 'the path must be to a generated .tar.gz bundle'
    End
 End
 
@@ -33,7 +33,7 @@ Describe 'When call ./snyk-iac-rules push -r https://docker.io/test/test bundle.
    It 'returns failing test status'
       When call ./snyk-iac-rules push -r https://docker.io/test/test bundle.tar.gz
       The status should be failure
-      The stderr should include 'The provided container registry includes a protocol. Please remove it and try again'
+      The stderr should include 'the provided container registry includes a protocol. Please remove it and try again'
    End
 End
 
@@ -42,7 +42,7 @@ Describe './snyk-iac-rules push -r docker.io/test/test bundle-incorrect.tar.gz'
    It 'returns failing test status'
       When call ./snyk-iac-rules push -r docker.io/test/test bundle-incorrect.tar.gz
       The status should be failure
-      The stderr should include 'Failed to read from the provided path'
+      The stderr should include 'failed to read from the provided path'
    End
 End
 
@@ -50,7 +50,7 @@ Describe './snyk-iac-rules push -r test bundle.tar.gz'
    It 'returns failing test status'
       When call ./snyk-iac-rules push -r test bundle.tar.gz
       The status should be failure
-      The stderr should include 'The provided container registry is invalid'
+      The stderr should include 'the provided container registry is invalid'
    End
 End
 

@@ -59,7 +59,7 @@ func pushBundle(ctx context.Context, copy copy, repository string, bundlePath st
 	fmt.Printf("Uploading %s %s\n", bundleDesc.Digest.Encoded()[:12], bundlePath)
 
 	if _, err := copy(ctx, store, repository, registry, repository); err != nil {
-		return fmt.Errorf("Failed to push bundle to container registry: %v", err)
+		return fmt.Errorf("failed to push bundle to container registry: %v", err)
 	}
 
 	return nil
