@@ -30,6 +30,7 @@ jobs:
 
           shellspec "spec/registries"
         env:
+          SKIP_PUSH_TEST: true
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
           OCI_DOCKERHUB_REGISTRY_NAME: ${{ secrets.OCI_DOCKERHUB_REGISTRY_NAME }}
           OCI_DOCKERHUB_REGISTRY_URL: ${{ secrets.OCI_DOCKERHUB_REGISTRY_URL }}
@@ -60,6 +61,7 @@ jobs:
 
           shellspec "spec/registries"
         env:
+          SKIP_PUSH_TEST: true
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
           OCI_AZURE_REGISTRY_NAME: ${{ secrets.OCI_AZURE_REGISTRY_NAME }}
           OCI_AZURE_REGISTRY_URL: ${{ secrets.OCI_AZURE_REGISTRY_URL }}
@@ -90,6 +92,7 @@ jobs:
 
           shellspec "spec/registries"
         env:
+          SKIP_PUSH_TEST: true
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
           OCI_HARBOR_REGISTRY_NAME: ${{ secrets.OCI_HARBOR_REGISTRY_NAME }}
           OCI_HARBOR_REGISTRY_URL: ${{ secrets.OCI_HARBOR_REGISTRY_URL }}
@@ -120,6 +123,7 @@ jobs:
 
           shellspec "spec/registries"
         env:
+          SKIP_PUSH_TEST: true
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
           OCI_GITHUB_REGISTRY_NAME: ${{ secrets.OCI_GITHUB_REGISTRY_NAME }}
           OCI_GITHUB_REGISTRY_URL: ${{ secrets.OCI_GITHUB_REGISTRY_URL }}
@@ -158,6 +162,7 @@ jobs:
 
           shellspec "spec/registries"
         env:
+          SKIP_PUSH_TEST: true
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
           OCI_ELASTIC_REGISTRY_NAME: ${{ secrets.OCI_ELASTIC_REGISTRY_NAME }}
           OCI_ELASTIC_REGISTRY_URL: ${{ secrets.OCI_ELASTIC_REGISTRY_URL }}
