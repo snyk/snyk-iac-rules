@@ -9,9 +9,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/open-policy-agent/opa/rego"
-	"github.com/open-policy-agent/opa/topdown"
-	"github.com/open-policy-agent/opa/util/test"
+	"github.com/open-policy-agent/opa/v1/ast"
+	"github.com/open-policy-agent/opa/v1/rego"
+	"github.com/open-policy-agent/opa/v1/topdown"
+	"github.com/open-policy-agent/opa/v1/util/test"
 
 	"github.com/snyk/snyk-iac-rules/util"
 
@@ -137,14 +138,14 @@ func TestFilterTraceExplainFull(t *testing.T) {
 | | | Unify data.testing.q.foo = _
 | | | Index data.testing.q (matched 1 rule)
 | | | Enter data.testing.q
-| | | | Unify x = "foo"
+| | | | Unify "foo" = x
 | | | | Eval trace("got this far")
 | | | | Note "got this far"
 | | | | Eval data.testing.r[x]
 | | | | Unify data.testing.r[x] = _
 | | | | Index data.testing.r (matched 1 rule)
 | | | | Enter data.testing.r
-| | | | | Unify x = "foo"
+| | | | | Unify "foo" = x
 | | | | | Eval trace("got this far2")
 | | | | | Note "got this far2"
 | | | | | Eval x = data.x
@@ -217,6 +218,7 @@ func failTrace(t *testing.T) []*topdown.Event {
 
 	_, err := rego.New(
 		rego.Module("test.rego", mod),
+		rego.SetRegoVersion(ast.RegoV0),
 		rego.Trace(true),
 		rego.QueryTracer(tracer),
 		rego.Query("data.testing.test_p"),
@@ -234,23 +236,22 @@ func TestInvalidRego(t *testing.T) {
 		`,
 	}
 
-	test.WithTempFS(baseTestFiles, func(root string) {
-		testParams := mockTestParams()
-		testParams.Verbose = false
+	root := test.TempDir(t, baseTestFiles)
+	testParams := mockTestParams()
+	testParams.Verbose = false
 
-		rescueStderr := os.Stderr
-		r, w, _ := os.Pipe()
-		os.Stderr = w
+	rescueStderr := os.Stderr
+	r, w, _ := os.Pipe()
+	os.Stderr = w
 
-		err := RunTest([]string{root}, testParams)
-		assert.NotNil(t, err)
+	err := RunTest([]string{root}, testParams)
+	assert.NotNil(t, err)
 
-		w.Close()
-		out, _ := io.ReadAll(r)
-		os.Stderr = rescueStderr
+	w.Close()
+	out, _ := io.ReadAll(r)
+	os.Stderr = rescueStderr
 
-		assert.Contains(t, string(out), "unexpected mul token")
-	})
+	assert.Contains(t, string(out), "unexpected mul token")
 }
 
 func TestRegoUnsafeVariable(t *testing.T) {
@@ -263,21 +264,20 @@ deny[msg] {
 `,
 	}
 
-	test.WithTempFS(baseTestFiles, func(root string) {
-		testParams := mockTestParams()
-		testParams.Verbose = false
+	root := test.TempDir(t, baseTestFiles)
+	testParams := mockTestParams()
+	testParams.Verbose = false
 
-		rescueStderr := os.Stderr
-		r, w, _ := os.Pipe()
-		os.Stderr = w
+	rescueStderr := os.Stderr
+	r, w, _ := os.Pipe()
+	os.Stderr = w
 
-		err := RunTest([]string{root}, testParams)
-		assert.NotNil(t, err)
+	err := RunTest([]string{root}, testParams)
+	assert.NotNil(t, err)
 
-		w.Close()
-		out, _ := io.ReadAll(r)
-		os.Stderr = rescueStderr
+	w.Close()
+	out, _ := io.ReadAll(r)
+	os.Stderr = rescueStderr
 
-		assert.Contains(t, string(out), "rego_unsafe_var_error")
-	})
+	assert.Contains(t, string(out), "rego_unsafe_var_error")
 }

@@ -3,7 +3,7 @@ package util
 import (
 	"os"
 
-	"github.com/open-policy-agent/opa/loader"
+	"github.com/open-policy-agent/opa/v1/loader"
 )
 
 // LoaderFilter was taken from https://github.com/open-policy-agent/opa/blob/v0.31.0/cmd/filters.go#L13

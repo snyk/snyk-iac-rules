@@ -10,8 +10,8 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/open-policy-agent/opa/ast"
-	"github.com/open-policy-agent/opa/compile"
+	"github.com/open-policy-agent/opa/v1/ast"
+	"github.com/open-policy-agent/opa/v1/compile"
 	"github.com/snyk/snyk-iac-rules/util"
 )
 
@@ -44,6 +44,7 @@ func RunBuild(args []string, params *BuildCommandParams) error {
 	}
 
 	compiler := compile.New().
+		WithRegoVersion(ast.RegoV0).
 		WithCapabilities(capabilities).
 		WithTarget(params.Target.String()).
 		WithAsBundle(false).

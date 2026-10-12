@@ -7,12 +7,12 @@ import (
 	"os"
 	"time"
 
-	"github.com/open-policy-agent/opa/ast"
-	"github.com/open-policy-agent/opa/compile"
-	"github.com/open-policy-agent/opa/storage"
-	"github.com/open-policy-agent/opa/tester"
-	"github.com/open-policy-agent/opa/topdown"
-	"github.com/open-policy-agent/opa/topdown/lineage"
+	"github.com/open-policy-agent/opa/v1/ast"
+	"github.com/open-policy-agent/opa/v1/compile"
+	"github.com/open-policy-agent/opa/v1/storage"
+	"github.com/open-policy-agent/opa/v1/tester"
+	"github.com/open-policy-agent/opa/v1/topdown"
+	"github.com/open-policy-agent/opa/v1/topdown/lineage"
 	"github.com/snyk/snyk-iac-rules/util"
 )
 
@@ -34,7 +34,7 @@ func RunTest(args []string, params *TestCommandParams) error {
 		Ignore: params.Ignore,
 	}
 
-	modules, store, err := tester.Load(args, filter.Apply)
+	modules, store, err := tester.LoadWithRegoVersion(args, filter.Apply, ast.RegoV0)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		return err
@@ -48,6 +48,7 @@ func RunTest(args []string, params *TestCommandParams) error {
 	defer store.Abort(ctx, txn)
 
 	compiler := ast.NewCompiler().
+		WithDefaultRegoVersion(ast.RegoV0).
 		WithPathConflictsCheck(storage.NonEmpty(ctx, store, txn)).
 		WithEnablePrintStatements(params.Verbose)
 
@@ -59,6 +60,7 @@ func RunTest(args []string, params *TestCommandParams) error {
 
 	runner := tester.NewRunner().
 		SetCompiler(compiler).
+		SetDefaultRegoVersion(ast.RegoV0).
 		SetStore(store).
 		CapturePrintOutput(true).
 		EnableTracing(params.Verbose).

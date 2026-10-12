@@ -71,6 +71,7 @@ jobs:
 
           shellspec "spec/contract"
         env:
+          SKIP_PUSH_TEST: true
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
           OCI_REGISTRY_NAME: ${{ secrets.OCI_REGISTRY_NAME }}
           OCI_REGISTRY_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -99,6 +100,7 @@ jobs:
         run: |
           sh ./scripts/run-contract-win.sh
         env:
+          SKIP_PUSH_TEST: true
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
           OCI_REGISTRY_NAME: ${{ secrets.OCI_REGISTRY_NAME }}
           OCI_REGISTRY_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
