@@ -28,6 +28,8 @@ Describe 'Supported Registry'
         @registry_test "$OCI_REGISTRY_URL" "$OCI_REGISTRY_USERNAME" "$OCI_REGISTRY_PASSWORD" ./fixtures/custom-rules/rules/CUSTOM-1/fixtures/test.tf
     }
     Describe 'DockerHub'
+        skip_push_test() { ! [ -z "$SKIP_PUSH_TEST" ]; }
+        Skip if 'skip environment variable is set' skip_push_test
         Skip if 'environment variable is not set'  [ -z "$OCI_DOCKERHUB_REGISTRY_URL" ]
         It "can push and pull"
             When call registry_test "$OCI_DOCKERHUB_REGISTRY_NAME" "$OCI_DOCKERHUB_REGISTRY_URL" "$OCI_DOCKERHUB_REGISTRY_USERNAME" "$OCI_DOCKERHUB_REGISTRY_PASSWORD"
@@ -39,6 +41,8 @@ Describe 'Supported Registry'
     End
 
     Describe "Azure"
+        skip_push_test() { ! [ -z "$SKIP_PUSH_TEST" ]; }
+        Skip if 'skip environment variable is set' skip_push_test
         Skip if 'environment variable is not set'  [ -z "$OCI_AZURE_REGISTRY_URL" ]
         It "can push and pull"
             When call registry_test "$OCI_AZURE_REGISTRY_NAME" "$OCI_AZURE_REGISTRY_URL" "$OCI_AZURE_REGISTRY_USERNAME" "$OCI_AZURE_REGISTRY_PASSWORD"
@@ -50,6 +54,8 @@ Describe 'Supported Registry'
     End
 
     Describe "Harbor"
+        skip_push_test() { ! [ -z "$SKIP_PUSH_TEST" ]; }
+        Skip if 'skip environment variable is set' skip_push_test
         Skip if 'environment variable is not set'  [ -z "$OCI_HARBOR_REGISTRY_URL" ]
         It "can push and pull"
             When call registry_test "$OCI_HARBOR_REGISTRY_NAME" "$OCI_HARBOR_REGISTRY_URL" "$OCI_HARBOR_REGISTRY_USERNAME" "$OCI_HARBOR_REGISTRY_PASSWORD"
@@ -61,6 +67,8 @@ Describe 'Supported Registry'
     End
 
     Describe "GitHub"
+        skip_push_test() { ! [ -z "$SKIP_PUSH_TEST" ]; }
+        Skip if 'skip environment variable is set' skip_push_test
         Skip if 'environment variable is not set'  [ -z "$OCI_GITHUB_REGISTRY_URL" ]
         It "can push and pull"
             When call registry_test "$OCI_GITHUB_REGISTRY_NAME" "$OCI_GITHUB_REGISTRY_URL" "$OCI_GITHUB_REGISTRY_USERNAME" "$OCI_GITHUB_REGISTRY_PASSWORD"
@@ -72,6 +80,8 @@ Describe 'Supported Registry'
     End
     
     Describe "Elastic"
+        skip_push_test() { ! [ -z "$SKIP_PUSH_TEST" ]; }
+        Skip if 'skip environment variable is set' skip_push_test
         Skip if 'environment variable is not set'  [ -z "$OCI_ELASTIC_REGISTRY_URL" ]
         It "can push and pull"
             When call registry_test "$OCI_ELASTIC_REGISTRY_NAME" "$OCI_ELASTIC_REGISTRY_URL" "$OCI_ELASTIC_REGISTRY_USERNAME"
