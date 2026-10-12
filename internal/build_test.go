@@ -10,10 +10,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/open-policy-agent/opa/loader"
+	"github.com/open-policy-agent/opa/v1/loader"
 	"github.com/snyk/snyk-iac-rules/util"
 
-	"github.com/open-policy-agent/opa/util/test"
+	"github.com/open-policy-agent/opa/v1/util/test"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -37,41 +37,40 @@ func TestBuildProducesRegoBundle(t *testing.T) {
 		`,
 	}
 
-	test.WithTempFS(files, func(root string) {
-		buildParams := mockBuildParams()
-		buildParams.OutputFile = path.Join(root, "bundle.tar.gz")
-		err := buildParams.Target.Set(util.TargetRego)
-		assert.Nil(t, err)
+	root := test.TempDir(t, files)
+	buildParams := mockBuildParams()
+	buildParams.OutputFile = path.Join(root, "bundle.tar.gz")
+	err := buildParams.Target.Set(util.TargetRego)
+	assert.Nil(t, err)
 
-		err = RunBuild([]string{root}, buildParams)
-		assert.Nil(t, err)
+	err = RunBuild([]string{root}, buildParams)
+	assert.Nil(t, err)
 
-		_, err = loader.NewFileLoader().AsBundle(buildParams.OutputFile)
-		assert.Nil(t, err)
+	_, err = loader.NewFileLoader().AsBundle(buildParams.OutputFile)
+	assert.Nil(t, err)
 
-		// Check that manifest is not written given no input manifest and no other flags
-		f, err := os.Open(buildParams.OutputFile)
-		assert.Nil(t, err)
-		defer f.Close()
+	// Check that manifest is not written given no input manifest and no other flags
+	f, err := os.Open(buildParams.OutputFile)
+	assert.Nil(t, err)
+	defer f.Close()
 
-		gr, err := gzip.NewReader(f)
-		assert.Nil(t, err)
+	gr, err := gzip.NewReader(f)
+	assert.Nil(t, err)
 
-		tr := tar.NewReader(gr)
+	tr := tar.NewReader(gr)
 
-		for {
-			f, err := tr.Next()
-			if err == io.EOF {
-				break
-			}
-			assert.Nil(t, err)
-
-			if f.Name == "/data.json" || strings.HasSuffix(f.Name, "/test.rego") {
-				continue
-			}
-			t.Fatal("unexpected file:", f.Name)
+	for {
+		f, err := tr.Next()
+		if err == io.EOF {
+			break
 		}
-	})
+		assert.Nil(t, err)
+
+		if f.Name == "/data.json" || f.Name == "/.manifest" || strings.HasSuffix(f.Name, "/test.rego") {
+			continue
+		}
+		t.Fatal("unexpected file:", f.Name)
+	}
 }
 
 func TestBuildProducesWasmBundle(t *testing.T) {
@@ -82,39 +81,38 @@ func TestBuildProducesWasmBundle(t *testing.T) {
 		`,
 	}
 
-	test.WithTempFS(files, func(root string) {
-		buildParams := mockBuildParams()
-		buildParams.OutputFile = path.Join(root, "bundle.tar.gz")
+	root := test.TempDir(t, files)
+	buildParams := mockBuildParams()
+	buildParams.OutputFile = path.Join(root, "bundle.tar.gz")
 
-		err := RunBuild([]string{root}, buildParams)
-		assert.Nil(t, err)
+	err := RunBuild([]string{root}, buildParams)
+	assert.Nil(t, err)
 
-		_, err = loader.NewFileLoader().AsBundle(buildParams.OutputFile)
-		assert.Nil(t, err)
+	_, err = loader.NewFileLoader().AsBundle(buildParams.OutputFile)
+	assert.Nil(t, err)
 
-		// Check that manifest is not written given no input manifest and no other flags
-		f, err := os.Open(buildParams.OutputFile)
-		assert.Nil(t, err)
-		defer f.Close()
+	// Check that manifest is not written given no input manifest and no other flags
+	f, err := os.Open(buildParams.OutputFile)
+	assert.Nil(t, err)
+	defer f.Close()
 
-		gr, err := gzip.NewReader(f)
-		assert.Nil(t, err)
+	gr, err := gzip.NewReader(f)
+	assert.Nil(t, err)
 
-		tr := tar.NewReader(gr)
+	tr := tar.NewReader(gr)
 
-		for {
-			f, err := tr.Next()
-			if err == io.EOF {
-				break
-			}
-			assert.Nil(t, err)
-
-			if f.Name == "/data.json" || strings.HasSuffix(f.Name, "/test.rego") || strings.HasSuffix(f.Name, "/policy.wasm") || strings.HasSuffix(f.Name, ".manifest") {
-				continue
-			}
-			t.Fatal("unexpected file:", f.Name)
+	for {
+		f, err := tr.Next()
+		if err == io.EOF {
+			break
 		}
-	})
+		assert.Nil(t, err)
+
+		if f.Name == "/data.json" || strings.HasSuffix(f.Name, "/test.rego") || strings.HasSuffix(f.Name, "/policy.wasm") || strings.HasSuffix(f.Name, ".manifest") {
+			continue
+		}
+		t.Fatal("unexpected file:", f.Name)
+	}
 }
 
 func TestBuildFilesystemModeIgnoresTarGz(t *testing.T) {
@@ -125,20 +123,19 @@ func TestBuildFilesystemModeIgnoresTarGz(t *testing.T) {
 		`,
 	}
 
-	test.WithTempFS(files, func(root string) {
-		buildParams := mockBuildParams()
-		buildParams.OutputFile = path.Join(root, "bundle.tar.gz")
+	root := test.TempDir(t, files)
+	buildParams := mockBuildParams()
+	buildParams.OutputFile = path.Join(root, "bundle.tar.gz")
 
-		err := RunBuild([]string{root}, buildParams)
-		assert.Nil(t, err)
+	err := RunBuild([]string{root}, buildParams)
+	assert.Nil(t, err)
 
-		_, err = loader.NewFileLoader().AsBundle(buildParams.OutputFile)
-		assert.Nil(t, err)
+	_, err = loader.NewFileLoader().AsBundle(buildParams.OutputFile)
+	assert.Nil(t, err)
 
-		// Just run the build again to simulate the user doing back-to-back builds.
-		err = RunBuild([]string{root}, buildParams)
-		assert.Nil(t, err)
-	})
+	// Just run the build again to simulate the user doing back-to-back builds.
+	err = RunBuild([]string{root}, buildParams)
+	assert.Nil(t, err)
 }
 
 func TestBuildErrorDoesNotWriteFile(t *testing.T) {
@@ -149,18 +146,17 @@ func TestBuildErrorDoesNotWriteFile(t *testing.T) {
 		`,
 	}
 
-	test.WithTempFS(files, func(root string) {
-		buildParams := mockBuildParams()
-		buildParams.OutputFile = path.Join(root, "bundle.tar.gz")
+	root := test.TempDir(t, files)
+	buildParams := mockBuildParams()
+	buildParams.OutputFile = path.Join(root, "bundle.tar.gz")
 
-		err := RunBuild([]string{root}, buildParams)
-		if err != nil {
-			assert.Contains(t, err.Error(), "rule data.test.p is recursive")
-		}
+	err := RunBuild([]string{root}, buildParams)
+	if err != nil {
+		assert.Contains(t, err.Error(), "rule data.test.p is recursive")
+	}
 
-		_, err = os.Stat(buildParams.OutputFile)
-		assert.NotNil(t, err)
-	})
+	_, err = os.Stat(buildParams.OutputFile)
+	assert.NotNil(t, err)
 }
 
 func TestBuildRespectsCapabilitiesSuccess(t *testing.T) {
@@ -209,18 +205,17 @@ func TestBuildRespectsCapabilitiesSuccess(t *testing.T) {
 		`,
 	}
 
-	test.WithTempFS(files, func(root string) {
-		caps := util.NewCapabilitiesFlag()
-		if err := caps.Set(path.Join(root, "capabilities.json")); err != nil {
-			t.Fatal(err)
-		}
-		buildParams := mockBuildParams()
-		buildParams.OutputFile = path.Join(root, "bundle.tar.gz")
-		buildParams.Capabilities = caps
+	root := test.TempDir(t, files)
+	caps := util.NewCapabilitiesFlag()
+	if err := caps.Set(path.Join(root, "capabilities.json")); err != nil {
+		t.Fatal(err)
+	}
+	buildParams := mockBuildParams()
+	buildParams.OutputFile = path.Join(root, "bundle.tar.gz")
+	buildParams.Capabilities = caps
 
-		err := RunBuild([]string{root}, buildParams)
-		assert.Nil(t, err)
-	})
+	err := RunBuild([]string{root}, buildParams)
+	assert.Nil(t, err)
 }
 
 func TestBuildRespectsCapabilitiesFailure(t *testing.T) {
@@ -255,19 +250,18 @@ func TestBuildRespectsCapabilitiesFailure(t *testing.T) {
 		`,
 	}
 
-	test.WithTempFS(files, func(root string) {
-		caps := util.NewCapabilitiesFlag()
-		if err := caps.Set(path.Join(root, "capabilities.json")); err != nil {
-			t.Fatal(err)
-		}
-		buildParams := mockBuildParams()
-		buildParams.OutputFile = path.Join(root, "bundle.tar.gz")
-		buildParams.Capabilities = caps
+	root := test.TempDir(t, files)
+	caps := util.NewCapabilitiesFlag()
+	if err := caps.Set(path.Join(root, "capabilities.json")); err != nil {
+		t.Fatal(err)
+	}
+	buildParams := mockBuildParams()
+	buildParams.OutputFile = path.Join(root, "bundle.tar.gz")
+	buildParams.Capabilities = caps
 
-		err := RunBuild([]string{root}, buildParams)
-		assert.NotNil(t, err)
-		assert.Contains(t, err.Error(), "undefined function is_foo")
-	})
+	err := RunBuild([]string{root}, buildParams)
+	assert.NotNil(t, err)
+	assert.Contains(t, err.Error(), "undefined function is_foo")
 }
 
 func TestBuildWithDuplicateRuleIds(t *testing.T) {
@@ -288,18 +282,17 @@ func TestBuildWithDuplicateRuleIds(t *testing.T) {
 		`,
 	}
 
-	test.WithTempFS(baseTestFiles, func(root string) {
-		buildParams := mockBuildParams()
-		buildParams.OutputFile = path.Join(root, "bundle.tar.gz")
-		err := buildParams.Target.Set(util.TargetRego)
-		assert.Nil(t, err)
+	root := test.TempDir(t, baseTestFiles)
+	buildParams := mockBuildParams()
+	buildParams.OutputFile = path.Join(root, "bundle.tar.gz")
+	err := buildParams.Target.Set(util.TargetRego)
+	assert.Nil(t, err)
 
-		err = RunBuild([]string{root}, buildParams)
-		assert.NotNil(t, err)
-		assert.Contains(t, err.Error(), "The bundle contains duplicate rules")
-		assert.Contains(t, err.Error(), fmt.Sprintf("%s/test1.rego", root))
-		assert.Contains(t, err.Error(), fmt.Sprintf("%s/test2.rego", root))
-	})
+	err = RunBuild([]string{root}, buildParams)
+	assert.NotNil(t, err)
+	assert.Contains(t, err.Error(), "The bundle contains duplicate rules")
+	assert.Contains(t, err.Error(), fmt.Sprintf("%s/test1.rego", root))
+	assert.Contains(t, err.Error(), fmt.Sprintf("%s/test2.rego", root))
 }
 
 func TestBuildWithRuleIdsWithSnykPrefix(t *testing.T) {
@@ -313,17 +306,16 @@ func TestBuildWithRuleIdsWithSnykPrefix(t *testing.T) {
 		`,
 	}
 
-	test.WithTempFS(baseTestFiles, func(root string) {
-		buildParams := mockBuildParams()
-		buildParams.OutputFile = path.Join(root, "bundle.tar.gz")
-		err := buildParams.Target.Set(util.TargetRego)
-		assert.Nil(t, err)
+	root := test.TempDir(t, baseTestFiles)
+	buildParams := mockBuildParams()
+	buildParams.OutputFile = path.Join(root, "bundle.tar.gz")
+	err := buildParams.Target.Set(util.TargetRego)
+	assert.Nil(t, err)
 
-		err = RunBuild([]string{root}, buildParams)
-		assert.NotNil(t, err)
-		assert.Contains(t, err.Error(), "Custom rules cannot have a name that starts with \"SNYK-\"")
-		assert.Contains(t, err.Error(), fmt.Sprintf("%s/test1.rego", root))
-	})
+	err = RunBuild([]string{root}, buildParams)
+	assert.NotNil(t, err)
+	assert.Contains(t, err.Error(), "Custom rules cannot have a name that starts with \"SNYK-\"")
+	assert.Contains(t, err.Error(), fmt.Sprintf("%s/test1.rego", root))
 }
 
 func TestBuildWithUnuppercasedRuleIds(t *testing.T) {
@@ -358,20 +350,19 @@ func TestBuildWithUnuppercasedRuleIds(t *testing.T) {
 		`,
 	}
 
-	test.WithTempFS(baseTestFiles, func(root string) {
-		buildParams := mockBuildParams()
-		buildParams.OutputFile = path.Join(root, "bundle.tar.gz")
-		err := buildParams.Target.Set(util.TargetRego)
-		assert.Nil(t, err)
+	root := test.TempDir(t, baseTestFiles)
+	buildParams := mockBuildParams()
+	buildParams.OutputFile = path.Join(root, "bundle.tar.gz")
+	err := buildParams.Target.Set(util.TargetRego)
+	assert.Nil(t, err)
 
-		err = RunBuild([]string{root}, buildParams)
-		assert.NotNil(t, err)
-		assert.Contains(t, err.Error(), "Custom rules must have an uppercased public ID.")
-		assert.Contains(t, err.Error(), fmt.Sprintf("%s/test1.rego", root))
-		assert.Contains(t, err.Error(), fmt.Sprintf("%s/test2.rego", root))
-		assert.Contains(t, err.Error(), fmt.Sprintf("%s/test3.rego", root))
-		assert.NotContains(t, err.Error(), fmt.Sprintf("%s/test4.rego", root))
-	})
+	err = RunBuild([]string{root}, buildParams)
+	assert.NotNil(t, err)
+	assert.Contains(t, err.Error(), "Custom rules must have an uppercased public ID.")
+	assert.Contains(t, err.Error(), fmt.Sprintf("%s/test1.rego", root))
+	assert.Contains(t, err.Error(), fmt.Sprintf("%s/test2.rego", root))
+	assert.Contains(t, err.Error(), fmt.Sprintf("%s/test3.rego", root))
+	assert.NotContains(t, err.Error(), fmt.Sprintf("%s/test4.rego", root))
 }
 
 func TestBuildWithInvalidSeverityLevel(t *testing.T) {
@@ -385,15 +376,14 @@ func TestBuildWithInvalidSeverityLevel(t *testing.T) {
 		`,
 	}
 
-	test.WithTempFS(baseTestFiles, func(root string) {
-		buildParams := mockBuildParams()
-		buildParams.OutputFile = path.Join(root, "bundle.tar.gz")
-		err := buildParams.Target.Set(util.TargetRego)
-		assert.Nil(t, err)
+	root := test.TempDir(t, baseTestFiles)
+	buildParams := mockBuildParams()
+	buildParams.OutputFile = path.Join(root, "bundle.tar.gz")
+	err := buildParams.Target.Set(util.TargetRego)
+	assert.Nil(t, err)
 
-		err = RunBuild([]string{root}, buildParams)
-		assert.NotNil(t, err)
-		assert.Contains(t, err.Error(), "Custom rules must have a valid severity level")
-		assert.Contains(t, err.Error(), fmt.Sprintf("%s/test1.rego", root))
-	})
+	err = RunBuild([]string{root}, buildParams)
+	assert.NotNil(t, err)
+	assert.Contains(t, err.Error(), "Custom rules must have a valid severity level")
+	assert.Contains(t, err.Error(), fmt.Sprintf("%s/test1.rego", root))
 }

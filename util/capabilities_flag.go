@@ -3,7 +3,7 @@ package util
 import (
 	"os"
 
-	"github.com/open-policy-agent/opa/ast"
+	"github.com/open-policy-agent/opa/v1/ast"
 )
 
 // CapabilitiesFlag was taken from https://github.com/open-policy-agent/opa/blob/v0.31.0/cmd/flags.go#L160

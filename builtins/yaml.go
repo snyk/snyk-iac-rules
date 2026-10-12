@@ -5,9 +5,9 @@ import (
 
 	parsers "github.com/snyk/snyk-iac-parsers"
 
-	"github.com/open-policy-agent/opa/ast"
-	"github.com/open-policy-agent/opa/rego"
-	"github.com/open-policy-agent/opa/types"
+	"github.com/open-policy-agent/opa/v1/ast"
+	"github.com/open-policy-agent/opa/v1/rego"
+	"github.com/open-policy-agent/opa/v1/types"
 )
 
 func RegisterYAMLBuiltin() {

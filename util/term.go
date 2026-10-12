@@ -4,8 +4,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/open-policy-agent/opa/ast"
-	"github.com/open-policy-agent/opa/version"
+	"github.com/open-policy-agent/opa/v1/ast"
+	"github.com/open-policy-agent/opa/v1/version"
 )
 
 // Term was taken from https://github.com/open-policy-agent/opa/blob/v0.31.0/internal/runtime/runtime.go#L23

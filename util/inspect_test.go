@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/open-policy-agent/opa/util/test"
+	"github.com/open-policy-agent/opa/v1/util/test"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -16,11 +16,10 @@ func TestRetrieveRulesWitInvalidPath(t *testing.T) {
 
 func TestRetrieveRulesWithNoFiles(t *testing.T) {
 	files := map[string]string{}
-	test.WithTempFS(files, func(root string) {
-		rules, err := RetrieveRules([]string{root})
-		assert.Nil(t, err)
-		assert.Equal(t, 0, len(rules))
-	})
+	root := test.TempDir(t, files)
+	rules, err := RetrieveRules([]string{root})
+	assert.Nil(t, err)
+	assert.Equal(t, 0, len(rules))
 }
 
 func TestRetrieveRulesWithNoRules(t *testing.T) {
@@ -30,11 +29,10 @@ func TestRetrieveRulesWithNoRules(t *testing.T) {
 		`,
 	}
 
-	test.WithTempFS(files, func(root string) {
-		rules, err := RetrieveRules([]string{root})
-		assert.Nil(t, err)
-		assert.Equal(t, 0, len(rules))
-	})
+	root := test.TempDir(t, files)
+	rules, err := RetrieveRules([]string{root})
+	assert.Nil(t, err)
+	assert.Equal(t, 0, len(rules))
 }
 
 func TestRetrieveRulesWithRulesWithPublicIdAndSeverityLevel(t *testing.T) {
@@ -48,13 +46,12 @@ func TestRetrieveRulesWithRulesWithPublicIdAndSeverityLevel(t *testing.T) {
 		`,
 	}
 
-	test.WithTempFS(files, func(root string) {
-		rules, err := RetrieveRules([]string{root})
-		assert.Nil(t, err)
-		assert.Equal(t, 1, len(rules))
-		assert.Equal(t, "1", rules[0].PublicId)
-		assert.Equal(t, "low", rules[0].SeverityLevel)
-	})
+	root := test.TempDir(t, files)
+	rules, err := RetrieveRules([]string{root})
+	assert.Nil(t, err)
+	assert.Equal(t, 1, len(rules))
+	assert.Equal(t, "1", rules[0].PublicId)
+	assert.Equal(t, "low", rules[0].SeverityLevel)
 }
 
 func TestRetrieveRulesWithRulesWithoutPublicId(t *testing.T) {
@@ -68,11 +65,10 @@ func TestRetrieveRulesWithRulesWithoutPublicId(t *testing.T) {
 		`,
 	}
 
-	test.WithTempFS(files, func(root string) {
-		rules, err := RetrieveRules([]string{root})
-		assert.Nil(t, err)
-		assert.Equal(t, 0, len(rules))
-	})
+	root := test.TempDir(t, files)
+	rules, err := RetrieveRules([]string{root})
+	assert.Nil(t, err)
+	assert.Equal(t, 0, len(rules))
 }
 
 func TestRetrieveRulesWithRulesWithDistinctPublicIds(t *testing.T) {
@@ -100,20 +96,19 @@ func TestRetrieveRulesWithRulesWithDistinctPublicIds(t *testing.T) {
 		`,
 	}
 
-	test.WithTempFS(files, func(root string) {
-		rules, err := RetrieveRules([]string{root})
-		assert.Nil(t, err)
-		assert.Equal(t, 2, len(rules))
-		assert.Subset(t, rules, []Rule{
-			{
-				PublicId: "1",
-				Path:     fmt.Sprintf("%s/test1.rego", root),
-			},
-			{
-				PublicId: "2",
-				Path:     fmt.Sprintf("%s/test2.rego", root),
-			},
-		})
+	root := test.TempDir(t, files)
+	rules, err := RetrieveRules([]string{root})
+	assert.Nil(t, err)
+	assert.Equal(t, 2, len(rules))
+	assert.Subset(t, rules, []Rule{
+		{
+			PublicId: "1",
+			Path:     fmt.Sprintf("%s/test1.rego", root),
+		},
+		{
+			PublicId: "2",
+			Path:     fmt.Sprintf("%s/test2.rego", root),
+		},
 	})
 }
 
@@ -142,19 +137,18 @@ func TestRetrieveRulesWithRulesWithSamePublicIds(t *testing.T) {
 		`,
 	}
 
-	test.WithTempFS(files, func(root string) {
-		rules, err := RetrieveRules([]string{root})
-		assert.Nil(t, err)
-		assert.Equal(t, 2, len(rules))
-		assert.Subset(t, rules, []Rule{
-			{
-				PublicId: "1",
-				Path:     fmt.Sprintf("%s/test1.rego", root),
-			},
-			{
-				PublicId: "1",
-				Path:     fmt.Sprintf("%s/test2.rego", root),
-			},
-		})
+	root := test.TempDir(t, files)
+	rules, err := RetrieveRules([]string{root})
+	assert.Nil(t, err)
+	assert.Equal(t, 2, len(rules))
+	assert.Subset(t, rules, []Rule{
+		{
+			PublicId: "1",
+			Path:     fmt.Sprintf("%s/test1.rego", root),
+		},
+		{
+			PublicId: "1",
+			Path:     fmt.Sprintf("%s/test2.rego", root),
+		},
 	})
 }

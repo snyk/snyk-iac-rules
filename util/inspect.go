@@ -6,7 +6,9 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/open-policy-agent/opa/loader"
+	"github.com/open-policy-agent/opa/v1/ast"
+	"github.com/open-policy-agent/opa/v1/bundle"
+	"github.com/open-policy-agent/opa/v1/loader"
 )
 
 type Rule struct {
@@ -45,7 +47,9 @@ func RetrieveRules(paths []string) ([]Rule, error) {
 func findRegoFiles(paths []string) ([]string, error) {
 	fileNames := []string{}
 
-	result, err := loader.AllRegos(paths)
+	result, err := loader.NewFileLoader().WithRegoVersion(ast.RegoV0).Filtered(paths, func(_ string, info os.FileInfo, _ int) bool {
+		return !info.IsDir() && !strings.HasSuffix(info.Name(), bundle.RegoExt)
+	})
 	if err != nil {
 		return fileNames, err
 	}
